@@ -1,0 +1,63 @@
+[gd_scene load_steps=15 format=3]
+
+[ext_resource type="Script" path="res://scenes/levels/level.gd" id="1_level"]
+[ext_resource type="Script" path="res://scenes/levels/background_layer.gd" id="2_bg"]
+[ext_resource type="PackedScene" path="res://scenes/enemies/recon_drone/recon_drone.tscn" id="3_drone"]
+[ext_resource type="PackedScene" path="res://scenes/fx/explosion.tscn" id="4_explosion"]
+[ext_resource type="Script" path="res://scenes/pickups/salvage_pool.gd" id="5_salvage_pool"]
+[ext_resource type="PackedScene" path="res://scenes/pickups/salvage_pickup.tscn" id="6_salvage"]
+[ext_resource type="Script" path="res://scenes/weapons/round_pool.gd" id="7_round_pool"]
+[ext_resource type="PackedScene" path="res://scenes/weapons/player_round.tscn" id="8_round"]
+[ext_resource type="PackedScene" path="res://scenes/player/player.tscn" id="9_player"]
+[ext_resource type="Shader" path="res://scenes/levels/terrain_grain.gdshader" id="10_grain"]
+[ext_resource type="Script" path="res://scenes/fx/explosion_pool.gd" id="11_explosion_pool"]
+[ext_resource type="PackedScene" path="res://scenes/weapons/enemy_round.tscn" id="12_enemy_round"]
+[ext_resource type="PackedScene" path="res://scenes/ui/mission_failed.tscn" id="13_mission_failed"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_grain"]
+shader = ExtResource("10_grain")
+
+[node name="Level" type="Node2D"]
+script = ExtResource("1_level")
+drone_scene = ExtResource("3_drone")
+
+[node name="GroundLayer" type="Node2D" parent="."]
+z_index = -10
+material = SubResource("ShaderMaterial_grain")
+script = ExtResource("2_bg")
+
+[node name="HazeLayer" type="Node2D" parent="."]
+z_index = -5
+script = ExtResource("2_bg")
+style = 1
+scroll_speed = 150.0
+pattern_seed = 902
+
+[node name="Enemies" type="Node2D" parent="."]
+
+[node name="FX" type="Node2D" parent="."]
+
+[node name="ExplosionPool" type="Node2D" parent="FX"]
+script = ExtResource("11_explosion_pool")
+explosion_scene = ExtResource("4_explosion")
+
+[node name="SalvagePool" type="Node2D" parent="." node_paths=PackedStringArray("player")]
+script = ExtResource("5_salvage_pool")
+player = NodePath("../Player")
+scene = ExtResource("6_salvage")
+pool_size = 48
+
+[node name="PlayerRoundPool" type="Node2D" parent="."]
+script = ExtResource("7_round_pool")
+scene = ExtResource("8_round")
+
+[node name="Player" parent="." node_paths=PackedStringArray("round_pool") instance=ExtResource("9_player")]
+position = Vector2(270, 820)
+round_pool = NodePath("../PlayerRoundPool")
+
+[node name="EnemyRoundPool" type="Node2D" parent="."]
+script = ExtResource("7_round_pool")
+scene = ExtResource("12_enemy_round")
+pool_size = 200
+
+[node name="MissionFailed" parent="." instance=ExtResource("13_mission_failed")]

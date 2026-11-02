@@ -1,0 +1,18 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/levels/level.tscn" id="1_level"]
+[ext_resource type="Script" path="res://tests/test_round_emitter.gd" id="2_emitter"]
+
+[node name="TestDamage" type="Node2D"]
+
+[node name="Level" parent="." instance=ExtResource("1_level")]
+
+[node name="RoundEmitter" type="Node2D" parent="." node_paths=PackedStringArray("round_pool", "target")]
+position = Vector2(270, 60)
+script = ExtResource("2_emitter")
+round_pool = NodePath("../Level/EnemyRoundPool")
+target = NodePath("../Level/Player")
+
+[node name="Visual" type="Polygon2D" parent="RoundEmitter"]
+color = Color(0.85, 0.42, 0.1, 1)
+polygon = PackedVector2Array(-10, -8, 10, -8, 10, 8, -10, 8)

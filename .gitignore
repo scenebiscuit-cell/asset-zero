@@ -1,5 +1,14 @@
+# Godot 4
 .godot/
+/android/
 *.tmp
+
+# Web/desktop builds
 export/
 .import/
+
+# Generated from data/translations/*.csv on import
+*.translation
+
+# Reference screenshots: study only, never commit (CLAUDE.md)
 art-reference/

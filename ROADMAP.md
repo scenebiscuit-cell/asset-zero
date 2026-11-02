@@ -11,10 +11,10 @@ How to hand a milestone to Claude Code (in VS Code, terminal at `C:\Projects\ass
 
 ## Milestone A — Flying, shooting and morphing feel good
 
-- [ ] **Step 0: Project setup**
+- [x] **Step 0: Project setup**
   - New Godot 4 project named `asset-zero`, Compatibility renderer
   - Window/viewport 540×960, stretch `canvas_items`, aspect `keep`
-  - Input map actions: `move_up/down/left/right` (WASD + arrows), `fire` (Space, J, left mouse), `morph` (Shift, K, right mouse), `overclock` (E, L, middle mouse), `toggle_autofire` (F), `pause` (Esc, P)
+  - Input map actions: `move_up/down/left/right` (WASD + arrows), `fire` (Space, J, left mouse), `morph` (Shift, K, right mouse), `overclock` (E, L, middle mouse), ~~`toggle_autofire` (F)~~ (removed 2026-11-02, see decisions log), `pause` (Esc, P)
   - Project lives in `C:\Projects\asset-zero`; folder layout from CLAUDE.md, `.gitignore` for Godot
   - Git repo with `main` as the default branch; first commit of the plan files on `main`, then branch `milestone-a` for the build
   - Optional: create the GitHub repo `asset-zero` under `scenebiscuit-cell` so pull requests work
@@ -22,30 +22,30 @@ How to hand a milestone to Claude Code (in VS Code, terminal at `C:\Projects\ass
   - **Do a test web export now** (single-threaded) and open it in a browser so web problems show up early
   - **Done when:** the project runs a dark empty screen on desktop AND in the browser
 
-- [ ] **Step 1: Player ship moves**
+- [x] **Step 1: Player ship moves**
   - XF-0 Light-class airframe in Gunship form (angular fighter silhouette, gunmetal with cyan accents) drawn with placeholder shapes (`Visual` child node)
   - Keyboard movement and mouse-follow movement, whichever was used last wins
   - Ship stays inside the screen
   - **Done when:** the ship moves smoothly with keyboard and mouse and can't leave the screen
 
-- [ ] **Step 2: M20 Autocannon + projectile pooling**
-  - Hold fire to shoot a stream of tracer rounds upward; auto-fire toggle
+- [x] **Step 2: M20 Autocannon + projectile pooling**
+  - Hold fire to shoot a stream of tracer rounds upward (auto-fire is a power-up now, not a key: DESIGN.md §7.3)
   - Placeholder effects in the Mech Havoc style (DESIGN.md §11 Effects reference): thin pale tracers and a warm muzzle-flash cone with additive blending
   - Rounds come from a pool (reused, not created/destroyed each shot)
   - **Done when:** holding fire shoots steadily and the projectile count stays stable (check the Remote scene tree / debugger)
 
-- [ ] **Step 3: Scrolling background + first enemy**
+- [x] **Step 3: Scrolling background + first enemy**
   - Scrolling placeholder jungle background (air layer and ground layer) using the Verdance palette, grain overlay and top-left lighting from DESIGN.md §11; air units cast drop shadows
   - RD-2 Recon Drone flies down in a line, takes damage, flashes white on hit, explodes (placeholder particles)
   - Drops salvage pickups that get pulled into the player when close; salvage counter in the debug output
   - **Done when:** you can shoot drones, they explode, and you collect salvage
 
-- [ ] **Step 4: Player damage and death**
+- [x] **Step 4: Player damage and death**
   - Armor (health), contact damage, enemy rounds, 1 s invulnerability with flashing and a splash effect, small hitbox
   - Death: airframe collapses into a liquid splash, MISSION FAILED → press a key to restart
   - **Done when:** you can die and restart cleanly with no leftover projectiles or enemies
 
-- [ ] **Step 5: Morph system + Combat Morph**
+- [x] **Step 5: Morph system + Combat Morph**
   - Shared **morph system**: tweens a Polygon2D (or set of polygons) from one point list to another. Airframe shapes stored as data (DESIGN.md §5.3 technical note)
   - Combat Morph from DESIGN.md §5.6: hold `morph` → Lance form (0.15 s morph), release → Gunship form
   - Lance form: 55% speed, 140% damage, autocannon fire converges into a tight stream
@@ -58,6 +58,7 @@ How to hand a milestone to Claude Code (in VS Code, terminal at `C:\Projects\ass
   - ID-4 Interceptor Drone, AA Emplacement (aims at player), Mining Platform, Armored Transport, HG-7 Gunship from DESIGN.md §8
   - Elite variant for any enemy: yellow outline, 2× HP, 2× salvage (module drops come later in Step 11)
   - Enemy stats live in Resource files (`data/enemies/*.tres`)
+  - Rare timed Fire Control pickup drop: auto-fire for ~10 s (DESIGN.md §7.3)
   - **Done when:** a test scene spawns each enemy, normal and elite, and each one behaves as described
 
 - [ ] **Step 7: Wave director + level flow**
@@ -122,6 +123,7 @@ How to hand a milestone to Claude Code (in VS Code, terminal at `C:\Projects\ass
 - [ ] **Step 17: Full run structure**
   - Title (click to start) → menu (Deploy, R&D, Settings) → mission briefing → L1 → Field Refit → Armory → L2 → … → boss → Mission Complete / Mission Failed
   - Combat Data earned (includes highest Threat reached), saved to `user://save.cfg`, R&D screen with ~6 unlocks
+  - Mission briefing sometimes offers the FC-1 Fire Control Computer for Combat Data (auto-fire for that run only); Settings → Accessibility → Auto-fire (DESIGN.md §7.3)
   - **Done when:** a full run works start to finish, and unlocks persist after closing the game
 
 ## Milestone E — Polish and release
@@ -148,6 +150,7 @@ How to hand a milestone to Claude Code (in VS Code, terminal at `C:\Projects\ass
 
 Write down decisions here as you make them (date — decision), so the AI tools know about them.
 
+- 2026-11-02 — Auto-fire is no longer a standard control (F key removed). It comes from the FC-1 Fire Control Computer (one-run purchase for Combat Data at the briefing, only when offered) or a rare timed Fire Control pickup; an Accessibility setting keeps it available for players who need it. DESIGN.md §5.5, §7.3, §13.
 - 2026-11-02 — Effects reference added from Mech Havoc footage (DESIGN.md §11): glowing muzzle cones, thin tracers, cyan beam lasers with bloom, red glowing enemy streaks, coral warning circles, flash → sparks → debris smoke trails → scorch. Raptor stays the world/ship reference.
 - 2026-11-02 — Detailed art direction written from 2015 Edition gameplay footage (DESIGN.md §11): palette, terrain, drop shadows, grain, explosions, minimal HUD + terminal-style shop. Kept our pink enemy bullets and gunmetal/cyan player.
 - 2026-11-02 — Art direction: aim for a look similar to Raptor: Call of the Shadows (2026 update) — grounded top-down military terrain, shaded metal aircraft, big explosions. Reference screenshots in gitignored `art-reference/raptor/` (study only). See DESIGN.md §11.

@@ -113,7 +113,7 @@ The ship always looks like a hard-edged military aircraft. The liquid metal show
 | Fire | Hold Space or J | Hold left mouse button |
 | Combat Morph (Lance form) | Hold Shift or K | Hold right mouse button |
 | Overclock | E or L | Middle mouse button |
-| Auto-fire toggle | F | Settings option |
+| Auto-fire | — (no key) | Only from Fire Control power-ups (§7.3) or the accessibility setting |
 | Pause | Esc / P | — |
 
 Keyboard and mouse can both work in the same session. Whichever moved last takes control.
@@ -246,6 +246,15 @@ Small simple upgrades: AP Rounds (+10% damage), Improved Feed (+10% fire rate), 
 ### 7.2 Meta unlocks (demo)
 
 Spend Combat Data in **R&D** on the main menu to unlock systems so they can appear in offers. Example: Beam Laser line (locked at start), Vector Dash, Mk3 Cluster Missile, Drone Bay module, Retention Matrix, +1 Armory slot. Keep it to ~6 unlocks for the demo.
+
+### 7.3 Fire Control (auto-fire power-ups)
+
+Auto-fire is not a standard control. It comes from two power-ups:
+
+- **FC-1 Fire Control Computer (one-run refit):** sometimes offered on the Mission Briefing screen before a run, bought with Combat Data. Gives auto-fire for that run only; it must be bought again before each run, and only when it's offered.
+- **Fire Control pickup (timed):** a rare drop from destroyed enemies. Turns on auto-fire for ~10 s (tunable). Pooled like other pickups.
+
+Separately, **Settings → Accessibility → Auto-fire** (off by default) gives always-on auto-fire for players who can't hold a button for long.
 
 ## 8. Enemies (sector 1, Halcyon Security Division)
 
@@ -465,7 +474,7 @@ Title (Click to start) → Main menu (Deploy, R&D, Settings) → Mission briefin
 
 HUD: Armor bar, Plating bar, Overclock meter, salvage count, weight class, HSD Threat label, assimilated weapon icon, level number, auto-fire indicator.
 
-Settings: master/music/SFX volume, screen shake on/off, auto-fire on/off.
+Settings: master/music/SFX volume, screen shake on/off, Accessibility: auto-fire on/off (off by default, §7.3).
 
 ## 14. Technical summary
 

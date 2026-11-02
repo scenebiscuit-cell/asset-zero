@@ -1,19 +1,31 @@
 class_name Player
 extends Area2D
-## XF-0. Handles movement only for now.
+## XF-0. Moves and tells its weapons when to fire.
 
 enum InputMode { KEYBOARD, MOUSE }
 
 @export var move_speed: float = 300.0
 ## Keeps the airframe visual fully on screen, not just its centre.
 @export var screen_margin: Vector2 = Vector2(26.0, 36.0)
+## Set by whatever scene the player is placed in; rounds live there, not on the ship.
+@export var round_pool: RoundPool
 
+var autofire: bool = false
 var _input_mode: InputMode = InputMode.KEYBOARD
+
+@onready var _autocannon: Autocannon = $Autocannon
+
+
+func _ready() -> void:
+	_autocannon.round_pool = round_pool
 
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion:
 		_input_mode = InputMode.MOUSE
+	elif event.is_action_pressed("toggle_autofire"):
+		autofire = not autofire
+		print("Auto-fire: ", "ON" if autofire else "OFF") # Temporary until the HUD exists.
 
 
 func _physics_process(delta: float) -> void:
@@ -28,6 +40,7 @@ func _physics_process(delta: float) -> void:
 		position = position.move_toward(get_global_mouse_position(), move_speed * delta)
 
 	_clamp_to_screen()
+	_autocannon.firing = autofire or Input.is_action_pressed("fire")
 
 
 func _clamp_to_screen() -> void:

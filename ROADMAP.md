@@ -28,7 +28,7 @@ How to hand a milestone to Claude Code (in VS Code, terminal at `C:\Projects\ass
   - Ship stays inside the screen
   - **Done when:** the ship moves smoothly with keyboard and mouse and can't leave the screen
 
-- [ ] **Step 2: M20 Autocannon + projectile pooling**
+- [x] **Step 2: M20 Autocannon + projectile pooling**
   - Hold fire to shoot a stream of tracer rounds upward; auto-fire toggle
   - Rounds come from a pool (reused, not created/destroyed each shot)
   - **Done when:** holding fire shoots steadily and the projectile count stays stable (check the Remote scene tree / debugger)

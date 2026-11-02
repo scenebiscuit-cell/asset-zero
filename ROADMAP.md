@@ -22,7 +22,7 @@ How to hand a milestone to Claude Code (in VS Code, terminal at `C:\Projects\ass
   - **Do a test web export now** (single-threaded) and open it in a browser so web problems show up early
   - **Done when:** the project runs a dark empty screen on desktop AND in the browser
 
-- [ ] **Step 1: Player ship moves**
+- [x] **Step 1: Player ship moves**
   - XF-0 Light-class airframe in Gunship form (angular fighter silhouette, gunmetal with cyan accents) drawn with placeholder shapes (`Visual` child node)
   - Keyboard movement and mouse-follow movement, whichever was used last wins
   - Ship stays inside the screen

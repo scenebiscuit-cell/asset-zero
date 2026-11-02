@@ -79,6 +79,15 @@ pause={
 ]
 }
 
+[layer_names]
+
+2d_physics/layer_1="player"
+2d_physics/layer_2="player_bullets"
+2d_physics/layer_3="enemies_air"
+2d_physics/layer_4="enemies_ground"
+2d_physics/layer_5="enemy_bullets"
+2d_physics/layer_6="pickups"
+
 [rendering]
 
 renderer/rendering_method="gl_compatibility"

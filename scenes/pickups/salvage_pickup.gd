@@ -1,8 +1,6 @@
 class_name SalvagePickup
-extends Area2D
+extends PooledObject
 ## Pooled salvage scrap. Bursts out, drifts with the ground, then gets pulled into XF-0.
-
-signal expired(pickup: SalvagePickup)
 
 @export var magnet_radius: float = 90.0
 @export var collect_radius: float = 16.0
@@ -17,8 +15,6 @@ var value: int = 1
 var _target: Node2D
 var _velocity: Vector2 = Vector2.ZERO
 var _magnetized: bool = false
-# Starts true so the pool's first deactivate() files it as free.
-var _active: bool = true
 
 @onready var _visual: Node2D = $Visual
 
@@ -29,18 +25,7 @@ func activate(start: Vector2, velocity: Vector2, pickup_value: int, target: Node
 	value = pickup_value
 	_target = target
 	_magnetized = false
-	_active = true
-	visible = true
-	set_physics_process(true)
-
-
-func deactivate() -> void:
-	if not _active:
-		return
-	_active = false
-	visible = false
-	set_physics_process(false)
-	expired.emit(self)
+	_start()
 
 
 func _physics_process(delta: float) -> void:

@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3]
+[gd_scene load_steps=15 format=3]
 
 [ext_resource type="Script" path="res://scenes/levels/level.gd" id="1_level"]
 [ext_resource type="Script" path="res://scenes/levels/background_layer.gd" id="2_bg"]
@@ -11,6 +11,8 @@
 [ext_resource type="PackedScene" path="res://scenes/player/player.tscn" id="9_player"]
 [ext_resource type="Shader" path="res://scenes/levels/terrain_grain.gdshader" id="10_grain"]
 [ext_resource type="Script" path="res://scenes/fx/explosion_pool.gd" id="11_explosion_pool"]
+[ext_resource type="PackedScene" path="res://scenes/weapons/enemy_round.tscn" id="12_enemy_round"]
+[ext_resource type="PackedScene" path="res://scenes/ui/mission_failed.tscn" id="13_mission_failed"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_grain"]
 shader = ExtResource("10_grain")
@@ -41,13 +43,21 @@ explosion_scene = ExtResource("4_explosion")
 
 [node name="SalvagePool" type="Node2D" parent="." node_paths=PackedStringArray("player")]
 script = ExtResource("5_salvage_pool")
-pickup_scene = ExtResource("6_salvage")
 player = NodePath("../Player")
+scene = ExtResource("6_salvage")
+pool_size = 48
 
 [node name="PlayerRoundPool" type="Node2D" parent="."]
 script = ExtResource("7_round_pool")
-round_scene = ExtResource("8_round")
+scene = ExtResource("8_round")
 
 [node name="Player" parent="." node_paths=PackedStringArray("round_pool") instance=ExtResource("9_player")]
 position = Vector2(270, 820)
 round_pool = NodePath("../PlayerRoundPool")
+
+[node name="EnemyRoundPool" type="Node2D" parent="."]
+script = ExtResource("7_round_pool")
+scene = ExtResource("12_enemy_round")
+pool_size = 200
+
+[node name="MissionFailed" parent="." instance=ExtResource("13_mission_failed")]

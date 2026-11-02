@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3]
+[gd_scene load_steps=9 format=3]
 
 [ext_resource type="Script" path="res://scenes/player/player.gd" id="1_player"]
 [ext_resource type="Script" path="res://scenes/weapons/autocannon.gd" id="2_autocannon"]
@@ -11,8 +11,17 @@ radius = 6.0
 [sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_add"]
 blend_mode = 1
 
+[sub_resource type="Gradient" id="Gradient_metal"]
+offsets = PackedFloat32Array(0, 0.5, 1)
+colors = PackedColorArray(0.85, 0.9, 0.95, 1, 0.45, 0.5, 0.55, 1, 0.3, 0.33, 0.36, 0)
+
+[sub_resource type="Gradient" id="Gradient_death"]
+offsets = PackedFloat32Array(0, 0.15, 0.6, 1)
+colors = PackedColorArray(1, 1, 1, 1, 0.6, 0.95, 1, 1, 0.45, 0.5, 0.55, 1, 0.3, 0.33, 0.36, 0)
+
 [node name="Player" type="Area2D"]
 collision_mask = 20
+monitorable = false
 script = ExtResource("1_player")
 
 [node name="Hitbox" type="CollisionShape2D" parent="."]
@@ -22,37 +31,76 @@ shape = SubResource("CircleShape2D_hitbox")
 z_index = -8
 script = ExtResource("4_shadow")
 shadow_offset = Vector2(12, 16)
+source_path = NodePath("../Visual/Airframe")
 shape_names = PackedStringArray("Hull")
 
 [node name="Visual" type="Node2D" parent="."]
 
-[node name="Barrel" type="Polygon2D" parent="Visual"]
+[node name="Airframe" type="Node2D" parent="Visual"]
+
+[node name="Barrel" type="Polygon2D" parent="Visual/Airframe"]
 color = Color(0.17, 0.19, 0.21, 1)
 polygon = PackedVector2Array(-1.5, -35, 1.5, -35, 1.5, -20, -1.5, -20)
 
-[node name="Hull" type="Polygon2D" parent="Visual"]
+[node name="Hull" type="Polygon2D" parent="Visual/Airframe"]
 color = Color(0.29, 0.32, 0.36, 1)
 polygon = PackedVector2Array(0, -30, 5, -16, 7, -4, 22, 6, 24, 12, 8, 10, 9, 20, 4, 22, 0, 18, -4, 22, -9, 20, -8, 10, -24, 12, -22, 6, -7, -4, -5, -16)
 
-[node name="Highlight" type="Polygon2D" parent="Visual"]
+[node name="Highlight" type="Polygon2D" parent="Visual/Airframe"]
 color = Color(0.6, 0.64, 0.68, 1)
 polygon = PackedVector2Array(0, -26, 2.5, -14, 2, 6, 0, 12, -2, 6, -2.5, -14)
 
-[node name="Sensor" type="Polygon2D" parent="Visual"]
+[node name="Sensor" type="Polygon2D" parent="Visual/Airframe"]
 color = Color(0.21, 0.88, 1, 1)
 polygon = PackedVector2Array(0, -21, 1.5, -15, 0, -11, -1.5, -15)
 
-[node name="WingLightL" type="Polygon2D" parent="Visual"]
+[node name="WingLightL" type="Polygon2D" parent="Visual/Airframe"]
 color = Color(0.21, 0.88, 1, 1)
 polygon = PackedVector2Array(-24, 12, -22, 6, -20, 7, -21, 11.7)
 
-[node name="WingLightR" type="Polygon2D" parent="Visual"]
+[node name="WingLightR" type="Polygon2D" parent="Visual/Airframe"]
 color = Color(0.21, 0.88, 1, 1)
 polygon = PackedVector2Array(24, 12, 22, 6, 20, 7, 21, 11.7)
 
-[node name="EngineGlow" type="Polygon2D" parent="Visual"]
+[node name="EngineGlow" type="Polygon2D" parent="Visual/Airframe"]
 color = Color(0.21, 0.88, 1, 0.85)
 polygon = PackedVector2Array(-3, 19, 3, 19, 2, 26, -2, 26)
+
+[node name="HitSplash" type="CPUParticles2D" parent="Visual"]
+emitting = false
+amount = 14
+lifetime = 0.4
+one_shot = true
+explosiveness = 1.0
+local_coords = false
+direction = Vector2(0, -1)
+spread = 180.0
+gravity = Vector2(0, 300)
+initial_velocity_min = 80.0
+initial_velocity_max = 180.0
+damping_min = 60.0
+damping_max = 120.0
+scale_amount_min = 1.5
+scale_amount_max = 3.0
+color_ramp = SubResource("Gradient_metal")
+
+[node name="DeathSplash" type="CPUParticles2D" parent="Visual"]
+emitting = false
+amount = 48
+lifetime = 0.9
+one_shot = true
+explosiveness = 0.9
+local_coords = false
+direction = Vector2(0, -1)
+spread = 110.0
+gravity = Vector2(0, 420)
+initial_velocity_min = 100.0
+initial_velocity_max = 280.0
+damping_min = 20.0
+damping_max = 60.0
+scale_amount_min = 2.0
+scale_amount_max = 4.5
+color_ramp = SubResource("Gradient_death")
 
 [node name="Autocannon" type="Node2D" parent="."]
 position = Vector2(0, -35)

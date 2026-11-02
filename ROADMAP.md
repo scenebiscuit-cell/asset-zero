@@ -40,7 +40,7 @@ How to hand a milestone to Claude Code (in VS Code, terminal at `C:\Projects\ass
   - Drops salvage pickups that get pulled into the player when close; salvage counter in the debug output
   - **Done when:** you can shoot drones, they explode, and you collect salvage
 
-- [ ] **Step 4: Player damage and death**
+- [x] **Step 4: Player damage and death**
   - Armor (health), contact damage, enemy rounds, 1 s invulnerability with flashing and a splash effect, small hitbox
   - Death: airframe collapses into a liquid splash, MISSION FAILED → press a key to restart
   - **Done when:** you can die and restart cleanly with no leftover projectiles or enemies

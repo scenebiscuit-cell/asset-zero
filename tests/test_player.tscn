@@ -8,7 +8,7 @@
 
 [node name="PlayerRoundPool" type="Node2D" parent="."]
 script = ExtResource("2_pool")
-round_scene = ExtResource("3_round")
+scene = ExtResource("3_round")
 
 [node name="Player" parent="." node_paths=PackedStringArray("round_pool") instance=ExtResource("1_player")]
 position = Vector2(270, 820)

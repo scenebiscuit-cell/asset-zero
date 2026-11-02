@@ -1,0 +1,37 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scenes/ui/mission_failed.gd" id="1_screen"]
+
+[node name="MissionFailed" type="CanvasLayer"]
+layer = 10
+script = ExtResource("1_screen")
+
+[node name="Dim" type="ColorRect" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.6)
+
+[node name="Lines" type="VBoxContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+
+[node name="Title" type="Label" parent="Lines"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.7, 0.2, 1)
+theme_override_font_sizes/font_size = 44
+text = "MISSION_FAILED"
+horizontal_alignment = 1
+
+[node name="Hint" type="Label" parent="Lines"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.7, 0.2, 0.75)
+theme_override_font_sizes/font_size = 18
+text = "PRESS_KEY_RESTART"
+horizontal_alignment = 1

@@ -1,0 +1,42 @@
+[gd_scene load_steps=10 format=3]
+
+[ext_resource type="Script" path="res://scenes/levels/level.gd" id="1_level"]
+[ext_resource type="Script" path="res://scenes/levels/background_layer.gd" id="2_bg"]
+[ext_resource type="PackedScene" path="res://scenes/enemies/recon_drone/recon_drone.tscn" id="3_drone"]
+[ext_resource type="PackedScene" path="res://scenes/fx/explosion.tscn" id="4_explosion"]
+[ext_resource type="Script" path="res://scenes/pickups/salvage_pool.gd" id="5_salvage_pool"]
+[ext_resource type="PackedScene" path="res://scenes/pickups/salvage_pickup.tscn" id="6_salvage"]
+[ext_resource type="Script" path="res://scenes/weapons/round_pool.gd" id="7_round_pool"]
+[ext_resource type="PackedScene" path="res://scenes/weapons/player_round.tscn" id="8_round"]
+[ext_resource type="PackedScene" path="res://scenes/player/player.tscn" id="9_player"]
+
+[node name="Level" type="Node2D"]
+script = ExtResource("1_level")
+drone_scene = ExtResource("3_drone")
+explosion_scene = ExtResource("4_explosion")
+
+[node name="GroundLayer" type="Node2D" parent="."]
+script = ExtResource("2_bg")
+
+[node name="HazeLayer" type="Node2D" parent="."]
+script = ExtResource("2_bg")
+style = 1
+scroll_speed = 150.0
+pattern_seed = 902
+
+[node name="Enemies" type="Node2D" parent="."]
+
+[node name="FX" type="Node2D" parent="."]
+
+[node name="SalvagePool" type="Node2D" parent="." node_paths=PackedStringArray("player")]
+script = ExtResource("5_salvage_pool")
+pickup_scene = ExtResource("6_salvage")
+player = NodePath("../Player")
+
+[node name="PlayerRoundPool" type="Node2D" parent="."]
+script = ExtResource("7_round_pool")
+round_scene = ExtResource("8_round")
+
+[node name="Player" parent="." node_paths=PackedStringArray("round_pool") instance=ExtResource("9_player")]
+position = Vector2(270, 820)
+round_pool = NodePath("../PlayerRoundPool")

@@ -13,6 +13,10 @@ var _velocity: Vector2 = Vector2.ZERO
 var _active: bool = true
 
 
+func _ready() -> void:
+	area_entered.connect(_on_area_entered)
+
+
 func activate(start: Vector2, velocity: Vector2, round_damage: int) -> void:
 	global_position = start
 	rotation = velocity.angle() + PI / 2.0
@@ -40,4 +44,12 @@ func deactivate() -> void:
 func _physics_process(delta: float) -> void:
 	position += _velocity * delta
 	if not get_viewport_rect().grow(OFFSCREEN_MARGIN).has_point(global_position):
+		deactivate()
+
+
+func _on_area_entered(area: Area2D) -> void:
+	if not _active:
+		return
+	if area is Enemy:
+		(area as Enemy).take_damage(damage)
 		deactivate()

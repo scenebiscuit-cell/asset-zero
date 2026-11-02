@@ -33,7 +33,7 @@ How to hand a milestone to Claude Code (in VS Code, terminal at `C:\Projects\ass
   - Rounds come from a pool (reused, not created/destroyed each shot)
   - **Done when:** holding fire shoots steadily and the projectile count stays stable (check the Remote scene tree / debugger)
 
-- [ ] **Step 3: Scrolling background + first enemy**
+- [x] **Step 3: Scrolling background + first enemy**
   - Scrolling placeholder jungle background (air layer and ground layer)
   - RD-2 Recon Drone flies down in a line, takes damage, flashes white on hit, explodes (placeholder particles)
   - Drops salvage pickups that get pulled into the player when close; salvage counter in the debug output

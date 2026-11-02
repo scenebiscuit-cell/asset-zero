@@ -1,9 +1,8 @@
-[gd_resource type="Resource" script_class="WeaponData" load_steps=2 format=3]
+[gd_resource type="Resource" script_class="WeaponData" format=3 uid="uid://bhrv8kl1o8mvb"]
 
-[ext_resource type="Script" path="res://resources/weapon_data.gd" id="1_weapon"]
+[ext_resource type="Script" uid="uid://dl6hpmqrn2lh" path="res://resources/weapon_data.gd" id="1_weapon"]
 
 [resource]
 script = ExtResource("1_weapon")
-fire_interval = 0.07
-round_speed = 1100.0
-damage = 10
+fire_interval = 0.08
+round_speed = 1000.0

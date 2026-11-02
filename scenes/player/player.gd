@@ -10,6 +10,7 @@ enum InputMode { KEYBOARD, MOUSE }
 ## Set by whatever scene the player is placed in; rounds live there, not on the ship.
 @export var round_pool: RoundPool
 
+## Turned on by Fire Control power-ups or the accessibility setting (DESIGN.md §7.3), never by a key.
 var autofire: bool = false
 var _input_mode: InputMode = InputMode.KEYBOARD
 
@@ -23,9 +24,6 @@ func _ready() -> void:
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion:
 		_input_mode = InputMode.MOUSE
-	elif event.is_action_pressed("toggle_autofire"):
-		autofire = not autofire
-		print("Auto-fire: ", "ON" if autofire else "OFF") # Temporary until the HUD exists.
 
 
 func _physics_process(delta: float) -> void:

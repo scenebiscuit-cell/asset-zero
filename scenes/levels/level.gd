@@ -3,7 +3,6 @@ extends Node2D
 ## Runs one level. For now it just sends lines of RD-2 drones; the wave director replaces that in Step 7.
 
 @export var drone_scene: PackedScene
-@export var explosion_scene: PackedScene
 @export var line_interval: float = 2.5
 @export var drones_per_line: int = 5
 @export var line_spacing: float = 48.0
@@ -13,7 +12,7 @@ extends Node2D
 var _spawn_timer: float = 1.0
 
 @onready var _enemies: Node2D = $Enemies
-@onready var _fx: Node2D = $FX
+@onready var _explosion_pool: ExplosionPool = $FX/ExplosionPool
 @onready var _salvage_pool: SalvagePool = $SalvagePool
 
 
@@ -38,7 +37,5 @@ func _spawn_drone_line() -> void:
 
 
 func _on_enemy_destroyed(enemy: Enemy) -> void:
-	var explosion: Node2D = explosion_scene.instantiate() as Node2D
-	explosion.position = enemy.global_position
-	_fx.add_child(explosion)
+	_explosion_pool.spawn(enemy.global_position)
 	_salvage_pool.spawn_burst(enemy.global_position, enemy.data.salvage)

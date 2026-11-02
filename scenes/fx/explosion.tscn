@@ -1,33 +1,82 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene load_steps=4 format=3]
 
 [ext_resource type="Script" path="res://scenes/fx/explosion.gd" id="1_explosion"]
 
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_add"]
+blend_mode = 1
+
 [sub_resource type="Gradient" id="Gradient_sparks"]
-offsets = PackedFloat32Array(0, 0.35, 1)
-colors = PackedColorArray(1, 0.95, 0.6, 1, 1, 0.5, 0.1, 1, 0.3, 0.1, 0.05, 0)
+offsets = PackedFloat32Array(0, 0.4, 1)
+colors = PackedColorArray(1, 0.9, 0.6, 1, 1, 0.69, 0.19, 1, 0.88, 0.31, 0.06, 0)
 
 [node name="Explosion" type="Node2D"]
 script = ExtResource("1_explosion")
 
 [node name="Visual" type="Node2D" parent="."]
 
+[node name="Scorch" type="Node2D" parent="Visual"]
+z_index = -9
+
+[node name="Outer" type="Polygon2D" parent="Visual/Scorch"]
+color = Color(0.035, 0.035, 0.03, 0.45)
+polygon = PackedVector2Array(0, -15, 9, -12, 15, -4, 13, 7, 6, 14, -4, 13, -13, 8, -15, -2, -10, -11)
+
+[node name="Inner" type="Polygon2D" parent="Visual/Scorch"]
+color = Color(0.02, 0.02, 0.015, 0.6)
+polygon = PackedVector2Array(0, -8, 6, -5, 7, 2, 3, 7, -4, 6, -8, 1, -6, -6)
+
+[node name="Smoke" type="Node2D" parent="Visual"]
+
+[node name="Puff1" type="Polygon2D" parent="Visual/Smoke"]
+polygon = PackedVector2Array(0, -10, 7, -7, 10, 0, 7, 7, 0, 10, -7, 7, -10, 0, -7, -7)
+
+[node name="Puff2" type="Polygon2D" parent="Visual/Smoke"]
+polygon = PackedVector2Array(0, -8, 5.6, -5.6, 8, 0, 5.6, 5.6, 0, 8, -5.6, 5.6, -8, 0, -5.6, -5.6)
+
+[node name="Puff3" type="Polygon2D" parent="Visual/Smoke"]
+polygon = PackedVector2Array(0, -7, 5, -5, 7, 0, 5, 5, 0, 7, -5, 5, -7, 0, -5, -5)
+
+[node name="Trails" type="Node2D" parent="Visual"]
+
+[node name="Fireballs" type="Node2D" parent="Visual"]
+
+[node name="Fireball1" type="Polygon2D" parent="Visual/Fireballs"]
+polygon = PackedVector2Array(0, -9, 6.4, -6.4, 9, 0, 6.4, 6.4, 0, 9, -6.4, 6.4, -9, 0, -6.4, -6.4)
+
+[node name="Fireball2" type="Polygon2D" parent="Visual/Fireballs"]
+polygon = PackedVector2Array(0, -7, 5, -5, 7, 0, 5, 5, 0, 7, -5, 5, -7, 0, -5, -5)
+
+[node name="Fireball3" type="Polygon2D" parent="Visual/Fireballs"]
+polygon = PackedVector2Array(0, -6, 4.2, -4.2, 6, 0, 4.2, 4.2, 0, 6, -4.2, 4.2, -6, 0, -4.2, -4.2)
+
+[node name="Debris" type="Node2D" parent="Visual"]
+
 [node name="Sparks" type="CPUParticles2D" parent="Visual"]
+material = SubResource("CanvasItemMaterial_add")
 emitting = false
-amount = 24
-lifetime = 0.5
+amount = 16
+lifetime = 0.45
 one_shot = true
 explosiveness = 1.0
 direction = Vector2(0, -1)
 spread = 180.0
 gravity = Vector2(0, 0)
-initial_velocity_min = 60.0
-initial_velocity_max = 200.0
-damping_min = 150.0
-damping_max = 250.0
-scale_amount_min = 2.0
-scale_amount_max = 4.0
+initial_velocity_min = 80.0
+initial_velocity_max = 240.0
+damping_min = 200.0
+damping_max = 320.0
+scale_amount_min = 1.5
+scale_amount_max = 3.0
 color_ramp = SubResource("Gradient_sparks")
 
-[node name="Flash" type="Polygon2D" parent="Visual"]
-color = Color(1, 0.95, 0.75, 1)
-polygon = PackedVector2Array(0, -16, 11, -11, 16, 0, 11, 11, 0, 16, -11, 11, -16, 0, -11, -11)
+[node name="Flash" type="Node2D" parent="Visual"]
+
+[node name="Glow" type="Polygon2D" parent="Visual/Flash"]
+material = SubResource("CanvasItemMaterial_add")
+color = Color(0.973, 0.847, 0.596, 0.5)
+polygon = PackedVector2Array(0, -22, 15.5, -15.5, 22, 0, 15.5, 15.5, 0, 22, -15.5, 15.5, -22, 0, -15.5, -15.5)
+
+[node name="Core" type="Polygon2D" parent="Visual/Flash"]
+material = SubResource("CanvasItemMaterial_add")
+color = Color(1, 0.98, 0.92, 0.9)
+polygon = PackedVector2Array(0, -11, 7.8, -7.8, 11, 0, 7.8, 7.8, 0, 11, -7.8, 7.8, -11, 0, -7.8, -7.8)

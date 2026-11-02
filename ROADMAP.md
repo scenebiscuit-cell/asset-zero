@@ -30,11 +30,12 @@ How to hand a milestone to Claude Code (in VS Code, terminal at `C:\Projects\ass
 
 - [x] **Step 2: M20 Autocannon + projectile pooling**
   - Hold fire to shoot a stream of tracer rounds upward; auto-fire toggle
+  - Placeholder effects in the Mech Havoc style (DESIGN.md §11 Effects reference): thin pale tracers and a warm muzzle-flash cone with additive blending
   - Rounds come from a pool (reused, not created/destroyed each shot)
   - **Done when:** holding fire shoots steadily and the projectile count stays stable (check the Remote scene tree / debugger)
 
 - [x] **Step 3: Scrolling background + first enemy**
-  - Scrolling placeholder jungle background (air layer and ground layer)
+  - Scrolling placeholder jungle background (air layer and ground layer) using the Verdance palette, grain overlay and top-left lighting from DESIGN.md §11; air units cast drop shadows
   - RD-2 Recon Drone flies down in a line, takes damage, flashes white on hit, explodes (placeholder particles)
   - Drops salvage pickups that get pulled into the player when close; salvage counter in the debug output
   - **Done when:** you can shoot drones, they explode, and you collect salvage
@@ -126,7 +127,7 @@ How to hand a milestone to Claude Code (in VS Code, terminal at `C:\Projects\ass
 ## Milestone E — Polish and release
 
 - [ ] **Step 18: Juice and sound**
-  - Hit-stop, screen shake (with toggle), muzzle flashes, more particles, Overclock and Assimilate effects
+  - Hit-stop, screen shake (with toggle), muzzle flashes, more particles, Overclock and Assimilate effects, clustered explosions with shockwave rings and ground scorch marks (DESIGN.md §11)
   - SFX for everything (jsfxr), level music and boss music, volume settings
   - **Done when:** the feel checklist in DESIGN.md §10 is all done
 
@@ -147,6 +148,9 @@ How to hand a milestone to Claude Code (in VS Code, terminal at `C:\Projects\ass
 
 Write down decisions here as you make them (date — decision), so the AI tools know about them.
 
+- 2026-11-02 — Effects reference added from Mech Havoc footage (DESIGN.md §11): glowing muzzle cones, thin tracers, cyan beam lasers with bloom, red glowing enemy streaks, coral warning circles, flash → sparks → debris smoke trails → scorch. Raptor stays the world/ship reference.
+- 2026-11-02 — Detailed art direction written from 2015 Edition gameplay footage (DESIGN.md §11): palette, terrain, drop shadows, grain, explosions, minimal HUD + terminal-style shop. Kept our pink enemy bullets and gunmetal/cyan player.
+- 2026-11-02 — Art direction: aim for a look similar to Raptor: Call of the Shadows (2026 update) — grounded top-down military terrain, shaded metal aircraft, big explosions. Reference screenshots in gitignored `art-reference/raptor/` (study only). See DESIGN.md §11.
 - 2026-10-31 — Workflow: one milestone per Claude Code session, small checked steps inside it, branch + pull request per milestone, merge only on "merge". Copilot dropped; `.github/copilot-instructions.md` kept as project notes.
 - 2026-10-29 — Renamed the game to ASSET ZERO (plain English, works for international players, comes from the story). Needs a trademark check before Steam.
 - 2026-10-29 — Added Combat Morph, Assimilate, Overclock and Threat Level as the game's core hook. Contract board, ramming build and laser-designated strikes parked in DESIGN.md "Later".

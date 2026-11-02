@@ -5,3 +5,7 @@
 
 # Web/desktop builds
 export/
+.import/
+
+# Reference screenshots: study only, never commit (CLAUDE.md)
+art-reference/

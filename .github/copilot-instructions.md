@@ -37,9 +37,11 @@ ASSET ZERO is a vertical-scrolling roguelite shoot 'em up made in **Godot 4 with
 - Weapon systems, refits, weapon modules, enemies, waves, levels and airframe shapes are **custom Resources** (`class_name WeaponData extends Resource`, etc.) stored as `.tres` files under `data/`.
 - Use **signals** to talk upward (child → parent / to the game), direct calls downward.
 - Global state lives in autoloads only: `GameState` (run data: salvage, armor, installed refits, assimilated module, overclock meter, threat level), `Events` (global signal bus), `SaveManager` (meta progression and settings), `AudioManager`.
-- **Pool** player rounds, missiles, enemy rounds and pickups. Never `queue_free()` / `instantiate()` per projectile.
+- **Pool** player rounds, missiles, enemy rounds, pickups and effect scenes (explosions, impact sparks). Never `queue_free()` / `instantiate()` per projectile.
+- Effects follow DESIGN.md §11 "Effects reference": additive-blend glow sprites, GPUParticles2D (CPUParticles2D fallback for web), Line2D smoke trails, capped particle counts.
 - Every object's visuals go in a child node named `Visual` so placeholder art can be swapped later without touching logic.
 - Placeholder art is drawn in code or with Polygon2D/Line2D. Do not add image files unless asked.
+- `art-reference/` holds reference screenshots from other games (see DESIGN.md §11). Look at them for direction only: never copy, trace, import into the project or commit them. Keep `art-reference/` in `.gitignore`.
 - Use collision layers consistently (see below). Don't make everything collide with everything.
 - Comment the *why*, not the *what*. Short comments only.
 - All player-facing text goes through Godot's translation system (`tr()` with keys in a CSV), so the game can be translated later. Keep text short and plain.

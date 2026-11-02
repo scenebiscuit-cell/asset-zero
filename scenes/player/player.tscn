@@ -1,9 +1,13 @@
-[gd_scene load_steps=9 format=3]
+[gd_scene load_steps=13 format=3]
 
 [ext_resource type="Script" path="res://scenes/player/player.gd" id="1_player"]
 [ext_resource type="Script" path="res://scenes/weapons/autocannon.gd" id="2_autocannon"]
 [ext_resource type="Resource" path="res://data/weapons/m20_autocannon.tres" id="3_m20"]
 [ext_resource type="Script" path="res://scenes/fx/drop_shadow.gd" id="4_shadow"]
+[ext_resource type="Script" path="res://scenes/fx/morph/morph_system.gd" id="5_morph"]
+[ext_resource type="Script" path="res://scenes/player/combat_morph.gd" id="6_combat_morph"]
+[ext_resource type="Resource" path="res://data/shapes/xf0_light_gunship.tres" id="7_gunship"]
+[ext_resource type="Resource" path="res://data/shapes/xf0_light_lance.tres" id="8_lance"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_hitbox"]
 radius = 6.0
@@ -101,6 +105,14 @@ damping_max = 60.0
 scale_amount_min = 2.0
 scale_amount_max = 4.5
 color_ramp = SubResource("Gradient_death")
+
+[node name="MorphSystem" type="Node" parent="."]
+script = ExtResource("5_morph")
+
+[node name="CombatMorph" type="Node" parent="."]
+script = ExtResource("6_combat_morph")
+gunship_shape = ExtResource("7_gunship")
+lance_shape = ExtResource("8_lance")
 
 [node name="Autocannon" type="Node2D" parent="."]
 position = Vector2(0, -35)

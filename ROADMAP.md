@@ -45,7 +45,7 @@ How to hand a milestone to Claude Code (in VS Code, terminal at `C:\Projects\ass
   - Death: airframe collapses into a liquid splash, MISSION FAILED → press a key to restart
   - **Done when:** you can die and restart cleanly with no leftover projectiles or enemies
 
-- [ ] **Step 5: Morph system + Combat Morph**
+- [x] **Step 5: Morph system + Combat Morph**
   - Shared **morph system**: tweens a Polygon2D (or set of polygons) from one point list to another. Airframe shapes stored as data (DESIGN.md §5.3 technical note)
   - Combat Morph from DESIGN.md §5.6: hold `morph` → Lance form (0.15 s morph), release → Gunship form
   - Lance form: 55% speed, 140% damage, autocannon fire converges into a tight stream

@@ -13,6 +13,9 @@ extends Node2D
 
 var round_pool: RoundPool
 var firing: bool = false
+## Set by Combat Morph: Lance form fires dead straight and hits harder.
+var converged: bool = false
+var damage_multiplier: float = 1.0
 var _cooldown: float = 0.0
 var _flash_time: float = 0.0
 
@@ -30,7 +33,10 @@ func _physics_process(delta: float) -> void:
 		_cooldown = maxf(_cooldown, 0.0)
 		return
 	if _cooldown <= 0.0:
-		round_pool.fire(global_position, Vector2.UP * data.round_speed, data.damage)
+		var direction: Vector2 = Vector2.UP
+		if not converged and data.spread_degrees > 0.0:
+			direction = direction.rotated(deg_to_rad(randf_range(-data.spread_degrees, data.spread_degrees)))
+		round_pool.fire(global_position, direction * data.round_speed, roundi(data.damage * damage_multiplier))
 		_cooldown += data.fire_interval
 		_show_flash()
 

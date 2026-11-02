@@ -24,7 +24,9 @@ var _dead: bool = false
 @onready var _autocannon: Autocannon = $Autocannon
 @onready var _hitbox: CollisionShape2D = $Hitbox
 @onready var _airframe: Node2D = $Visual/Airframe
-@onready var _shadow: Node2D = $Shadow
+@onready var _shadow: DropShadow = $Shadow
+@onready var _morph_system: MorphSystem = $MorphSystem
+@onready var _combat_morph: CombatMorph = $CombatMorph
 @onready var _hit_splash: CPUParticles2D = $Visual/HitSplash
 @onready var _death_splash: CPUParticles2D = $Visual/DeathSplash
 
@@ -32,6 +34,8 @@ var _dead: bool = false
 func _ready() -> void:
 	_autocannon.round_pool = round_pool
 	area_entered.connect(_try_hit)
+	_morph_system.shape_changed.connect(_shadow.refresh)
+	_combat_morph.form_changed.connect(_on_form_changed)
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -44,11 +48,12 @@ func _physics_process(delta: float) -> void:
 	if direction != Vector2.ZERO:
 		_input_mode = InputMode.KEYBOARD
 
+	var speed: float = move_speed * _combat_morph.speed_multiplier()
 	if _input_mode == InputMode.KEYBOARD:
-		position += direction * move_speed * delta
+		position += direction * speed * delta
 	else:
-		# Capped at move_speed so mouse play isn't faster than keyboard.
-		position = position.move_toward(get_global_mouse_position(), move_speed * delta)
+		# Capped at speed so mouse play isn't faster than keyboard.
+		position = position.move_toward(get_global_mouse_position(), speed * delta)
 
 	_clamp_to_screen()
 	_autocannon.firing = autofire or Input.is_action_pressed("fire")
@@ -63,6 +68,14 @@ func take_damage(amount: int) -> void:
 		_die()
 		return
 	_invulnerable_left = invulnerable_time
+
+
+func _on_form_changed(is_lance: bool) -> void:
+	_autocannon.converged = is_lance
+	_autocannon.damage_multiplier = _combat_morph.damage_multiplier()
+	# The muzzle (and its flash) slides out to the new nose as the shape flows.
+	var muzzle: Vector2 = _combat_morph.current_shape().muzzle_offset
+	create_tween().tween_property(_autocannon, "position", muzzle, _combat_morph.morph_time)
 
 
 func _try_hit(area: Area2D) -> void:
@@ -95,6 +108,7 @@ func _die() -> void:
 	_dead = true
 	_autocannon.firing = false
 	set_physics_process(false)
+	_combat_morph.set_physics_process(false)
 	_hitbox.set_deferred("disabled", true)
 	_airframe.modulate.a = 1.0
 	_death_splash.restart()

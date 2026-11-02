@@ -6,3 +6,4 @@
 script = ExtResource("1_weapon")
 fire_interval = 0.08
 round_speed = 1000.0
+spread_degrees = 4.0

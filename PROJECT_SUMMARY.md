@@ -23,6 +23,8 @@ ASSET ZERO is a modern take on *Raptor: Call of the Shadows* (1994): a vertical-
 - The liquid metal shows only in moments: the ship flowing between shapes, salvage melting in, splashing when hit.
 - Placeholder art is simple vector shapes drawn in Godot: gunmetal and cyan for the player; orange, grey and hazard yellow for the enemy.
 - The interface looks like a military cockpit display.
+- **Art reference: Raptor: Call of the Shadows (2015 Edition).** Grounded top-down military terrain with a muted earthy palette (oxblood earth, teal water, concrete grey), fine grain, top-left lighting, drop shadows under aircraft, big clustered fireballs, scorched craters, minimal HUD and a terminal-style shop. Adapted to Verdance as jungle over rust-red mining pits. We keep our own pink enemy bullets and gunmetal/cyan jet. Details in DESIGN.md §11.
+- **Effects reference: Mech Havoc.** Glowing muzzle-flash cones, thin pale tracers, thick cyan lasers with a white core and bloom, red glowing enemy streaks, coral warning circles before area attacks, and explosions that go flash → sparks → debris with dark smoke trails → lingering scorch marks.
 
 ## Core hook (4 unique mechanics)
 1. **Combat Morph:** hold a button to flow from the wide Gunship form into the narrow Lance form (55% speed, 140% damage, all weapons focus forward). Release to flow back.

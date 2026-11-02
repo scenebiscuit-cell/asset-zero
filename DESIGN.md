@@ -296,7 +296,10 @@ When Threat rises, show a radio-chatter pop-up ("HSD-Control: Asset has grown. E
 - Small hit-stop (pause of ~30–60 ms) on big kills and when the player is hit
 - Screen shake on explosions (scaled by size, with a settings toggle)
 - Sparks, debris, smoke trails on missiles, shell casings from the autocannon
-- Muzzle flashes and tracer lines
+- Muzzle flashes (warm light cone) and thin pale tracer lines (§11 Effects reference)
+- Lasers with white core, cyan glow and bloom; flares at emitter and impact
+- Explosions: flash → sparks/embers → debris with dark smoke trails → lingering scorch mark
+- Coral warning circles before area attacks
 - Combat Morph feels instant and looks fluid; distinct sound for each direction
 - Near-miss sparks and a soft tick sound when grazing
 - Overclock activation: white flash, shockwave ring, all nearby enemy rounds melt into salvage
@@ -307,6 +310,127 @@ When Threat rises, show a radio-chatter pop-up ("HSD-Control: Asset has grown. E
 
 ## 11. Art direction
 
+### Visual reference: the direction we want
+
+**Reference:** *Raptor: Call of the Shadows* (2015 Edition and its 2026 60 FPS update). Gameplay footage: the 2015 Edition Steam trailer and https://www.youtube.com/watch?v=oMc3gF9bnUQ (Bravo Sector).
+
+Screenshots from this footage live in `art-reference/raptor/` on the developer's PC. That folder is **gitignored**: the images are someone else's copyrighted art and are for study only. Never copy, trace or ship them, and never commit them.
+
+What we learned from studying gameplay footage of the 2015 Edition (Nov 2, 2026). Aim for a *similar direction*, not a copy.
+
+**1. Overall look**
+- Grounded, top-down military realism: the world below is real terrain seen from straight above, not space or neon.
+- Muted, earthy world + hot, saturated action. The ground is dark and desaturated so ships, fire and pickups pop.
+- Every surface has a fine grain/noise texture (dithered look). Nothing is a flat fill.
+- Strong top-left light on everything: highlights top-left, shadows bottom-right.
+
+**2. Reference palette (sampled from the footage)**
+
+| Role | Colors | Notes |
+|---|---|---|
+| Earth / desert ground | `#5b2d2c` base, `#461f1f` shadow, `#715049` highlight | Dark oxblood red-brown, the dominant ground color |
+| Water | `#1b6259` deep, `#27645b` mid, `#457562` shallows | Deep teal, darker patches show depth |
+| Concrete / metal structures | `#6e6e6e` base, `#89816c` warm light, `#363331` shadow | Neutral grey with a slight warm tint |
+| Deep shadow / foliage | `#1e1e1b`, `#090c08` | Near-black, used for trees and cast shadows |
+| Fire and explosions | `#e4cc24` core, `#cc8424`, `#b45424`, `#9c3c24` edge | Yellow center to orange to dark red |
+| HUD text | `#ad5720` with `#4b1112` outline | Burnt orange digits with dark outline |
+| Pickups / shield hits | White-violet glow rings with a yellow star | The brightest, coolest thing on screen |
+
+**3. Terrain**
+- Biomes change within a level: red earth, teal water with ragged organic coastlines, concrete bases, dark tree clusters, bridges.
+- Bases are hard geometric shapes (walls, pipes, tanks, landing pads) with thin orange trim lines, sitting in organic terrain.
+- Ground targets (turrets, tanks, bunkers, storage tanks) are part of the terrain and leave **dark scorched craters and debris** when destroyed.
+- **Aircraft cast drop shadows on the ground**, offset down-right. This sells altitude and separates air from ground targets.
+- Terrain scrolls slowly and steadily; air units move much faster than the ground.
+
+**4. Ships**
+- Look like pre-rendered 3D models shrunk to sprites: metallic, beveled, clearly lit, with small details (cockpits, panel lines, engine nozzles).
+- Player jet is small (about 1/12 of the screen width), light grey/white with red accents. Enemies are gunmetal grey; bigger ships are multi-part and much larger.
+- Engine exhaust glows; muzzle flashes are small and bright.
+
+**5. Explosions and effects**
+- Big clustered fireballs: several round puffy blobs layered together, yellow core to red edge. Large kills chain several explosions and leave grey smoke haze.
+- White expanding shockwave rings on some hits.
+- Debris chunks and scorch marks stay on the ground afterward.
+
+**6. HUD and screens**
+- Minimal HUD: a money counter top-center (`$00027500` style, chunky bitmap digits), thin dark metal rails down both sides of the play area, warnings as bitmap text at the bottom ("SYSTEM DAMAGED / SHIELDS LOW").
+- Shop: a beveled gunmetal terminal frame around a black CRT screen showing an item icon, a short military-style product blurb in pixel text, and chunky red/green buttons.
+- Title logo: distressed, grungy lettering textured with terrain.
+
+**7. What we do differently (keeps ASSET ZERO original and fixes readability)**
+- **Enemy bullets stay hot pink/orange with a dark outline** (see placeholder rules). In the reference, small orange enemy shots blend into explosions; ours must never.
+- **Player palette stays gunmetal with cyan accents**, not white and red, so XF-0 is our own design.
+- **HUD:** keep the minimal layout and side rails, but use our cockpit-display style (amber/green monospace text on dark panels). The Field Refit and Armory screens borrow the beveled terminal frame + CRT screen idea.
+- No copying of any ship, logo, layout or sprite. The reference sets mood, palette range and readability rules only.
+
+**8. Applying it to Verdance (sector 1)**
+- Swap the reference's red desert for **jungle canopy (dark greens) over oxblood/rust earth**: the red-brown becomes **strip-mined pits and haul roads** cut through the jungle. This keeps the earthy palette and tells the story.
+- Teal water stays: rivers and tailings ponds (slightly toxic, greener teal).
+- HEG structures use the concrete greys with **hazard-yellow and orange trim** instead of thin orange lines.
+- Destroyed HEG machines leave scrap and scorch marks; salvage pickups glow like the reference's pickups (bright and cool-toned) so they read instantly.
+
+**9. Art production note**
+The reference's look comes from 3D-rendered, shaded sprites at low resolution. For final art, hand-painted sprites (painted large, shrunk down) or simple 3D renders can hit the same feel. Decide after the game is fun.
+
+
+### Effects reference: Mech Havoc (explosions, smoke, guns, lasers)
+
+**Reference:** *Mech Havoc* (PC), "Scavenged" mission highlights video (Mathilde heavy tank), studied Nov 2, 2026. Screenshots for study go in the gitignored `art-reference/mech-havoc/`. Same rule as above: direction only, never copy or commit.
+
+Raptor (above) sets the **world, terrain and ship look**. Mech Havoc sets the **weapon and effect feel**: modern, glowing, particle-heavy effects on top of a grounded top-down world. We take its effects, not its dark night palette.
+
+**1. Overall effect style**
+- Effects **emit light**: muzzle flashes, lasers, explosions and lamps glow and light up the ground around them (soft bloom). The scene is otherwise calm, so every shot reads.
+- Lots of small particles (sparks, embers, square debris chunks) rather than a few big sprites. Particles are chunky little squares and triangles, which fits a pixel-ish world.
+- Effects are short and punchy (a flash lasts a few frames), but **smoke and scorch marks linger** so the battlefield shows its history.
+
+**2. Guns (kinetic weapons)**
+- **Tracers:** very thin, long, pale straight lines (near-white `#f0ece0`, low opacity) that streak from the barrel to the target and fade within a fraction of a second. Fast and hitscan-looking.
+- **Muzzle flash:** a soft warm **cone of light** fanning forward from the barrel (`#f8d898` core fading to transparent), like a flashlight burst, plus a tiny bright dot at the muzzle. It briefly lights the ground in front.
+- **Impacts:** a small spray of bright sparks and a puff of grey square smoke particles at the hit point.
+
+**3. Lasers / energy beams**
+- **Thick continuous beam** with a **white-hot core** (`#e8ffff`) and a wide **cyan-teal glow** around it (`#40d8d0` fading out). The beam is perfectly straight, with soft bloom along its whole length.
+- **Flare at both ends:** a bright bloom at the emitter and a splash of sparks/glow where it hits.
+- The beam is on screen only while firing and snaps off cleanly; a faint afterglow fades over ~0.1 s.
+
+**4. Enemy fire**
+- Short **red glowing streaks** (capsule shape, `#e02838` with a soft red glow), easy to tell apart from the player's white tracers and cyan lasers.
+- **Area attacks are telegraphed** with a thin **salmon/coral circle outline** (`#c87868`) on the ground before they land, so the player can dodge.
+
+**5. Explosions**
+- **Big flash first:** a bright warm bloom (`#f8d898` to white) that floods the area for a few frames.
+- Then a **burst of orange sparks and embers** (`#ffb030` to `#e05010`) and **small dark debris chunks** thrown outward in all directions.
+- Barrage/mortar hits: many small sparkling impacts inside the warning circle, like fireworks on the ground.
+
+**6. Smoke**
+- **Debris trails:** flying debris leaves **thin dark grey-black smoke trails** that curve slightly and radiate out from the blast in a starburst. These linger for a few seconds and slowly fade. This is the signature look to copy in spirit.
+- **Drifting smoke:** low-opacity grey haze and square smoke puffs that drift with the scroll and fade.
+- **Scorch marks:** dark marks stay on the ground under destroyed targets.
+
+**7. How this maps to ASSET ZERO weapons**
+
+| ASSET ZERO weapon / effect | Look |
+|---|---|
+| M20 Autocannon line | Thin pale tracers + warm muzzle-flash cone + spark impacts (§2). Rounds are visible but fast. |
+| RG-9 Railgun | One extra-long, brighter tracer line that lingers slightly longer, with a sharp flash |
+| HEL Beam Laser line | Cyan beam with white core and bloom (§3); Thermal Lance adds orange glow on burning targets |
+| Seeker Missiles | Small bright exhaust glow with a **thin grey smoke trail** that curves as they home in; small explosion on hit |
+| GBU Bunker Buster | Big flash + debris starburst with smoke trails (§5, §6) |
+| Enemy rounds | Keep **hot pink/orange with dark outline** (our readability rule), and give them the soft glow of Mech Havoc's red streaks |
+| Boss / area attacks | Coral warning circle on the ground before impact (§4) |
+| Overclock | Meltdown pulse = a bright expanding ring + white-hot flash; the heat aura is a soft orange glow around XF-0 |
+| Explosions everywhere | Flash → sparks and embers → debris with smoke trails → lingering scorch mark |
+
+**8. How to build it in Godot (web-friendly)**
+- Use **GPUParticles2D** (or CPUParticles2D if the web build struggles) for sparks, embers, debris and smoke puffs.
+- Use **additive blending** (`CanvasItemMaterial` with blend mode Add) on glow sprites for muzzle flashes, laser glow and explosion flashes. This works in the Compatibility renderer.
+- Use Godot's **WorldEnvironment glow** for bloom if the Compatibility renderer in our Godot version supports it; otherwise fake bloom with soft additive glow sprites.
+- **Light2D** for muzzle flashes and explosions only if performance allows in the browser; otherwise the additive glow sprites are enough.
+- Smoke trails: **Line2D** whose points follow the debris/missile, fading out over time.
+- Keep particle counts capped (see §14 performance) and pool effect scenes like bullets.
+
 ### Placeholder phase (now)
 
 Simple vector / geometric shapes drawn in Godot (Polygon2D, Line2D or `_draw()`), no image files needed.
@@ -315,8 +439,12 @@ Simple vector / geometric shapes drawn in Godot (Polygon2D, Line2D or `_draw()`)
 - **Halcyon forces:** blocky, utilitarian industrial machines in grey/orange with hazard-yellow stripes. Elites get a yellow outline.
 - **Weapon modules:** glowing hexagons in the color of the enemy that dropped them, pulsing
 - **Enemy rounds:** hot pink/orange, round, with an outline, always the highest-contrast thing on screen
-- **Background:** dark green-black jungle gradient with simple scrolling shapes for terrain, roads and mining structures
-- **UI:** military cockpit display style: monospace font, green or amber text on dark panels, thin line borders, designation codes everywhere (like a mech game's loadout screen)
+- **Background:** top-down terrain using the Verdance palette from §11.8: dark jungle greens over oxblood/rust mining earth (`#5b2d2c` family), teal water (`#1b6259` family), concrete-grey HEG structures with hazard trim. Built from simple shapes for now, scrolling slowly in layers.
+- **Grain:** a light noise/grain overlay on the background (one cheap shader or a tiled noise texture) so nothing reads as a flat fill.
+- **Drop shadows:** every air unit (player and enemies) gets a dark, semi-transparent copy of its shape offset down-right on the ground layer. Ground units get no shadow. This is cheap and makes air vs. ground instantly readable.
+- **Explosions:** combine both references: a bright warm flash, clustered round fireballs from yellow `#e4cc24` through orange to dark red `#9c3c24` (Raptor), then sparks, embers and debris with dark smoke trails (Mech Havoc), a white shockwave ring on big kills, and a lingering scorch mark on the ground.
+- **Lighting:** shade shapes as if lit from the top-left (lighter top-left edges, darker bottom-right).
+- **UI:** military cockpit display style: monospace font, green or amber text on dark panels, thin line borders, designation codes everywhere (like a mech game's loadout screen). Gameplay HUD stays minimal: salvage counter top-center, thin dark metal rails down both sides, warnings as short text at the bottom. Field Refit and Armory use a beveled gunmetal terminal frame around a dark screen (§11.6).
 
 The look should say "military hardware" first. The liquid metal is the surprise in how it changes shape.
 

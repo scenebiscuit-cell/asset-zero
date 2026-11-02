@@ -1,4 +1,7 @@
+# Godot 4
 .godot/
+/android/
 *.tmp
+
+# Web/desktop builds
 export/
-.import/

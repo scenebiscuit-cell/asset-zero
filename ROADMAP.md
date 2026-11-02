@@ -11,7 +11,7 @@ How to hand a milestone to Claude Code (in VS Code, terminal at `C:\Projects\ass
 
 ## Milestone A — Flying, shooting and morphing feel good
 
-- [ ] **Step 0: Project setup**
+- [x] **Step 0: Project setup**
   - New Godot 4 project named `asset-zero`, Compatibility renderer
   - Window/viewport 540×960, stretch `canvas_items`, aspect `keep`
   - Input map actions: `move_up/down/left/right` (WASD + arrows), `fire` (Space, J, left mouse), `morph` (Shift, K, right mouse), `overclock` (E, L, middle mouse), `toggle_autofire` (F), `pause` (Esc, P)

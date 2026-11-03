@@ -469,7 +469,7 @@ Ships, vehicles and buildings are **3D models in Blender, rendered top-down into
 - **Hit flash, elite outline, drop shadow** are done in Godot on top of the sprite (white flash shader, yellow outline shader, shadow from the sprite silhouette), so they never need extra renders.
 - **Visual node rule stays:** each object's art lives in its `Visual` child, so swapping placeholder → sprite never touches game logic.
 - Exact numbers (sprite sizes, render scale, light angle, frame count) get locked in ART-1d and written here.
-- Schedule: ART-1 right after Milestone A, then ART-2 to ART-5 alongside Milestones B–E (ROADMAP.md).
+- Schedule: ART-1 and ART-2 when Milestone B is finished, then ART-3 to ART-5 alongside Milestones C–E (ROADMAP.md).
 ## 12. Audio
 
 - SFX: generated with jsfxr (free) during development. Heavy, punchy military sounds (cannon thumps, missile whooshes, alarm beeps), plus a metallic liquid sound for morphs, refits, assimilating and salvage pickups.

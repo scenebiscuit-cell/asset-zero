@@ -54,32 +54,6 @@ How to hand a milestone to Claude Code (in VS Code, terminal at `C:\Projects\ass
   - Distinct placeholder sound for each morph direction
   - **Done when:** tapping and holding morph feels instant, the shape flows smoothly both ways, and speed, damage and fire pattern change correctly
 
-### ART-1: Blender pipeline test (do this right after Milestone A)
-
-- [ ] **ART-1a: Install Blender and connect it to Claude Code** (you do this part by hand; Claude Code can help)
-  - Install **Blender 5.1 or newer** from blender.org (free)
-  - Install the official **Blender MCP add-on and server** from Blender Lab, following its Setup wiki: https://projects.blender.org/lab/blender_mcp/wiki/Setup (overview: https://www.blender.org/lab/mcp-server/). An MCP server is a plug-in that lets Claude Code control Blender.
-  - Add it to Claude Code (check the exact command against the Setup wiki), e.g. `claude mcp add blender -- uv --directory C:\blender_mcp\mcp run blender-mcp`
-  - Safety: the connection runs Claude's Python code inside Blender with no guards. Only open project files in Blender while it's connected, and save often.
-  - **Done when:** with Blender open and the add-on running, `claude mcp list` shows `blender` as connected, and asking Claude Code to "add a cube in Blender" makes a cube appear.
-
-- [ ] **ART-1b: Render rig + RD-2 Recon Drone**
-  - Create `art-source/blender/render_rig.blend`: orthographic camera looking straight down, transparent background, top-left key light + soft fill, metal materials (gunmetal, HEG grey/orange, hazard yellow) matching DESIGN.md §11
-  - A repeatable render script `art-source/render/render_sprites.py` that renders any model in the rig to `assets/sprites/<category>/<name>.png` at 4× the in-game size
-  - Model the RD-2 Recon Drone (simple, chunky shapes), render it, and swap it into the game in place of the polygon placeholder (keep the `Visual` node rule; the drop shadow must still work)
-  - **Done when:** the drone in-game looks like a shaded metal machine lit from the top-left, matches the Raptor reference feel, and still flashes white on hit and casts a shadow
-
-- [ ] **ART-1c: XF-0 Light class, both forms + morph frames**
-  - Model the XF-0 Light-class airframe in Gunship form, then make the Lance form as a **shape key** (a stored second shape of the same model that Blender can blend toward)
-  - Render the morph as a frame strip: Gunship → Lance in ~8 frames (`assets/sprites/player/xf0_light_morph.png`)
-  - Extend the existing **MorphSystem** with a frame-strip mode (same `morph_to()` / `snap_to()` API, tween drives the frame instead of polygon points). Don't write a second morph system. Polygon mode stays for anything without sprites yet.
-  - Drop shadow uses the current sprite frame's silhouette
-  - **Done when:** holding morph flows the rendered jet from Gunship to Lance and back as smoothly as the placeholder did, at 0.15 s, with the shadow following
-
-- [ ] **ART-1d: Lock the art rules**
-  - Write the final numbers into DESIGN.md §11 "Final art pipeline" (sprite sizes, render scale, light angle, material colors, morph frame count) and add a line to the decisions log
-  - **Done when:** DESIGN.md has the rules and you're happy with the look. If you're not, decide here whether to adjust the rig, paint over renders in Krita, or stay with placeholders for now.
-
 ## Milestone B — A real level
 
 - [ ] **Step 6: Enemy set + elites**
@@ -106,7 +80,33 @@ How to hand a milestone to Claude Code (in VS Code, terminal at `C:\Projects\ass
   - Overclock activation: Meltdown pulse turns nearby enemy rounds into salvage, 5 s of ×1.5 damage + heat aura that destroys rounds, salvage extends it (max 10 s), 0.5 s invulnerability at the end
   - **Done when:** you can fill the meter by grazing and collecting, trigger Overclock, and survive a dense bullet pattern with it
 
-- [ ] **ART-2: Enemy renders** (end of Milestone B)
+### ART-1: Blender pipeline test (do this when Milestone B is finished, before ART-2)
+
+- [ ] **ART-1a: Install Blender and connect it to Claude Code** (you do this part by hand; Claude Code can help)
+  - Install **Blender 5.1 or newer** from blender.org (free)
+  - Install the official **Blender MCP add-on and server** from Blender Lab, following its Setup wiki: https://projects.blender.org/lab/blender_mcp/wiki/Setup (overview: https://www.blender.org/lab/mcp-server/). An MCP server is a plug-in that lets Claude Code control Blender.
+  - Add it to Claude Code (check the exact command against the Setup wiki), e.g. `claude mcp add blender -- uv --directory C:\blender_mcp\mcp run blender-mcp`
+  - Safety: the connection runs Claude's Python code inside Blender with no guards. Only open project files in Blender while it's connected, and save often.
+  - **Done when:** with Blender open and the add-on running, `claude mcp list` shows `blender` as connected, and asking Claude Code to "add a cube in Blender" makes a cube appear.
+
+- [ ] **ART-1b: Render rig + RD-2 Recon Drone**
+  - Create `art-source/blender/render_rig.blend`: orthographic camera looking straight down, transparent background, top-left key light + soft fill, metal materials (gunmetal, HEG grey/orange, hazard yellow) matching DESIGN.md §11
+  - A repeatable render script `art-source/render/render_sprites.py` that renders any model in the rig to `assets/sprites/<category>/<name>.png` at 4× the in-game size
+  - Model the RD-2 Recon Drone (simple, chunky shapes), render it, and swap it into the game in place of the polygon placeholder (keep the `Visual` node rule; the drop shadow must still work)
+  - **Done when:** the drone in-game looks like a shaded metal machine lit from the top-left, matches the Raptor reference feel, and still flashes white on hit and casts a shadow
+
+- [ ] **ART-1c: XF-0 Light class, both forms + morph frames**
+  - Model the XF-0 Light-class airframe in Gunship form, then make the Lance form as a **shape key** (a stored second shape of the same model that Blender can blend toward)
+  - Render the morph as a frame strip: Gunship → Lance in ~8 frames (`assets/sprites/player/xf0_light_morph.png`)
+  - Extend the existing **MorphSystem** with a frame-strip mode (same `morph_to()` / `snap_to()` API, tween drives the frame instead of polygon points). Don't write a second morph system. Polygon mode stays for anything without sprites yet.
+  - Drop shadow uses the current sprite frame's silhouette
+  - **Done when:** holding morph flows the rendered jet from Gunship to Lance and back as smoothly as the placeholder did, at 0.15 s, with the shadow following
+
+- [ ] **ART-1d: Lock the art rules**
+  - Write the final numbers into DESIGN.md §11 "Final art pipeline" (sprite sizes, render scale, light angle, material colors, morph frame count) and add a line to the decisions log
+  - **Done when:** DESIGN.md has the rules and you're happy with the look. If you're not, decide here whether to adjust the rig, paint over renders in Krita, or stay with placeholders for now.
+
+- [ ] **ART-2: Enemy renders** (right after ART-1)
   - Model and render the remaining enemies with the ART-1 rig: ID-4 Interceptor Drone, AA Emplacement, Mining Platform, Armored Transport, HG-7 Gunship (plus destroyed/wreck versions for ground targets)
   - Elites reuse the same sprites with a yellow outline added in Godot (no extra renders)
   - **Done when:** every Milestone B enemy uses its rendered sprite in-game with hit flash and shadows working
@@ -197,7 +197,7 @@ How to hand a milestone to Claude Code (in VS Code, terminal at `C:\Projects\ass
 
 Write down decisions here as you make them (date — decision), so the AI tools know about them.
 
-- 2026-11-02 — Final art will be made in Blender (free) driven by Claude Code through Blender Lab's official MCP connection: 3D models rendered top-down into shaded sprites, like Raptor's pre-rendered look. Art steps ART-1 to ART-5 added; ART-1 (pipeline test) happens right after Milestone A. Effects stay code-made in Godot.
+- 2026-11-02 — Final art will be made in Blender (free) driven by Claude Code through Blender Lab's official MCP connection: 3D models rendered top-down into shaded sprites, like Raptor's pre-rendered look. Art steps ART-1 to ART-5 added; ART-1 (pipeline test) happens when Milestone B is finished, then ART-2. Effects stay code-made in Godot.
 
 - 2026-11-02 — Auto-fire is no longer a standard control (F key removed). It comes from the FC-1 Fire Control Computer (one-run purchase for Combat Data at the briefing, only when offered) or a rare timed Fire Control pickup; an Accessibility setting keeps it available for players who need it. DESIGN.md §5.5, §7.3, §13.
 - 2026-11-02 — Effects reference added from Mech Havoc footage (DESIGN.md §11): glowing muzzle cones, thin tracers, cyan beam lasers with bloom, red glowing enemy streaks, coral warning circles, flash → sparks → debris smoke trails → scorch. Raptor stays the world/ship reference.

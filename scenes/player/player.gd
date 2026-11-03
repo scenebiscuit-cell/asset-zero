@@ -69,15 +69,27 @@ func grant_autofire(seconds: float) -> void:
 	if _dead:
 		return
 	_autofire_left = maxf(_autofire_left, seconds)
-	print("Fire Control: ON (%.0f s)" % seconds) # Temporary until the HUD shows it (Step 8).
+
+
+func autofire_time_left() -> float:
+	return maxf(_autofire_left, 0.0)
+
+
+func is_overclocked() -> bool:
+	return false
+
+
+func overclock_time_left() -> float:
+	return 0.0
+
+
+func overclock_max_time() -> float:
+	return 10.0
 
 
 func _update_timed_autofire(delta: float) -> void:
-	if _autofire_left <= 0.0:
-		return
-	_autofire_left -= delta
-	if _autofire_left <= 0.0:
-		print("Fire Control: OFF") # Temporary until the HUD shows it (Step 8).
+	if _autofire_left > 0.0:
+		_autofire_left -= delta
 
 
 func take_damage(amount: int) -> void:

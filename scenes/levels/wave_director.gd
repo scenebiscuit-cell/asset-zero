@@ -26,7 +26,6 @@ var _next_wave: WaveData
 var _finished_spawning: bool = false
 var _wait_after_end: float = 0.0
 var _done: bool = false
-var _next_report: float = 30.0
 # Staggered side/scatter entries waiting to spawn: [time_left, scene, position, elite].
 var _queue: Array[Array] = []
 
@@ -38,9 +37,6 @@ func _physics_process(delta: float) -> void:
 	_update_queue(delta)
 	if not _finished_spawning:
 		_update_spawning(delta)
-		if _elapsed >= _next_report:
-			print("Sector %d: %d s / %d s" % [level_data.sector_number, _next_report, level_data.duration]) # Temporary until the HUD exists.
-			_next_report += 30.0
 		return
 	_wait_after_end += delta
 	if (enemies.get_child_count() == 0 and _queue.is_empty()) or _wait_after_end >= clear_timeout:

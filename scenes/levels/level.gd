@@ -19,6 +19,8 @@ var _player_dead: bool = false
 @onready var _wave_director: WaveDirector = $WaveDirector
 @onready var _sector_clear: SectorClearScreen = $SectorClear
 @onready var _sector_banner: SectorBanner = $SectorBanner
+@onready var _hud: Hud = $Hud
+@onready var _pause_menu: PauseMenu = $PauseMenu
 @onready var _ground_layer: BackgroundLayer = $GroundLayer
 @onready var _enemy_round_pool: RoundPool = $EnemyRoundPool
 @onready var _explosion_pool: ExplosionPool = $FX/ExplosionPool
@@ -34,9 +36,11 @@ func _ready() -> void:
 		GameState.reset_run()
 	_player.destroyed.connect(_on_player_destroyed)
 	_sector_clear.continue_pressed.connect(_on_continue_pressed)
+	_hud.player = _player
 	if not run_waves or sectors.is_empty():
 		return
 	_level_data = sectors[GameState.sector_index % sectors.size()]
+	_hud.sector_number = _level_data.sector_number
 	_sector_banner.show_banner(_level_data.sector_number)
 	_wave_director.level_data = _level_data
 	_wave_director.enemies = _enemies
@@ -51,6 +55,7 @@ func _on_spawn_requested(scene: PackedScene, at: Vector2, elite: bool) -> void:
 func _on_sector_cleared() -> void:
 	if _player_dead:
 		return
+	_pause_menu.allowed = false
 	_sector_clear.show_screen(_level_data.sector_number)
 
 
@@ -98,5 +103,6 @@ func drop_pickup(pool: ObjectPool, at: Vector2) -> void:
 
 func _on_player_destroyed() -> void:
 	_player_dead = true
+	_pause_menu.allowed = false
 	await get_tree().create_timer(mission_failed_delay).timeout
 	_mission_failed.show_screen()

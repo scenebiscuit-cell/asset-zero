@@ -263,7 +263,7 @@ Air enemies fly over everything. Ground enemies scroll with the background. All 
 
 | Enemy | Layer | Behavior | HP | Salvage | Elite drops |
 |---|---|---|---|---|---|
-| RD-2 Recon Drone | Air | Flies straight down in lines/V formations; most fire one weak, slow aimed round (8 dmg; others 12) | Low | 1 | — |
+| RD-2 Recon Drone | Air | Flies straight down in lines/V formations; about a third fire one weak, slow aimed round (8 dmg; others 12) | Low | 1 | — |
 | ID-4 Interceptor Drone | Air | Sine-wave path, fires a single slow round | Low | 2 | — |
 | AA Emplacement | Ground | Stationary, aims and fires at the player | Medium | 3 | Flak Burst |
 | Mining Platform | Ground | Tanky, no attack, big salvage reward | High | 8 | Drill Lance |
@@ -281,7 +281,7 @@ A giant armored strip-mining machine that fills the top third of the screen.
 
 ## 9. Levels
 
-- Each level is about **2–3 minutes** of vertical scrolling.
+- Each level is about **2–3 minutes** of vertical scrolling, except Sector 1, which is about **1.5 minutes** so the run gets going quickly.
 - A **wave director** spawns enemy waves from a pool, using a difficulty budget that grows over time and per level, multiplied by the Threat Level.
 - Waves are defined as data (which enemies, formation, entry side, path), so new waves can be added without new code.
 - Each level ends with a short "SECTOR CLEAR" moment, then the between-level screens.

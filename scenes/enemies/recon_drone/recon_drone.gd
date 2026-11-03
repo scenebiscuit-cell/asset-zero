@@ -6,7 +6,7 @@ extends Enemy
 @export var fire_delay_min: float = 0.4
 @export var fire_delay_max: float = 1.6
 ## Chance (0-1) this drone fires at all, so big formations stay dodgeable.
-@export_range(0.0, 1.0) var fire_chance: float = 0.7
+@export_range(0.0, 1.0) var fire_chance: float = 0.35
 
 var _fire_delay: float = 0.0
 var _fired: bool = false

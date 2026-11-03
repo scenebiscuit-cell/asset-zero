@@ -61,18 +61,18 @@ How to hand a milestone to Claude Code (in VS Code, terminal at `C:\Projects\ass
   - Rare timed Fire Control pickup drop: auto-fire for ~10 s (DESIGN.md §7.3)
   - **Done when:** a test scene spawns each enemy, normal and elite, and each one behaves as described
 
-- [ ] **Step 7: Wave director + level flow**
+- [x] **Step 7: Wave director + level flow**
   - Waves defined as Resources (enemies, formation, entry side, path)
   - Director spends a growing difficulty budget to spawn waves; has a `threat_multiplier` and `elite_chance` (fixed at Threat 1 values for now); level lasts ~2–3 minutes, then "SECTOR CLEAR"
   - Level settings (wave pool, length, budget) as Resources for levels 1–3
   - **Done when:** Level 1 plays start to finish and ends with "SECTOR CLEAR"
 
-- [ ] **Step 8: HUD + pause**
+- [x] **Step 8: HUD + pause**
   - Cockpit-style HUD: Armor bar, Plating bar, Overclock meter (empty for now), salvage count, weight class, HSD Threat label, assimilated weapon slot, level number, auto-fire indicator
   - Pause menu (resume, quit to menu)
   - **Done when:** HUD updates correctly during play and pause works
 
-- [ ] **Step 9: Grazing + Overclock**
+- [x] **Step 9: Grazing + Overclock**
   - Graze detection from DESIGN.md §5.4 / §5.7: each enemy round counts once when it passes inside the graze radius without hitting; spark + tick sound
   - Overclock meter fills from salvage, near misses and elite kills
   - Overclock activation: Meltdown pulse turns nearby enemy rounds into salvage, 5 s of ×1.5 damage + heat aura that destroys rounds, salvage extends it (max 10 s), 0.5 s invulnerability at the end
@@ -150,8 +150,9 @@ How to hand a milestone to Claude Code (in VS Code, terminal at `C:\Projects\ass
 
 Write down decisions here as you make them (date — decision), so the AI tools know about them.
 
+- 2026-11-03 — Sector 1 shortened to 90 s (was 150 s) so the run gets going quickly; later sectors stay 2–3 minutes. DESIGN.md §9.
 - 2026-11-03 — Breach penalty: each enemy aircraft that escapes costs 2 salvage; a sector with no escapes pays a 25-salvage Perimeter Held bonus at SECTOR CLEAR. Enemy round damage raised (RD-2 8, others 12). DESIGN.md §8, §9.
-- 2026-11-03 — RD-2 Recon Drones now fire one weak, slow aimed round (most of them, at a random moment) so Sector 1 has rounds to dodge and graze. AA Emplacements fire 3-round bursts and appear more often. DESIGN.md §8.
+- 2026-11-03 — RD-2 Recon Drones now fire one weak, slow aimed round (about a third of them since 2026-11-03 retune, at a random moment) so Sector 1 has rounds to dodge and graze. AA Emplacements fire 2-round bursts every 1.4 s and appear more often (pairs from 45 s). DESIGN.md §8.
 
 - 2026-11-02 — XF-0 hitbox changed from a ~6 px circle to a capsule over the body + wing roots (~24 px wide in Gunship form, ~14 px in Lance form), stored per airframe shape and morphing with it. Lance form is now also the dodge form. Same size in every weight class. DESIGN.md §5.2, §5.4, §5.6.
 

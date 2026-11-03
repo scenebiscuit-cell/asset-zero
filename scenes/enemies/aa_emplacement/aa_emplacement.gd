@@ -11,7 +11,7 @@ extends Enemy
 ## Only fires when the barrel is this close to pointing at XF-0, so shots never go wild mid-turn.
 @export var aim_tolerance_degrees: float = 8.0
 ## Rounds per burst. The turret keeps tracking between rounds, so a burst follows a moving XF-0.
-@export var burst_count: int = 3
+@export var burst_count: int = 2
 @export var burst_gap: float = 0.12
 
 var _on_screen_time: float = 0.0

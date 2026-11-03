@@ -1,8 +1,14 @@
-[gd_scene load_steps=18 format=3]
+[gd_scene load_steps=24 format=3]
 
 [ext_resource type="Script" path="res://scenes/levels/level.gd" id="1_level"]
 [ext_resource type="Script" path="res://scenes/levels/background_layer.gd" id="2_bg"]
-[ext_resource type="PackedScene" path="res://scenes/enemies/recon_drone/recon_drone.tscn" id="3_drone"]
+[ext_resource type="Script" path="res://resources/level_data.gd" id="3_level_data"]
+[ext_resource type="Resource" path="res://data/levels/sector_1.tres" id="17_sector_1"]
+[ext_resource type="Resource" path="res://data/levels/sector_2.tres" id="18_sector_2"]
+[ext_resource type="Resource" path="res://data/levels/sector_3.tres" id="19_sector_3"]
+[ext_resource type="Script" path="res://scenes/levels/wave_director.gd" id="20_wave_director"]
+[ext_resource type="PackedScene" path="res://scenes/ui/sector_clear.tscn" id="21_sector_clear"]
+[ext_resource type="PackedScene" path="res://scenes/ui/sector_banner.tscn" id="22_sector_banner"]
 [ext_resource type="PackedScene" path="res://scenes/fx/explosion.tscn" id="4_explosion"]
 [ext_resource type="Script" path="res://scenes/pickups/salvage_pool.gd" id="5_salvage_pool"]
 [ext_resource type="PackedScene" path="res://scenes/pickups/salvage_pickup.tscn" id="6_salvage"]
@@ -22,7 +28,7 @@ shader = ExtResource("10_grain")
 
 [node name="Level" type="Node2D"]
 script = ExtResource("1_level")
-drone_scene = ExtResource("3_drone")
+sectors = Array[ExtResource("3_level_data")]([ExtResource("17_sector_1"), ExtResource("18_sector_2"), ExtResource("19_sector_3")])
 
 [node name="GroundLayer" type="Node2D" parent="."]
 z_index = -10
@@ -72,5 +78,12 @@ round_pool = NodePath("../PlayerRoundPool")
 script = ExtResource("7_round_pool")
 scene = ExtResource("12_enemy_round")
 pool_size = 200
+
+[node name="WaveDirector" type="Node" parent="."]
+script = ExtResource("20_wave_director")
+
+[node name="SectorBanner" parent="." instance=ExtResource("22_sector_banner")]
+
+[node name="SectorClear" parent="." instance=ExtResource("21_sector_clear")]
 
 [node name="MissionFailed" parent="." instance=ExtResource("13_mission_failed")]

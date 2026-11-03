@@ -1,23 +1,24 @@
 class_name Level
 extends Node2D
-## Runs one level. For now it just sends lines of RD-2 drones; the wave director replaces that in Step 7.
+## Runs one sector: the wave director sends enemies, this spawns them, handles drops, death and
+## SECTOR CLEAR. Which sector comes from GameState, so the same scene plays every sector.
 
-@export var drone_scene: PackedScene
+## Sectors of the run, in order (data/levels/). After the last one it loops until the boss exists (Step 16).
+@export var sectors: Array[LevelData] = []
 ## Off in test scenes that spawn enemies by hand.
-@export var auto_spawn_drones: bool = true
-@export var line_interval: float = 2.5
-@export var drones_per_line: int = 5
-@export var line_spacing: float = 48.0
-## Keeps spawned lines away from the screen edges.
-@export var spawn_margin: float = 60.0
+@export var run_waves: bool = true
 ## Chance (0-1) that any destroyed enemy drops a timed Fire Control pickup (DESIGN.md §7.3).
 @export_range(0.0, 1.0) var fire_control_drop_chance: float = 0.03
 ## Lets the death splash play out before the failure screen appears.
 @export var mission_failed_delay: float = 1.0
 
-var _spawn_timer: float = 1.0
+var _level_data: LevelData
+var _player_dead: bool = false
 
 @onready var _enemies: Node2D = $Enemies
+@onready var _wave_director: WaveDirector = $WaveDirector
+@onready var _sector_clear: SectorClearScreen = $SectorClear
+@onready var _sector_banner: SectorBanner = $SectorBanner
 @onready var _ground_layer: BackgroundLayer = $GroundLayer
 @onready var _enemy_round_pool: RoundPool = $EnemyRoundPool
 @onready var _explosion_pool: ExplosionPool = $FX/ExplosionPool
@@ -29,23 +30,34 @@ var _spawn_timer: float = 1.0
 
 
 func _ready() -> void:
-	GameState.reset_run()
+	if not GameState.run_active:
+		GameState.reset_run()
 	_player.destroyed.connect(_on_player_destroyed)
-
-
-func _process(delta: float) -> void:
-	if not auto_spawn_drones:
+	_sector_clear.continue_pressed.connect(_on_continue_pressed)
+	if not run_waves or sectors.is_empty():
 		return
-	_spawn_timer -= delta
-	if _spawn_timer <= 0.0:
-		_spawn_timer += line_interval
-		_spawn_drone_line()
+	_level_data = sectors[GameState.sector_index % sectors.size()]
+	_sector_banner.show_banner(_level_data.sector_number)
+	_wave_director.level_data = _level_data
+	_wave_director.enemies = _enemies
+	_wave_director.spawn_requested.connect(_on_spawn_requested)
+	_wave_director.sector_cleared.connect(_on_sector_cleared)
 
 
-func _spawn_drone_line() -> void:
-	var x: float = randf_range(spawn_margin, get_viewport_rect().size.x - spawn_margin)
-	for i: int in drones_per_line:
-		spawn_enemy(drone_scene, Vector2(x, -30.0 - i * line_spacing))
+func _on_spawn_requested(scene: PackedScene, at: Vector2, elite: bool) -> void:
+	spawn_enemy(scene, at, elite)
+
+
+func _on_sector_cleared() -> void:
+	if _player_dead:
+		return
+	_sector_clear.show_screen(_level_data.sector_number)
+
+
+func _on_continue_pressed() -> void:
+	GameState.advance_sector()
+	# Same scene, next sector's data. Nothing on screen carries over; the run does.
+	get_tree().reload_current_scene()
 
 
 ## The one way enemies enter the level: wires up what they need before they're added.
@@ -85,5 +97,6 @@ func drop_pickup(pool: ObjectPool, at: Vector2) -> void:
 
 
 func _on_player_destroyed() -> void:
+	_player_dead = true
 	await get_tree().create_timer(mission_failed_delay).timeout
 	_mission_failed.show_screen()

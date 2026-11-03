@@ -1,0 +1,23 @@
+[gd_resource type="Resource" script_class="LevelData" load_steps=12 format=3]
+
+[ext_resource type="Script" path="res://resources/level_data.gd" id="1_level"]
+[ext_resource type="Script" path="res://resources/wave_data.gd" id="1_wave_script"]
+[ext_resource type="Resource" path="res://data/waves/rd2_column5.tres" id="2_rd2_column5"]
+[ext_resource type="Resource" path="res://data/waves/rd2_v5.tres" id="3_rd2_v5"]
+[ext_resource type="Resource" path="res://data/waves/rd2_row4.tres" id="4_rd2_row4"]
+[ext_resource type="Resource" path="res://data/waves/aa_single.tres" id="5_aa_single"]
+[ext_resource type="Resource" path="res://data/waves/aa_pair.tres" id="6_aa_pair"]
+[ext_resource type="Resource" path="res://data/waves/id4_v3.tres" id="7_id4_v3"]
+[ext_resource type="Resource" path="res://data/waves/id4_column4.tres" id="8_id4_column4"]
+[ext_resource type="Resource" path="res://data/waves/mp_single.tres" id="9_mp_single"]
+[ext_resource type="Resource" path="res://data/waves/at_side.tres" id="10_at_side"]
+
+[resource]
+script = ExtResource("1_level")
+sector_number = 2
+duration = 150.0
+wave_pool = Array[ExtResource("1_wave_script")]([ExtResource("2_rd2_column5"), ExtResource("3_rd2_v5"), ExtResource("4_rd2_row4"), ExtResource("5_aa_single"), ExtResource("6_aa_pair"), ExtResource("7_id4_v3"), ExtResource("8_id4_column4"), ExtResource("9_mp_single"), ExtResource("10_at_side")])
+budget_rate = 1.4
+budget_growth = 0.01
+min_wave_gap = 1.1
+max_enemies_alive = 25

@@ -7,4 +7,4 @@
 script = ExtResource("1_test")
 
 [node name="Level" parent="." instance=ExtResource("2_level")]
-auto_spawn_drones = false
+run_waves = false

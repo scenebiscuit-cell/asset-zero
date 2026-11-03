@@ -17,12 +17,21 @@ const SIDE_ENTRY: Array[int] = [KEY_5]
 
 
 func _ready() -> void:
-	print("Enemy test: 1 RD-2  2 ID-4  3 AA Emplacement  4 Mining Platform  5 Armored Transport  6 HG-7 Gunship  (hold Shift for elite)")
+	print("Enemy test: 1 RD-2  2 ID-4  3 AA Emplacement  4 Mining Platform  5 Armored Transport  6 HG-7 Gunship  (hold Shift for elite)  7 Fire Control pickup  8 repair pickup")
 
 
 func _unhandled_key_input(event: InputEvent) -> void:
 	var key: InputEventKey = event as InputEventKey
 	if key == null or not key.pressed or key.echo:
+		return
+	var drop_at: Vector2 = Vector2(get_viewport_rect().size.x * 0.5, 120.0)
+	if key.physical_keycode == KEY_7:
+		_level.drop_fire_control(drop_at)
+		print("Dropped Fire Control pickup")
+		return
+	if key.physical_keycode == KEY_8:
+		_level.drop_repair(drop_at)
+		print("Dropped repair pickup")
 		return
 	# physical_keycode ignores Shift, so Shift+1 still reads as KEY_1.
 	if not SPAWNS.has(key.physical_keycode):

@@ -10,6 +10,8 @@ extends Node2D
 @export var line_spacing: float = 48.0
 ## Keeps spawned lines away from the screen edges.
 @export var spawn_margin: float = 60.0
+## Chance (0-1) that any destroyed enemy drops a timed Fire Control pickup (DESIGN.md §7.3).
+@export_range(0.0, 1.0) var fire_control_drop_chance: float = 0.03
 ## Lets the death splash play out before the failure screen appears.
 @export var mission_failed_delay: float = 1.0
 
@@ -21,6 +23,7 @@ var _spawn_timer: float = 1.0
 @onready var _explosion_pool: ExplosionPool = $FX/ExplosionPool
 @onready var _salvage_pool: SalvagePool = $SalvagePool
 @onready var _repair_pool: ObjectPool = $RepairPool
+@onready var _fire_control_pool: ObjectPool = $FireControlPool
 @onready var _player: Player = $Player
 @onready var _mission_failed: MissionFailedScreen = $MissionFailed
 
@@ -62,9 +65,23 @@ func _on_enemy_destroyed(enemy: Enemy) -> void:
 	_explosion_pool.spawn(enemy.global_position)
 	_salvage_pool.spawn_burst(enemy.global_position, enemy.salvage_value())
 	if randf() < enemy.data.repair_drop_chance:
-		var repair: RepairPickup = _repair_pool.acquire() as RepairPickup
-		if repair != null:
-			repair.activate(enemy.global_position, _player)
+		drop_pickup(_repair_pool, enemy.global_position)
+	if randf() < fire_control_drop_chance:
+		drop_pickup(_fire_control_pool, enemy.global_position + Vector2(0.0, -12.0))
+
+
+func drop_repair(at: Vector2) -> void:
+	drop_pickup(_repair_pool, at)
+
+
+func drop_fire_control(at: Vector2) -> void:
+	drop_pickup(_fire_control_pool, at)
+
+
+func drop_pickup(pool: ObjectPool, at: Vector2) -> void:
+	var pickup: DriftPickup = pool.acquire() as DriftPickup
+	if pickup != null:
+		pickup.activate(at, _player)
 
 
 func _on_player_destroyed() -> void:

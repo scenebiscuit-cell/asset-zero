@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=3]
+[gd_scene load_steps=18 format=3]
 
 [ext_resource type="Script" path="res://scenes/levels/level.gd" id="1_level"]
 [ext_resource type="Script" path="res://scenes/levels/background_layer.gd" id="2_bg"]
@@ -15,6 +15,7 @@
 [ext_resource type="PackedScene" path="res://scenes/ui/mission_failed.tscn" id="13_mission_failed"]
 [ext_resource type="Script" path="res://scenes/weapons/object_pool.gd" id="14_object_pool"]
 [ext_resource type="PackedScene" path="res://scenes/pickups/repair_pickup.tscn" id="15_repair"]
+[ext_resource type="PackedScene" path="res://scenes/pickups/fire_control_pickup.tscn" id="16_fire_control"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_grain"]
 shader = ExtResource("10_grain")
@@ -53,6 +54,11 @@ pool_size = 48
 script = ExtResource("14_object_pool")
 scene = ExtResource("15_repair")
 pool_size = 4
+
+[node name="FireControlPool" type="Node2D" parent="."]
+script = ExtResource("14_object_pool")
+scene = ExtResource("16_fire_control")
+pool_size = 2
 
 [node name="PlayerRoundPool" type="Node2D" parent="."]
 script = ExtResource("7_round_pool")

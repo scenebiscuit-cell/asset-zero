@@ -15,9 +15,11 @@ enum InputMode { KEYBOARD, MOUSE }
 @export var flash_interval: float = 0.08
 @export var collapse_time: float = 0.6
 
-## Turned on by Fire Control power-ups or the accessibility setting (DESIGN.md §7.3), never by a key.
+## Always-on auto-fire: the FC-1 refit or the accessibility setting (DESIGN.md §7.3), never a key.
 var autofire: bool = false
 var _input_mode: InputMode = InputMode.KEYBOARD
+## Seconds left on a timed Fire Control pickup.
+var _autofire_left: float = 0.0
 var _invulnerable_left: float = 0.0
 var _dead: bool = false
 
@@ -36,6 +38,7 @@ func _ready() -> void:
 	area_entered.connect(_try_hit)
 	_morph_system.shape_changed.connect(_shadow.refresh)
 	_combat_morph.form_changed.connect(_on_form_changed)
+	_set_hitbox(_combat_morph.current_shape(), 0.0)
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -56,8 +59,25 @@ func _physics_process(delta: float) -> void:
 		position = position.move_toward(get_global_mouse_position(), speed * delta)
 
 	_clamp_to_screen()
-	_autocannon.firing = autofire or Input.is_action_pressed("fire")
+	_update_timed_autofire(delta)
+	_autocannon.firing = autofire or _autofire_left > 0.0 or Input.is_action_pressed("fire")
 	_update_invulnerability(delta)
+
+
+## Timed auto-fire from a Fire Control pickup. A second pickup tops the timer back up, it doesn't stack.
+func grant_autofire(seconds: float) -> void:
+	if _dead:
+		return
+	_autofire_left = maxf(_autofire_left, seconds)
+	print("Fire Control: ON (%.0f s)" % seconds) # Temporary until the HUD shows it (Step 8).
+
+
+func _update_timed_autofire(delta: float) -> void:
+	if _autofire_left <= 0.0:
+		return
+	_autofire_left -= delta
+	if _autofire_left <= 0.0:
+		print("Fire Control: OFF") # Temporary until the HUD shows it (Step 8).
 
 
 func take_damage(amount: int) -> void:
@@ -76,6 +96,21 @@ func _on_form_changed(is_lance: bool) -> void:
 	# The muzzle (and its flash) slides out to the new nose as the shape flows.
 	var muzzle: Vector2 = _combat_morph.current_shape().muzzle_offset
 	create_tween().tween_property(_autocannon, "position", muzzle, _combat_morph.morph_time)
+	_set_hitbox(_combat_morph.current_shape(), _combat_morph.morph_time)
+
+
+## The hitbox follows the airframe: it narrows as the wings fold into Lance form.
+func _set_hitbox(shape: AirframeShape, duration: float) -> void:
+	var capsule: CapsuleShape2D = _hitbox.shape as CapsuleShape2D
+	if duration <= 0.0:
+		capsule.radius = shape.hitbox_radius
+		capsule.height = shape.hitbox_height
+		_hitbox.position = shape.hitbox_offset
+		return
+	var tween: Tween = create_tween().set_parallel()
+	tween.tween_property(capsule, "radius", shape.hitbox_radius, duration)
+	tween.tween_property(capsule, "height", shape.hitbox_height, duration)
+	tween.tween_property(_hitbox, "position", shape.hitbox_offset, duration)
 
 
 func _try_hit(area: Area2D) -> void:

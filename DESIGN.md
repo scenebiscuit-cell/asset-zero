@@ -78,7 +78,7 @@ The airframe grows as you refit. **Weight class** is based on the total number o
 | Heavy (gunship) | 6–8 | Wide, armored, extra pylons visible | +30 max Armor | −10% speed |
 | Assault | 9+ | Huge flying fortress | +50 max Armor | −15% speed |
 
-The **hitbox stays the same small size** in every class (genre standard), so a bigger ship isn't unfair. Moving up a class plays a bigger morph and a "CLASS UPGRADE: MEDIUM" callout. Weight class also sets the **Threat Level** (§9.1).
+The **hitbox stays the same size** in every class (body + wing roots, §5.4), so a bigger ship isn't unfair. Moving up a class plays a bigger morph and a "CLASS UPGRADE: MEDIUM" callout. Weight class also sets the **Threat Level** (§9.1).
 
 ### 5.3 Liquid-metal behavior (visual rules)
 
@@ -101,7 +101,7 @@ The ship always looks like a hard-edged military aircraft. The liquid metal show
 | Armor | 100 | Health. Run ends at 0. Repairable in the Armory |
 | Plating | 0 | Regenerating shield, absorbs damage first, recharges after 3 s without being hit |
 | Move speed | 300 px/s | Gunship form. Changed by Propulsion and weight class |
-| Hitbox | small circle, ~6 px radius | Much smaller than the ship visual |
+| Hitbox | capsule over the body + wing roots: ~24 px wide (Gunship), ~14 px wide (Lance) | Wing tips don't count. Shrinks as the wings fold in Lance form (§5.6). Stored per airframe shape |
 | Graze radius | ~28 px | Enemy rounds passing inside this (but not hitting) count as near misses for Overclock |
 | Invulnerability after hit | 1.0 s | Ship flashes |
 
@@ -130,6 +130,7 @@ XF-0 has two combat forms. **Hold** the Morph button for Lance form, and release
 | Damage | 100% | 140% |
 | Ground targets | Normal | Normal |
 | Seeker Missiles | Seek any target | Seek only targets ahead of the ship |
+| Hitbox | ~24 px wide | ~14 px wide (wings folded) |
 | Graze radius | 28 px | 36 px (easier to charge Overclock while threading bullets) |
 
 How each weapon line converges in Lance form:

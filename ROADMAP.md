@@ -54,7 +54,7 @@ How to hand a milestone to Claude Code (in VS Code, terminal at `C:\Projects\ass
 
 ## Milestone B — A real level
 
-- [ ] **Step 6: Enemy set + elites**
+- [x] **Step 6: Enemy set + elites**
   - ID-4 Interceptor Drone, AA Emplacement (aims at player), Mining Platform, Armored Transport, HG-7 Gunship from DESIGN.md §8
   - Elite variant for any enemy: yellow outline, 2× HP, 2× salvage (module drops come later in Step 11)
   - Enemy stats live in Resource files (`data/enemies/*.tres`)
@@ -149,6 +149,8 @@ How to hand a milestone to Claude Code (in VS Code, terminal at `C:\Projects\ass
 ## Notes / decisions log
 
 Write down decisions here as you make them (date — decision), so the AI tools know about them.
+
+- 2026-11-02 — XF-0 hitbox changed from a ~6 px circle to a capsule over the body + wing roots (~24 px wide in Gunship form, ~14 px in Lance form), stored per airframe shape and morphing with it. Lance form is now also the dodge form. Same size in every weight class. DESIGN.md §5.2, §5.4, §5.6.
 
 - 2026-11-02 — Auto-fire is no longer a standard control (F key removed). It comes from the FC-1 Fire Control Computer (one-run purchase for Combat Data at the briefing, only when offered) or a rare timed Fire Control pickup; an Accessibility setting keeps it available for players who need it. DESIGN.md §5.5, §7.3, §13.
 - 2026-11-02 — Effects reference added from Mech Havoc footage (DESIGN.md §11): glowing muzzle cones, thin tracers, cyan beam lasers with bloom, red glowing enemy streaks, coral warning circles, flash → sparks → debris smoke trails → scorch. Raptor stays the world/ship reference.

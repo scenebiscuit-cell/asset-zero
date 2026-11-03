@@ -3,6 +3,8 @@ extends Node2D
 ## Runs one level. For now it just sends lines of RD-2 drones; the wave director replaces that in Step 7.
 
 @export var drone_scene: PackedScene
+## Off in test scenes that spawn enemies by hand.
+@export var auto_spawn_drones: bool = true
 @export var line_interval: float = 2.5
 @export var drones_per_line: int = 5
 @export var line_spacing: float = 48.0
@@ -14,6 +16,8 @@ extends Node2D
 var _spawn_timer: float = 1.0
 
 @onready var _enemies: Node2D = $Enemies
+@onready var _ground_layer: BackgroundLayer = $GroundLayer
+@onready var _enemy_round_pool: RoundPool = $EnemyRoundPool
 @onready var _explosion_pool: ExplosionPool = $FX/ExplosionPool
 @onready var _salvage_pool: SalvagePool = $SalvagePool
 @onready var _player: Player = $Player
@@ -26,6 +30,8 @@ func _ready() -> void:
 
 
 func _process(delta: float) -> void:
+	if not auto_spawn_drones:
+		return
 	_spawn_timer -= delta
 	if _spawn_timer <= 0.0:
 		_spawn_timer += line_interval
@@ -35,15 +41,25 @@ func _process(delta: float) -> void:
 func _spawn_drone_line() -> void:
 	var x: float = randf_range(spawn_margin, get_viewport_rect().size.x - spawn_margin)
 	for i: int in drones_per_line:
-		var drone: Enemy = drone_scene.instantiate() as Enemy
-		drone.position = Vector2(x, -30.0 - i * line_spacing)
-		drone.destroyed.connect(_on_enemy_destroyed)
-		_enemies.add_child(drone)
+		spawn_enemy(drone_scene, Vector2(x, -30.0 - i * line_spacing))
+
+
+## The one way enemies enter the level: wires up what they need before they're added.
+func spawn_enemy(scene: PackedScene, at: Vector2, elite: bool = false) -> Enemy:
+	var enemy: Enemy = scene.instantiate() as Enemy
+	enemy.position = at
+	enemy.elite = elite
+	enemy.round_pool = _enemy_round_pool
+	enemy.target = _player
+	enemy.ground_speed = _ground_layer.scroll_speed
+	enemy.destroyed.connect(_on_enemy_destroyed)
+	_enemies.add_child(enemy)
+	return enemy
 
 
 func _on_enemy_destroyed(enemy: Enemy) -> void:
 	_explosion_pool.spawn(enemy.global_position)
-	_salvage_pool.spawn_burst(enemy.global_position, enemy.data.salvage)
+	_salvage_pool.spawn_burst(enemy.global_position, enemy.salvage_value())
 
 
 func _on_player_destroyed() -> void:

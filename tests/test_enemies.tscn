@@ -1,0 +1,10 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://tests/test_enemies.gd" id="1_test"]
+[ext_resource type="PackedScene" path="res://scenes/levels/level.tscn" id="2_level"]
+
+[node name="TestEnemies" type="Node2D"]
+script = ExtResource("1_test")
+
+[node name="Level" parent="." instance=ExtResource("2_level")]
+auto_spawn_drones = false

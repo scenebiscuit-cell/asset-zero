@@ -1,0 +1,57 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://scenes/enemies/aa_emplacement/aa_emplacement.gd" id="1_aa"]
+[ext_resource type="Resource" path="res://data/enemies/aa_emplacement.tres" id="2_data"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_aa"]
+radius = 16.0
+
+[node name="AAEmplacement" type="Area2D"]
+collision_layer = 8
+collision_mask = 0
+monitoring = false
+script = ExtResource("1_aa")
+data = ExtResource("2_data")
+
+[node name="Hitbox" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_aa")
+
+[node name="Visual" type="Node2D" parent="."]
+
+[node name="PadShadow" type="Polygon2D" parent="Visual"]
+color = Color(0.035, 0.047, 0.031, 0.55)
+polygon = PackedVector2Array(-16, -14, 24, -14, 24, 26, -16, 26)
+
+[node name="Pad" type="Polygon2D" parent="Visual"]
+color = Color(0.43, 0.43, 0.43, 1)
+polygon = PackedVector2Array(-20, -20, 20, -20, 20, 20, -20, 20)
+
+[node name="PadLight" type="Polygon2D" parent="Visual"]
+color = Color(0.54, 0.51, 0.42, 1)
+polygon = PackedVector2Array(-20, -20, 20, -20, 18, -18, -18, -18, -18, 18, -20, 20)
+
+[node name="PadDark" type="Polygon2D" parent="Visual"]
+color = Color(0.21, 0.2, 0.19, 1)
+polygon = PackedVector2Array(20, -20, 20, 20, -20, 20, -18, 18, 18, 18, 18, -18)
+
+[node name="Stripe" type="Polygon2D" parent="Visual"]
+color = Color(0.79, 0.64, 0.15, 1)
+polygon = PackedVector2Array(-18, 14, -12, 14, -16, 18, -18, 18, -8, 14, -2, 14, -6, 18, -12, 18, 2, 14, 8, 14, 4, 18, -2, 18, 12, 14, 18, 14, 14, 18, 8, 18)
+
+[node name="Turret" type="Node2D" parent="Visual"]
+
+[node name="Barrel" type="Polygon2D" parent="Visual/Turret"]
+color = Color(0.17, 0.19, 0.21, 1)
+polygon = PackedVector2Array(-2.5, -18, 2.5, -18, 2.5, 0, -2.5, 0)
+
+[node name="Mount" type="Polygon2D" parent="Visual/Turret"]
+color = Color(0.3, 0.3, 0.3, 1)
+polygon = PackedVector2Array(0, -9, 6.4, -6.4, 9, 0, 6.4, 6.4, 0, 9, -6.4, 6.4, -9, 0, -6.4, -6.4)
+
+[node name="MountLight" type="Polygon2D" parent="Visual/Turret"]
+color = Color(0.5, 0.5, 0.48, 1)
+polygon = PackedVector2Array(-3, -6, 1, -6, -1, -2, -5, -2)
+
+[node name="Lamp" type="Polygon2D" parent="Visual/Turret"]
+color = Color(1, 0.15, 0.1, 1)
+polygon = PackedVector2Array(-2, 2, 2, 2, 2, 6, -2, 6)

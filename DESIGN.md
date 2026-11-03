@@ -457,10 +457,19 @@ Simple vector / geometric shapes drawn in Godot (Polygon2D, Line2D or `_draw()`)
 
 The look should say "military hardware" first. The liquid metal is the surprise in how it changes shape.
 
-### Final art (later, decided after the game is fun)
+### Final art pipeline: Blender (decided 2026-11-02)
 
-Likely hand-painted art downscaled to sprites, possibly with a metallic sheen shader. Placeholders must be easy to swap: each object's visuals live in one child node named `Visual`, so art can be replaced without touching game logic. The morph system may need to switch to blended sprites or a shader for final art; decide later.
+Ships, vehicles and buildings are **3D models in Blender, rendered top-down into shaded sprites**, the same way the Raptor reference got its look. Claude Code drives Blender through Blender Lab's official MCP connection; the developer art-directs and touches up by hand (Blender or Krita) where needed. Both tools are free.
 
+- **What Blender makes:** XF-0 (every weight class, Gunship and Lance forms), enemies, the MAWLER boss, weapon modules, buildings and terrain props.
+- **What stays code-made in Godot:** explosions, smoke, sparks, tracers, lasers, glows, grain and drop shadows (see the Effects reference above).
+- **Render rig** (`art-source/blender/render_rig.blend`): orthographic camera straight down, transparent background, top-left key light with a soft fill (matching the terrain lighting), shared metal materials in the §11 palette (XF-0 gunmetal with cyan accents; HEG grey/orange with hazard yellow).
+- **Repeatable renders:** a Python script (`art-source/render/render_sprites.py`) renders models to `assets/sprites/<category>/<name>.png` at 4× in-game size; Godot scales them down with filtering on. Re-running the script must give the same result.
+- **Morphing with sprites:** the Lance form is a **shape key** on the Gunship model (a stored second shape Blender can blend toward). The morph is rendered as a frame strip (~8 frames). The existing MorphSystem gets a frame-strip mode with the same API, so Combat Morph, refit morphs and weight-class changes keep working. Polygon mode remains for anything without sprites.
+- **Hit flash, elite outline, drop shadow** are done in Godot on top of the sprite (white flash shader, yellow outline shader, shadow from the sprite silhouette), so they never need extra renders.
+- **Visual node rule stays:** each object's art lives in its `Visual` child, so swapping placeholder → sprite never touches game logic.
+- Exact numbers (sprite sizes, render scale, light angle, frame count) get locked in ART-1d and written here.
+- Schedule: ART-1 right after Milestone A, then ART-2 to ART-5 alongside Milestones B–E (ROADMAP.md).
 ## 12. Audio
 
 - SFX: generated with jsfxr (free) during development. Heavy, punchy military sounds (cannon thumps, missile whooshes, alarm beeps), plus a metallic liquid sound for morphs, refits, assimilating and salvage pickups.

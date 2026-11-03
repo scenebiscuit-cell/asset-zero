@@ -13,6 +13,8 @@ enum Layer { AIR, GROUND }
 @export var salvage: int = 1
 ## Armor lost when XF-0 flies into this enemy. Ground units can't be flown into.
 @export var contact_damage: int = 20
+## Chance (0-1) to drop a repair pickup on death.
+@export_range(0.0, 1.0) var repair_drop_chance: float = 0.0
 
 @export_group("Fire")
 @export var fire_interval: float = 1.5

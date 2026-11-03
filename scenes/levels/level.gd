@@ -20,6 +20,7 @@ var _spawn_timer: float = 1.0
 @onready var _enemy_round_pool: RoundPool = $EnemyRoundPool
 @onready var _explosion_pool: ExplosionPool = $FX/ExplosionPool
 @onready var _salvage_pool: SalvagePool = $SalvagePool
+@onready var _repair_pool: ObjectPool = $RepairPool
 @onready var _player: Player = $Player
 @onready var _mission_failed: MissionFailedScreen = $MissionFailed
 
@@ -60,6 +61,10 @@ func spawn_enemy(scene: PackedScene, at: Vector2, elite: bool = false) -> Enemy:
 func _on_enemy_destroyed(enemy: Enemy) -> void:
 	_explosion_pool.spawn(enemy.global_position)
 	_salvage_pool.spawn_burst(enemy.global_position, enemy.salvage_value())
+	if randf() < enemy.data.repair_drop_chance:
+		var repair: RepairPickup = _repair_pool.acquire() as RepairPickup
+		if repair != null:
+			repair.activate(enemy.global_position, _player)
 
 
 func _on_player_destroyed() -> void:

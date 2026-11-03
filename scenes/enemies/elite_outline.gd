@@ -16,7 +16,8 @@ func _process(_delta: float) -> void:
 func _draw() -> void:
 	if source == null:
 		return
-	_draw_branch(source, Transform2D.IDENTITY)
+	# Start from Visual's own transform so flips and leans are outlined too.
+	_draw_branch(source, source.transform)
 
 
 func _draw_branch(node: Node, xform: Transform2D) -> void:

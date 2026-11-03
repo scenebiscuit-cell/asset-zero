@@ -24,6 +24,7 @@ ASSET ZERO is a modern take on *Raptor: Call of the Shadows* (1994): a vertical-
 - Placeholder art is simple vector shapes drawn in Godot: gunmetal and cyan for the player; orange, grey and hazard yellow for the enemy.
 - The interface looks like a military cockpit display.
 - **Art reference: Raptor: Call of the Shadows (2015 Edition).** Grounded top-down military terrain with a muted earthy palette (oxblood earth, teal water, concrete grey), fine grain, top-left lighting, drop shadows under aircraft, big clustered fireballs, scorched craters, minimal HUD and a terminal-style shop. Adapted to Verdance as jungle over rust-red mining pits. We keep our own pink enemy bullets and gunmetal/cyan jet. Details in DESIGN.md §11.
+- **Final art pipeline: Blender (free) driven by Claude Code** through Blender Lab's official MCP connection: 3D models rendered top-down into shaded sprites. Art steps ART-1 to ART-5 run alongside the milestones; ART-1 (pipeline test with the RD-2 drone and the XF-0 morph) comes when Milestone B is finished, followed by ART-2 (enemy renders). Effects stay code-made.
 - **Effects reference: Mech Havoc.** Glowing muzzle-flash cones, thin pale tracers, thick cyan lasers with a white core and bloom, red glowing enemy streaks, coral warning circles before area attacks, and explosions that go flash → sparks → debris with dark smoke trails → lingering scorch marks.
 
 ## Core hook (4 unique mechanics)
@@ -83,7 +84,7 @@ Each milestone goes to Claude Code (VS Code terminal in `C:\Projects\asset-zero`
 Each milestone gets its own branch and pull request; I merge only when I say "merge". Then `/clear` and start the next milestone.
 
 ## Current status
-Planning is done. The build hasn't started yet; next is Milestone A, starting with Step 0 (project setup and a test web export).
+Milestone A (Steps 0–5: setup, flying, Autocannon, terrain and first enemy, damage and death, Combat Morph) is done and merged. Milestone B is in progress. After it: ART-1 (Blender pipeline test) and ART-2, then Milestone C.
 
 ## Preference
 When referring back to earlier instructions or steps, paste them in full rather than saying "from earlier."

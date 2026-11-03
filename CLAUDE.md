@@ -70,6 +70,11 @@ res://
   resources/       custom Resource class scripts (weapon_data.gd, etc.)
   audio/           sfx/, music/
   tests/           test scenes for trying single objects
+  assets/
+    sprites/       rendered PNGs from Blender: player/, enemies/, boss/, modules/, props/
+art-source/        source art (has a .gdignore file so Godot never imports the .blend files)
+  blender/         .blend files: render_rig.blend and one file per model
+  render/          Python render scripts (render_sprites.py)
 ```
 
 ## Collision layers
@@ -83,9 +88,18 @@ res://
 | 5 | enemy_bullets |
 | 6 | pickups |
 
+## Blender art pipeline (ART steps)
+
+- Final ship, vehicle and building art comes from Blender through the Blender MCP connection (DESIGN.md §11 "Final art pipeline", ROADMAP.md ART-1 to ART-5). Only do art work during ART steps unless asked.
+- The connection runs Python inside Blender with no guards: only open and save files inside `art-source/`, never touch files outside the project, and save the .blend before big changes.
+- All renders go through `art-source/render/render_sprites.py` so they are repeatable; don't hand-export one-off PNGs.
+- Keep models simple and chunky (they become small sprites). Light from the top-left, palette from DESIGN.md §11.
+- Effects (explosions, smoke, tracers, lasers, glow) stay code-made in Godot, not rendered.
+- Sprites swap into each object's `Visual` node; hit flash, elite outline and drop shadow are applied in Godot, not baked into renders.
+
 ## Core systems to keep consistent
 
-- **Morph system** (`scenes/fx/morph`): one shared system that tweens polygon point lists. Used by Combat Morph, refit morphs, weight class changes and Assimilate. Don't write a second one.
+- **Morph system** (`scenes/fx/morph`): one shared system that tweens polygon point lists, and (from ART-1c) also plays rendered morph frame strips through the same API. Used by Combat Morph, refit morphs, weight class changes and Assimilate. Don't write a second one.
 - **Combat Morph**: every weapon and module needs both a Gunship and a Lance behavior (DESIGN.md §5.6, §5.8).
 - **Graze**: done with an Area2D on the player that watches the enemy_bullets layer; each round may count only once.
 

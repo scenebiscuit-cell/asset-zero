@@ -17,3 +17,4 @@ muzzle_offset = Vector2(0, -46)
 hitbox_radius = 7.0
 hitbox_height = 44.0
 hitbox_offset = Vector2(0, -4)
+graze_radius = 36.0

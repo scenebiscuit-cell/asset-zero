@@ -5,6 +5,8 @@ const START_MAX_ARMOR: int = 100
 const OVERCLOCK_MAX: float = 100.0
 ## Overclock gained per salvage pickup (DESIGN.md §5.7).
 const OVERCLOCK_PER_SALVAGE: float = 2.0
+const OVERCLOCK_PER_GRAZE: float = 1.0
+const OVERCLOCK_PER_ELITE: float = 10.0
 
 enum WeightClass { LIGHT, MEDIUM, HEAVY, ASSAULT }
 

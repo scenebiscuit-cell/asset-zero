@@ -35,6 +35,7 @@ func _ready() -> void:
 	if not GameState.run_active:
 		GameState.reset_run()
 	_player.destroyed.connect(_on_player_destroyed)
+	_player.meltdown_pulse.connect(_on_meltdown_pulse)
 	_sector_clear.continue_pressed.connect(_on_continue_pressed)
 	_hud.player = _player
 	if not run_waves or sectors.is_empty():
@@ -81,10 +82,22 @@ func spawn_enemy(scene: PackedScene, at: Vector2, elite: bool = false) -> Enemy:
 func _on_enemy_destroyed(enemy: Enemy) -> void:
 	_explosion_pool.spawn(enemy.global_position)
 	_salvage_pool.spawn_burst(enemy.global_position, enemy.salvage_value())
+	if enemy.elite:
+		GameState.add_overclock(GameState.OVERCLOCK_PER_ELITE)
 	if randf() < enemy.data.repair_drop_chance:
 		drop_pickup(_repair_pool, enemy.global_position)
 	if randf() < fire_control_drop_chance:
 		drop_pickup(_fire_control_pool, enemy.global_position + Vector2(0.0, -12.0))
+
+
+## Overclock's Meltdown pulse: every enemy round in the circle becomes a salvage pickup.
+func _on_meltdown_pulse(center: Vector2, radius: float) -> void:
+	for child: Node in _enemy_round_pool.get_children():
+		var enemy_round: EnemyRound = child as EnemyRound
+		if enemy_round.is_active() and enemy_round.global_position.distance_to(center) <= radius:
+			var at: Vector2 = enemy_round.global_position
+			enemy_round.deactivate()
+			_salvage_pool.spawn_burst(at, 1)
 
 
 func drop_repair(at: Vector2) -> void:

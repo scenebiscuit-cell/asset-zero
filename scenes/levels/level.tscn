@@ -56,7 +56,7 @@ explosion_scene = ExtResource("4_explosion")
 script = ExtResource("5_salvage_pool")
 player = NodePath("../Player")
 scene = ExtResource("6_salvage")
-pool_size = 48
+pool_size = 96
 
 [node name="RepairPool" type="Node2D" parent="."]
 script = ExtResource("14_object_pool")

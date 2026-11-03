@@ -1,8 +1,10 @@
 class_name Player
 extends Area2D
-## XF-0. Moves, tells its weapons when to fire, and takes hits.
+## XF-0. Moves, tells its weapons when to fire, takes hits, grazes and Overclocks.
 
 signal destroyed
+## Overclock's Meltdown pulse: the Level turns enemy rounds in this circle into salvage.
+signal meltdown_pulse(center: Vector2, radius: float)
 
 enum InputMode { KEYBOARD, MOUSE }
 
@@ -14,6 +16,8 @@ enum InputMode { KEYBOARD, MOUSE }
 @export var invulnerable_time: float = 1.0
 @export var flash_interval: float = 0.08
 @export var collapse_time: float = 0.6
+## Hull colour at the peak of the white-hot Overclock pulse (values above 1 brighten).
+@export var overclock_glow: Color = Color(1.9, 1.5, 1.15)
 
 ## Always-on auto-fire: the FC-1 refit or the accessibility setting (DESIGN.md §7.3), never a key.
 var autofire: bool = false
@@ -22,6 +26,7 @@ var _input_mode: InputMode = InputMode.KEYBOARD
 var _autofire_left: float = 0.0
 var _invulnerable_left: float = 0.0
 var _dead: bool = false
+var _glow_time: float = 0.0
 
 @onready var _autocannon: Autocannon = $Autocannon
 @onready var _hitbox: CollisionShape2D = $Hitbox
@@ -31,6 +36,9 @@ var _dead: bool = false
 @onready var _combat_morph: CombatMorph = $CombatMorph
 @onready var _hit_splash: CPUParticles2D = $Visual/HitSplash
 @onready var _death_splash: CPUParticles2D = $Visual/DeathSplash
+@onready var _graze_spark: CPUParticles2D = $Visual/GrazeSpark
+@onready var _graze_area: GrazeArea = $GrazeArea
+@onready var _overclock: Overclock = $Overclock
 
 
 func _ready() -> void:
@@ -38,6 +46,10 @@ func _ready() -> void:
 	area_entered.connect(_try_hit)
 	_morph_system.shape_changed.connect(_shadow.refresh)
 	_combat_morph.form_changed.connect(_on_form_changed)
+	_graze_area.grazed.connect(_on_grazed)
+	_overclock.meltdown.connect(meltdown_pulse.emit)
+	_overclock.started.connect(_refresh_damage)
+	_overclock.finished.connect(_on_overclock_finished)
 	_set_hitbox(_combat_morph.current_shape(), 0.0)
 
 
@@ -62,6 +74,7 @@ func _physics_process(delta: float) -> void:
 	_update_timed_autofire(delta)
 	_autocannon.firing = autofire or _autofire_left > 0.0 or Input.is_action_pressed("fire")
 	_update_invulnerability(delta)
+	_update_overclock_glow(delta)
 
 
 ## Timed auto-fire from a Fire Control pickup. A second pickup tops the timer back up, it doesn't stack.
@@ -76,15 +89,56 @@ func autofire_time_left() -> float:
 
 
 func is_overclocked() -> bool:
-	return false
+	return _overclock.active
 
 
 func overclock_time_left() -> float:
-	return 0.0
+	return _overclock.time_left()
 
 
 func overclock_max_time() -> float:
-	return 10.0
+	return _overclock.max_duration
+
+
+## Never shortens invulnerability that's already running.
+func grant_invulnerability(seconds: float) -> void:
+	_invulnerable_left = maxf(_invulnerable_left, seconds)
+
+
+func _on_grazed(at: Vector2) -> void:
+	if _dead:
+		return
+	GameState.add_overclock(GameState.OVERCLOCK_PER_GRAZE)
+	_graze_spark.global_position = at
+	_graze_spark.restart()
+	AudioManager.play("graze_tick", -8.0)
+	Events.grazed.emit(at)
+
+
+func _on_overclock_finished() -> void:
+	_refresh_damage()
+	grant_invulnerability(_overclock.end_invulnerability)
+
+
+## Lance form and Overclock both boost damage; they multiply.
+func _refresh_damage() -> void:
+	var overclock_bonus: float = _overclock.damage_multiplier if _overclock.active else 1.0
+	_autocannon.damage_multiplier = _combat_morph.damage_multiplier() * overclock_bonus
+
+
+## White-hot pulsing hull with a slight ripple while Overclocked (DESIGN.md §5.3).
+func _update_overclock_glow(delta: float) -> void:
+	if not _overclock.active:
+		if _glow_time > 0.0:
+			_glow_time = 0.0
+			_airframe.modulate = Color(1.0, 1.0, 1.0, _airframe.modulate.a)
+			_airframe.scale = Vector2.ONE
+		return
+	_glow_time += delta
+	var pulse: float = 0.5 + 0.5 * sin(_glow_time * 14.0)
+	var hot: Color = Color.WHITE.lerp(overclock_glow, 0.6 + 0.4 * pulse)
+	_airframe.modulate = Color(hot.r, hot.g, hot.b, _airframe.modulate.a)
+	_airframe.scale = Vector2.ONE * (1.0 + 0.025 * sin(_glow_time * 22.0))
 
 
 func _update_timed_autofire(delta: float) -> void:
@@ -104,7 +158,7 @@ func take_damage(amount: int) -> void:
 
 func _on_form_changed(is_lance: bool) -> void:
 	_autocannon.converged = is_lance
-	_autocannon.damage_multiplier = _combat_morph.damage_multiplier()
+	_refresh_damage()
 	# The muzzle (and its flash) slides out to the new nose as the shape flows.
 	var muzzle: Vector2 = _combat_morph.current_shape().muzzle_offset
 	create_tween().tween_property(_autocannon, "position", muzzle, _combat_morph.morph_time)
@@ -114,6 +168,7 @@ func _on_form_changed(is_lance: bool) -> void:
 ## The hitbox follows the airframe: it narrows as the wings fold into Lance form.
 func _set_hitbox(shape: AirframeShape, duration: float) -> void:
 	var capsule: CapsuleShape2D = _hitbox.shape as CapsuleShape2D
+	_graze_area.set_radius(shape.graze_radius, duration)
 	if duration <= 0.0:
 		capsule.radius = shape.hitbox_radius
 		capsule.height = shape.hitbox_height
@@ -157,7 +212,10 @@ func _die() -> void:
 	set_physics_process(false)
 	_combat_morph.set_physics_process(false)
 	_hitbox.set_deferred("disabled", true)
-	_airframe.modulate.a = 1.0
+	_graze_area.enabled = false
+	_overclock.cancel()
+	_airframe.modulate = Color.WHITE
+	_airframe.scale = Vector2.ONE
 	_death_splash.restart()
 
 	# Liquid collapse: the airframe loses its shape, spreads flat and falls away.

@@ -11,9 +11,14 @@ extends Node2D
 @export_range(0.0, 1.0) var fire_control_drop_chance: float = 0.03
 ## Lets the death splash play out before the failure screen appears.
 @export var mission_failed_delay: float = 1.0
+## Salvage lost for each enemy aircraft that gets away.
+@export var escape_penalty: int = 2
+## Salvage awarded at SECTOR CLEAR if no aircraft got away all sector.
+@export var perimeter_bonus: int = 25
 
 var _level_data: LevelData
 var _player_dead: bool = false
+var _breaches: int = 0
 
 @onready var _enemies: Node2D = $Enemies
 @onready var _wave_director: WaveDirector = $WaveDirector
@@ -57,7 +62,9 @@ func _on_sector_cleared() -> void:
 	if _player_dead:
 		return
 	_pause_menu.allowed = false
-	_sector_clear.show_screen(_level_data.sector_number)
+	var bonus: int = perimeter_bonus if _breaches == 0 else 0
+	GameState.award_salvage(bonus)
+	_sector_clear.show_screen(_level_data.sector_number, _breaches, bonus)
 
 
 func _on_continue_pressed() -> void:
@@ -75,6 +82,7 @@ func spawn_enemy(scene: PackedScene, at: Vector2, elite: bool = false) -> Enemy:
 	enemy.target = _player
 	enemy.ground_speed = _ground_layer.scroll_speed
 	enemy.destroyed.connect(_on_enemy_destroyed)
+	enemy.escaped.connect(_on_enemy_escaped)
 	_enemies.add_child(enemy)
 	return enemy
 
@@ -88,6 +96,13 @@ func _on_enemy_destroyed(enemy: Enemy) -> void:
 		drop_pickup(_repair_pool, enemy.global_position)
 	if randf() < fire_control_drop_chance:
 		drop_pickup(_fire_control_pool, enemy.global_position + Vector2(0.0, -12.0))
+
+
+func _on_enemy_escaped(_enemy: Enemy) -> void:
+	if _player_dead:
+		return
+	_breaches += 1
+	_hud.show_breach(GameState.lose_salvage(escape_penalty))
 
 
 ## Overclock's Meltdown pulse: every enemy round in the circle becomes a salvage pickup.

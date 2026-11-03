@@ -150,6 +150,9 @@ How to hand a milestone to Claude Code (in VS Code, terminal at `C:\Projects\ass
 
 Write down decisions here as you make them (date — decision), so the AI tools know about them.
 
+- 2026-11-03 — Breach penalty: each enemy aircraft that escapes costs 2 salvage; a sector with no escapes pays a 25-salvage Perimeter Held bonus at SECTOR CLEAR. Enemy round damage raised (RD-2 8, others 12). DESIGN.md §8, §9.
+- 2026-11-03 — RD-2 Recon Drones now fire one weak, slow aimed round (most of them, at a random moment) so Sector 1 has rounds to dodge and graze. AA Emplacements fire 3-round bursts and appear more often. DESIGN.md §8.
+
 - 2026-11-02 — XF-0 hitbox changed from a ~6 px circle to a capsule over the body + wing roots (~24 px wide in Gunship form, ~14 px in Lance form), stored per airframe shape and morphing with it. Lance form is now also the dodge form. Same size in every weight class. DESIGN.md §5.2, §5.4, §5.6.
 
 - 2026-11-02 — Auto-fire is no longer a standard control (F key removed). It comes from the FC-1 Fire Control Computer (one-run purchase for Combat Data at the briefing, only when offered) or a rare timed Fire Control pickup; an Accessibility setting keeps it available for players who need it. DESIGN.md §5.5, §7.3, §13.

@@ -58,6 +58,18 @@ func add_salvage(amount: int) -> void:
 	Events.salvage_collected.emit()
 
 
+## Rewards paid out by the game (not picked up), so they don't charge Overclock.
+func award_salvage(amount: int) -> void:
+	salvage += amount
+
+
+## Returns how much was actually lost (salvage never goes below 0).
+func lose_salvage(amount: int) -> int:
+	var lost: int = mini(amount, salvage)
+	salvage -= lost
+	return lost
+
+
 func add_overclock(amount: float) -> void:
 	overclock = minf(overclock + amount, OVERCLOCK_MAX)
 

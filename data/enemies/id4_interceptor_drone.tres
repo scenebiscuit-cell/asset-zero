@@ -10,4 +10,4 @@ speed = 150.0
 salvage = 2
 contact_damage = 15
 round_speed = 200.0
-round_damage = 10
+round_damage = 12

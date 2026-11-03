@@ -24,4 +24,4 @@ func _tick(delta: float) -> void:
 	position += Vector2(_direction * data.speed, drift_down) * delta
 	var width: float = get_viewport_rect().size.x
 	if (_direction > 0.0 and position.x > width + exit_margin) or (_direction < 0.0 and position.x < -exit_margin):
-		queue_free() # Got away: no salvage.
+		escape()

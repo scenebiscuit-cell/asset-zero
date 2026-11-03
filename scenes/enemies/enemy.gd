@@ -4,6 +4,8 @@ extends Area2D
 ## Each enemy's own script adds movement in _tick().
 
 signal destroyed(enemy: Enemy)
+## An air unit got away (off the bottom, or out its exit route) without being destroyed.
+signal escaped(enemy: Enemy)
 
 const FLASH_TIME: float = 0.06
 ## Multiplying every colour this hard pushes it to white.
@@ -59,7 +61,7 @@ func _physics_process(delta: float) -> void:
 		position.y += ground_speed * delta
 	_tick(delta)
 	if is_below_screen():
-		queue_free() # Escaped: no salvage.
+		escape()
 
 
 ## Per-enemy behaviour. Override in each enemy's script.
@@ -101,6 +103,16 @@ func is_on_screen() -> bool:
 
 func is_below_screen() -> bool:
 	return global_position.y > get_viewport_rect().size.y + OFFSCREEN_MARGIN
+
+
+## Leaves the fight with no salvage. Only aircraft count as a breach; ground units just scroll away.
+func escape() -> void:
+	if _dead:
+		return
+	_dead = true
+	if data.layer == EnemyData.Layer.AIR:
+		escaped.emit(self)
+	queue_free()
 
 
 func _die() -> void:

@@ -132,6 +132,17 @@ theme_override_constants/outline_size = 5
 text = "00000000"
 horizontal_alignment = 1
 
+[node name="Breach" type="Label" parent="Root/TopCenter"]
+visible = false
+offset_top = 46.0
+offset_right = 160.0
+offset_bottom = 66.0
+theme_override_colors/font_color = Color(1, 0.25, 0.2, 1)
+theme_override_font_sizes/font_size = 14
+theme_override_constants/outline_size = 4
+text = "HUD_BREACH"
+horizontal_alignment = 1
+
 [node name="SalvageLabel" type="Label" parent="Root/TopCenter"]
 offset_top = 28.0
 offset_right = 160.0

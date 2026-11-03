@@ -50,7 +50,7 @@ func _tick(delta: float) -> void:
 		Phase.LEAVING:
 			position.y -= data.speed * minf(_phase_time * 2.0, 1.0) * delta
 			if position.y < -60.0:
-				queue_free() # Left the fight: no salvage.
+				escape()
 
 
 func _set_phase(phase: Phase) -> void:

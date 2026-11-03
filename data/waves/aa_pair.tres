@@ -11,5 +11,5 @@ formation = 2
 entry = 0
 spacing = 160.0
 cost = 5.5
-min_time = 60.0
-weight = 1
+min_time = 25.0
+weight = 2

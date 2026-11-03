@@ -263,7 +263,7 @@ Air enemies fly over everything. Ground enemies scroll with the background. All 
 
 | Enemy | Layer | Behavior | HP | Salvage | Elite drops |
 |---|---|---|---|---|---|
-| RD-2 Recon Drone | Air | Flies straight down in lines/V formations | Low | 1 | — |
+| RD-2 Recon Drone | Air | Flies straight down in lines/V formations; most fire one weak, slow aimed round (8 dmg; others 12) | Low | 1 | — |
 | ID-4 Interceptor Drone | Air | Sine-wave path, fires a single slow round | Low | 2 | — |
 | AA Emplacement | Ground | Stationary, aims and fires at the player | Medium | 3 | Flak Burst |
 | Mining Platform | Ground | Tanky, no attack, big salvage reward | High | 8 | Drill Lance |
@@ -285,6 +285,7 @@ A giant armored strip-mining machine that fills the top third of the screen.
 - A **wave director** spawns enemy waves from a pool, using a difficulty budget that grows over time and per level, multiplied by the Threat Level.
 - Waves are defined as data (which enemies, formation, entry side, path), so new waves can be added without new code.
 - Each level ends with a short "SECTOR CLEAR" moment, then the between-level screens.
+- **Breaches:** each enemy aircraft that gets away (off the bottom, or out its exit route) costs a little salvage (2, tunable) and shows "BREACH" under the salvage counter. Ground units scrolling away don't count. If none get away all sector, SECTOR CLEAR pays a **Perimeter Held** bonus (25 salvage, tunable).
 - Level 1: drones and AA emplacements. Level 2: adds interceptors, mining platforms, transports. Level 3: adds gunships and denser waves. Then the boss.
 
 ### 9.1 Threat Level

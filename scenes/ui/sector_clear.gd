@@ -12,14 +12,22 @@ var _accepting_input: bool = false
 
 @onready var _title: Label = $Lines/Title
 @onready var _hint: Label = $Lines/Hint
+@onready var _result: Label = $Lines/Result
 
 
 func _ready() -> void:
 	visible = false
 
 
-func show_screen(sector_number: int) -> void:
+## `breaches` = enemy aircraft that got away; `bonus` = salvage paid for holding the perimeter.
+func show_screen(sector_number: int, breaches: int = 0, bonus: int = 0) -> void:
 	_title.text = tr("SECTOR_CLEAR") % sector_number
+	if breaches == 0:
+		_result.text = tr("CLEAR_PERIMETER_HELD") % bonus
+		_result.add_theme_color_override("font_color", Color(0.55, 1.0, 0.6))
+	else:
+		_result.text = tr("CLEAR_BREACHES") % breaches
+		_result.add_theme_color_override("font_color", Color(1.0, 0.7, 0.2))
 	_hint.visible = false
 	visible = true
 	await get_tree().create_timer(input_delay).timeout

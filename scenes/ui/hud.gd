@@ -38,7 +38,8 @@ var _shown_overclock_secs: int = -1
 @onready var _sector_label: Label = $Root/TopRight/Sector
 @onready var _class_label: Label = $Root/TopRight/WeightClass
 @onready var _threat_label: Label = $Root/TopRight/Threat
-@onready var _module_value: Label = $Root/BottomLeft/ModuleSlot/ModuleValue
+@onready var _module_label: Label = $Root/BottomLeft/ModuleLabel
+@onready var _module_icon: WeaponIcon = $Root/BottomLeft/ModuleSlot/ModuleIcon
 @onready var _overclock_bar: HudBar = $Root/BottomRight/OverclockBar
 @onready var _overclock_state: Label = $Root/BottomRight/OverclockState
 @onready var _warning: Label = $Root/BottomCenter/Warning
@@ -64,7 +65,7 @@ func _process(delta: float) -> void:
 	if wave_director != null:
 		_sector_progress.value = wave_director.progress()
 	_update_status()
-	_module_value.text = "—" if GameState.assimilated_module == null else GameState.assimilated_module.resource_name
+	_update_module()
 	_update_overclock(blink_on)
 	_update_autofire()
 	_update_weapon(_nose_icon, _nose_name, WeaponData.Hardpoint.NOSE)
@@ -145,3 +146,12 @@ func _update_weapon(icon: WeaponIcon, label: Label, hardpoint: WeaponData.Hardpo
 		return
 	icon.weapon = weapon
 	label.text = "—" if weapon == null else tr(weapon.name_key)
+
+
+## The slot shows the module's icon, and its name replaces the MODULE header while one is mounted.
+func _update_module() -> void:
+	var module: ModuleData = GameState.assimilated_module()
+	if module == _module_icon.weapon:
+		return
+	_module_icon.weapon = module
+	_module_label.text = tr("HUD_MODULE") if module == null else tr(module.name_key)

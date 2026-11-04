@@ -15,6 +15,7 @@ parts = Dictionary[String, PackedVector2Array]({
 })
 muzzle_offset = Vector2(0, -46)
 pylon_offset = Vector2(8, 13)
+mount_offset = Vector2(0, 8)
 hitbox_radius = 7.0
 hitbox_height = 44.0
 hitbox_offset = Vector2(0, -4)

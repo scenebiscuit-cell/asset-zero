@@ -16,6 +16,7 @@ func _ready() -> void:
 	_streams["morph_to_gunship"] = _make_metallic_sweep(1000.0, 380.0, 0.14)
 	_streams["graze_tick"] = _make_metallic_sweep(2400.0, 3000.0, 0.035)
 	_streams["overclock_on"] = _make_rising_roar(0.55)
+	_streams["assimilate"] = _make_metallic_sweep(1400.0, 240.0, 0.22)
 	for i: int in VOICES:
 		var player: AudioStreamPlayer = AudioStreamPlayer.new()
 		add_child(player)

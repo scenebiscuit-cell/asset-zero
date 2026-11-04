@@ -8,6 +8,8 @@ extends Resource
 @export var muzzle_offset: Vector2 = Vector2(0.0, -35.0)
 ## Right wing pylon (secondary weapons), relative to the ship. The left one is its mirror.
 @export var pylon_offset: Vector2 = Vector2(14.0, 6.0)
+## Salvage Mount (assimilated module), on the belly, relative to the ship.
+@export var mount_offset: Vector2 = Vector2(0.0, 10.0)
 
 @export_group("Hitbox")
 ## Capsule over the body and wing roots (DESIGN.md §5.4). Wing tips don't count.

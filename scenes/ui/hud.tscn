@@ -226,14 +226,12 @@ offset_bottom = 54.0
 mouse_filter = 2
 color = Color(0.08, 0.09, 0.1, 1)
 
-[node name="ModuleValue" type="Label" parent="Root/BottomLeft/ModuleSlot"]
+[node name="ModuleIcon" type="Control" parent="Root/BottomLeft/ModuleSlot"]
+anchors_preset = 0
 offset_right = 36.0
 offset_bottom = 36.0
-theme_override_colors/font_color = Color(1, 1, 1, 0.35)
-theme_override_font_sizes/font_size = 16
-text = "—"
-horizontal_alignment = 1
-vertical_alignment = 1
+mouse_filter = 2
+script = ExtResource("4_weapon_icon")
 
 [node name="Weapons" type="Control" parent="Root"]
 offset_left = 96.0

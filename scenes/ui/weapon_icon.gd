@@ -1,7 +1,7 @@
 class_name WeaponIcon
 extends Control
 ## Small HUD picture of a weapon, drawn in code from its data (placeholder art, no image files):
-## tracer streams per barrel, a cyan beam, straight rockets or a curving seeker.
+## tracer streams per barrel, a cyan beam, straight rockets, a curving seeker, or a module hexagon.
 
 const TRACER: Color = Color(0.94, 0.925, 0.88)
 const BEAM_CORE: Color = Color(0.91, 1.0, 1.0)
@@ -22,7 +22,9 @@ var weapon: WeaponData:
 
 func _draw() -> void:
 	draw_rect(Rect2(Vector2.ZERO, size), Color(0.08, 0.09, 0.1, 1.0))
-	if weapon is GunData:
+	if weapon is ModuleData:
+		_draw_module(weapon as ModuleData)
+	elif weapon is GunData:
 		_draw_gun(weapon as GunData)
 	elif weapon is BeamData:
 		_draw_beam()
@@ -67,3 +69,22 @@ func _draw_rocket(tip: Vector2, tilt: float) -> void:
 	var tail: Vector2 = tip - forward * 8.0
 	draw_colored_polygon(PackedVector2Array([tip, tail + side, tail - side]), MISSILE)
 	draw_line(tail, tail - forward * 3.0, EXHAUST, 2.0)
+
+
+## A glowing hexagon in the module's colour with a small sign for what it does.
+func _draw_module(module: ModuleData) -> void:
+	var center: Vector2 = size * 0.5
+	var radius: float = minf(size.x, size.y) * 0.45
+	var hexagon: PackedVector2Array = PackedVector2Array()
+	for i: int in 6:
+		hexagon.append(center + Vector2.from_angle(PI / 6.0 + i * PI / 3.0) * radius)
+	draw_colored_polygon(hexagon, Color(module.color, 0.25))
+	hexagon.append(hexagon[0]) # Closes the outline.
+	draw_polyline(hexagon, module.color, 1.5)
+	var sign_color: Color = module.color.lerp(Color.WHITE, 0.5)
+	if module is SpreadCannonData:
+		for i: int in 5:
+			var angle: float = -PI / 2.0 + (i - 2) * 0.35
+			draw_line(center + Vector2(0.0, radius * 0.45), center + Vector2.from_angle(angle) * radius * 0.6, sign_color, 1.0)
+	else:
+		draw_circle(center, radius * 0.25, sign_color)

@@ -22,6 +22,7 @@ var _enabled: bool = true
 	WeaponData.Hardpoint.SALVAGE_MOUNT: $SalvageMount,
 }
 @onready var _nose: Node2D = $Nose
+@onready var _salvage_mount: Node2D = $SalvageMount
 @onready var _pylon_left: Node2D = $WingPylons/Left
 @onready var _pylon_right: Node2D = $WingPylons/Right
 
@@ -89,11 +90,13 @@ func apply_shape(shape: AirframeShape, duration: float) -> void:
 		_nose.position = shape.muzzle_offset
 		_pylon_left.position = left
 		_pylon_right.position = shape.pylon_offset
+		_salvage_mount.position = shape.mount_offset
 		return
 	var tween: Tween = create_tween().set_parallel()
 	tween.tween_property(_nose, "position", shape.muzzle_offset, duration)
 	tween.tween_property(_pylon_left, "position", left, duration)
 	tween.tween_property(_pylon_right, "position", shape.pylon_offset, duration)
+	tween.tween_property(_salvage_mount, "position", shape.mount_offset, duration)
 
 
 func _mount(weapon_data: WeaponData) -> void:

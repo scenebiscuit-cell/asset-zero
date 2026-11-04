@@ -32,6 +32,7 @@ var _breaches: int = 0
 @onready var _salvage_pool: SalvagePool = $SalvagePool
 @onready var _repair_pool: ObjectPool = $RepairPool
 @onready var _fire_control_pool: ObjectPool = $FireControlPool
+@onready var _module_pool: ObjectPool = $ModulePool
 @onready var _player: Player = $Player
 @onready var _mission_failed: MissionFailedScreen = $MissionFailed
 
@@ -67,6 +68,7 @@ func _on_sector_cleared() -> void:
 	if _player_dead:
 		return
 	_pause_menu.allowed = false
+	_player.dissolve_module()
 	var bonus: int = perimeter_bonus if _breaches == 0 else 0
 	GameState.award_salvage(bonus)
 	_sector_clear.show_screen(_level_data.sector_number, _breaches, bonus)
@@ -97,6 +99,8 @@ func _on_enemy_destroyed(enemy: Enemy) -> void:
 	_salvage_pool.spawn_burst(enemy.global_position, enemy.salvage_value())
 	if enemy.elite:
 		GameState.add_overclock(GameState.OVERCLOCK_PER_ELITE)
+		if enemy.data.module != null:
+			drop_module(enemy.data.module, enemy.global_position)
 	if randf() < enemy.data.repair_drop_chance:
 		drop_pickup(_repair_pool, enemy.global_position)
 	if randf() < fire_control_drop_chance:
@@ -126,6 +130,15 @@ func drop_repair(at: Vector2) -> void:
 
 func drop_fire_control(at: Vector2) -> void:
 	drop_pickup(_fire_control_pool, at)
+
+
+## Elites always drop their weapon module (DESIGN.md §5.8).
+func drop_module(module: ModuleData, at: Vector2) -> void:
+	var pickup: ModulePickup = _module_pool.acquire() as ModulePickup
+	if pickup == null:
+		return
+	pickup.module = module
+	pickup.activate(at, _player)
 
 
 func drop_pickup(pool: ObjectPool, at: Vector2) -> void:

@@ -40,6 +40,7 @@ var _glow_time: float = 0.0
 @onready var _graze_spark: CPUParticles2D = $Visual/GrazeSpark
 @onready var _graze_area: GrazeArea = $GrazeArea
 @onready var _overclock: Overclock = $Overclock
+@onready var _assimilate_fx: AssimilateFx = $Visual/AssimilateFx
 
 
 func _ready() -> void:
@@ -100,6 +101,28 @@ func overclock_time_left() -> float:
 
 func overclock_max_time() -> float:
 	return _overclock.max_duration
+
+
+## Absorbs an enemy weapon module onto the Salvage Mount (DESIGN.md §5.8). Only one at a time:
+## a new one replaces the old, which splashes away.
+func assimilate(module: ModuleData) -> void:
+	if _dead:
+		return
+	if _hardpoints.equipped(WeaponData.Hardpoint.SALVAGE_MOUNT) != null:
+		_hardpoints.unequip(WeaponData.Hardpoint.SALVAGE_MOUNT)
+		_hit_splash.restart()
+	_assimilate_fx.play(module.color)
+	await _assimilate_fx.absorbed
+	if not _dead:
+		_hardpoints.equip(module)
+
+
+## The module dissolves at the end of the sector (DESIGN.md §5.8).
+func dissolve_module() -> void:
+	if _hardpoints.equipped(WeaponData.Hardpoint.SALVAGE_MOUNT) == null:
+		return
+	_hardpoints.unequip(WeaponData.Hardpoint.SALVAGE_MOUNT)
+	_hit_splash.restart()
 
 
 ## Never shortens invulnerability that's already running.

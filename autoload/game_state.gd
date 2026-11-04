@@ -19,8 +19,6 @@ var max_plating: int = 0
 var weight_class: WeightClass = WeightClass.LIGHT
 ## HSD Threat Level 1-4 (§9.1). Follows weight class from Step 15.
 var threat_level: int = 1
-## The assimilated weapon module on the Salvage Mount (§5.8), or null. Filled in Step 11.
-var assimilated_module: Resource = null
 ## What's mounted on each hardpoint (WeaponData.Hardpoint -> WeaponData). Empty = stock loadout.
 var weapons: Dictionary[int, WeaponData] = {}
 var overclock: float = 0.0
@@ -38,7 +36,6 @@ func reset_run() -> void:
 	max_plating = 0
 	weight_class = WeightClass.LIGHT
 	threat_level = 1
-	assimilated_module = null
 	weapons.clear()
 	overclock = 0.0
 	sector_index = 0
@@ -53,6 +50,13 @@ func end_run() -> void:
 ## Called on SECTOR CLEAR: Armor, salvage and Overclock carry over.
 func advance_sector() -> void:
 	sector_index += 1
+	# The assimilated module dissolves at the end of the sector (§5.8).
+	weapons.erase(WeaponData.Hardpoint.SALVAGE_MOUNT)
+
+
+## The weapon module on the Salvage Mount (§5.8), or null.
+func assimilated_module() -> ModuleData:
+	return weapons.get(WeaponData.Hardpoint.SALVAGE_MOUNT, null) as ModuleData
 
 
 func add_salvage(amount: int) -> void:

@@ -1,4 +1,4 @@
-[gd_scene load_steps=25 format=3]
+[gd_scene load_steps=28 format=3]
 
 [ext_resource type="Script" path="res://scenes/player/player.gd" id="1_player"]
 [ext_resource type="Script" path="res://scenes/player/hardpoints.gd" id="2_hardpoints"]
@@ -16,6 +16,9 @@
 [ext_resource type="Resource" path="res://data/weapons/hel1_beam_laser.tres" id="14_hel1"]
 [ext_resource type="Resource" path="res://data/weapons/mk1_seeker.tres" id="15_mk1"]
 [ext_resource type="Resource" path="res://data/weapons/r1_rocket_pod.tres" id="16_r1"]
+[ext_resource type="Script" path="res://scenes/player/assimilate_fx.gd" id="17_assimilate"]
+[ext_resource type="Resource" path="res://data/modules/spread_cannon.tres" id="18_spread"]
+[ext_resource type="Script" path="res://resources/module_data.gd" id="19_module_data"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_hitbox"]
 resource_local_to_scene = true
@@ -113,6 +116,13 @@ polygon = PackedVector2Array(24, 12, 22, 6, 20, 7, 21, 11.7)
 color = Color(0.21, 0.88, 1, 0.85)
 polygon = PackedVector2Array(-3, 19, 3, 19, 2, 26, -2, 26)
 
+[node name="AssimilateFx" type="Node2D" parent="Visual"]
+script = ExtResource("17_assimilate")
+
+[node name="Hex" type="Polygon2D" parent="Visual/AssimilateFx"]
+material = SubResource("CanvasItemMaterial_add")
+polygon = PackedVector2Array(0, -20, 17.3, -10, 17.3, 10, 0, 20, -17.3, 10, -17.3, -10)
+
 [node name="HitSplash" type="CPUParticles2D" parent="Visual"]
 emitting = false
 amount = 14
@@ -196,9 +206,11 @@ position = Vector2(14, 6)
 [node name="Hull" type="Node2D" parent="Hardpoints"]
 
 [node name="SalvageMount" type="Node2D" parent="Hardpoints"]
+position = Vector2(0, 10)
 
 [node name="DebugLoadout" type="Node" parent="." node_paths=PackedStringArray("hardpoints")]
 script = ExtResource("12_debug")
 hardpoints = NodePath("../Hardpoints")
 nose_options = Array[ExtResource("11_weapon_data")]([ExtResource("3_m20"), ExtResource("13_m20d"), ExtResource("14_hel1")])
 pylon_options = Array[ExtResource("11_weapon_data")]([ExtResource("16_r1"), ExtResource("15_mk1")])
+module_options = Array[ExtResource("19_module_data")]([ExtResource("18_spread")])

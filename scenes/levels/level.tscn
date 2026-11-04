@@ -1,4 +1,4 @@
-[gd_scene load_steps=28 format=3]
+[gd_scene load_steps=29 format=3]
 
 [ext_resource type="Script" path="res://scenes/levels/level.gd" id="1_level"]
 [ext_resource type="Script" path="res://scenes/levels/background_layer.gd" id="2_bg"]
@@ -26,6 +26,7 @@
 [ext_resource type="PackedScene" path="res://scenes/pickups/fire_control_pickup.tscn" id="16_fire_control"]
 [ext_resource type="Script" path="res://scenes/weapons/missile_pool.gd" id="25_missile_pool"]
 [ext_resource type="PackedScene" path="res://scenes/weapons/missile.tscn" id="26_missile"]
+[ext_resource type="PackedScene" path="res://scenes/pickups/module_pickup.tscn" id="27_module"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_grain"]
 shader = ExtResource("10_grain")
@@ -70,9 +71,15 @@ script = ExtResource("14_object_pool")
 scene = ExtResource("16_fire_control")
 pool_size = 2
 
+[node name="ModulePool" type="Node2D" parent="."]
+script = ExtResource("14_object_pool")
+scene = ExtResource("27_module")
+pool_size = 3
+
 [node name="PlayerRoundPool" type="Node2D" parent="."]
 script = ExtResource("7_round_pool")
 scene = ExtResource("8_round")
+pool_size = 96
 
 [node name="PlayerMissilePool" type="Node2D" parent="." node_paths=PackedStringArray("targets")]
 script = ExtResource("25_missile_pool")

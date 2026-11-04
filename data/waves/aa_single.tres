@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="WaveData" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://resources/wave_data.gd" id="1_wave"]
+[ext_resource type="PackedScene" path="res://scenes/enemies/aa_emplacement/aa_emplacement.tscn" id="2_enemy"]
+
+[resource]
+script = ExtResource("1_wave")
+enemy_scene = ExtResource("2_enemy")
+count = 1
+formation = 0
+entry = 0
+spacing = 48.0
+cost = 2.5
+min_time = 3.0
+weight = 3

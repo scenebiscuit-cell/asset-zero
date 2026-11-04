@@ -1,0 +1,40 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scenes/pickups/fire_control_pickup.gd" id="1_fc"]
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_add"]
+blend_mode = 1
+
+[node name="FireControlPickup" type="Area2D"]
+collision_layer = 32
+collision_mask = 0
+monitoring = false
+monitorable = false
+script = ExtResource("1_fc")
+
+[node name="Visual" type="Node2D" parent="."]
+
+[node name="Glow" type="Polygon2D" parent="Visual"]
+material = SubResource("CanvasItemMaterial_add")
+color = Color(0.75, 0.68, 1, 0.35)
+polygon = PackedVector2Array(0, -16, 11.3, -11.3, 16, 0, 11.3, 11.3, 0, 16, -11.3, 11.3, -16, 0, -11.3, -11.3)
+
+[node name="Ring" type="Polygon2D" parent="Visual"]
+color = Color(0.93, 0.9, 1, 1)
+polygon = PackedVector2Array(0, -11, 7.8, -7.8, 11, 0, 7.8, 7.8, 0, 11, -7.8, 7.8, -11, 0, -7.8, -7.8)
+
+[node name="Inner" type="Polygon2D" parent="Visual"]
+color = Color(0.2, 0.16, 0.32, 1)
+polygon = PackedVector2Array(0, -8.5, 6, -6, 8.5, 0, 6, 6, 0, 8.5, -6, 6, -8.5, 0, -6, -6)
+
+[node name="ChevronTop" type="Polygon2D" parent="Visual"]
+color = Color(1, 0.85, 0.2, 1)
+polygon = PackedVector2Array(0, -7, 5, -2, 3, -2, 0, -4.5, -3, -2, -5, -2)
+
+[node name="ChevronMid" type="Polygon2D" parent="Visual"]
+color = Color(1, 0.85, 0.2, 1)
+polygon = PackedVector2Array(0, -2.5, 5, 2.5, 3, 2.5, 0, 0, -3, 2.5, -5, 2.5)
+
+[node name="ChevronLow" type="Polygon2D" parent="Visual"]
+color = Color(1, 0.85, 0.2, 1)
+polygon = PackedVector2Array(0, 2, 5, 7, 3, 7, 0, 4.5, -3, 7, -5, 7)

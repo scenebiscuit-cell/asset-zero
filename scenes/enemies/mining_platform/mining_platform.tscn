@@ -1,0 +1,69 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://scenes/enemies/mining_platform/mining_platform.gd" id="1_platform"]
+[ext_resource type="Resource" path="res://data/enemies/mining_platform.tres" id="2_data"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_platform"]
+size = Vector2(76, 60)
+
+[node name="MiningPlatform" type="Area2D"]
+collision_layer = 8
+collision_mask = 0
+monitoring = false
+script = ExtResource("1_platform")
+data = ExtResource("2_data")
+
+[node name="Hitbox" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_platform")
+
+[node name="Visual" type="Node2D" parent="."]
+
+[node name="PadShadow" type="Polygon2D" parent="Visual"]
+color = Color(0.035, 0.047, 0.031, 0.55)
+polygon = PackedVector2Array(-34, -24, 48, -24, 48, 42, -34, 42)
+
+[node name="Deck" type="Polygon2D" parent="Visual"]
+color = Color(0.43, 0.43, 0.43, 1)
+polygon = PackedVector2Array(-40, -32, 40, -32, 40, 32, -40, 32)
+
+[node name="DeckLight" type="Polygon2D" parent="Visual"]
+color = Color(0.54, 0.51, 0.42, 1)
+polygon = PackedVector2Array(-40, -32, 40, -32, 38, -30, -38, -30, -38, 30, -40, 32)
+
+[node name="DeckDark" type="Polygon2D" parent="Visual"]
+color = Color(0.21, 0.2, 0.19, 1)
+polygon = PackedVector2Array(40, -32, 40, 32, -40, 32, -38, 30, 38, 30, 38, -30)
+
+[node name="HazardTop" type="Polygon2D" parent="Visual"]
+color = Color(0.79, 0.64, 0.15, 1)
+polygon = PackedVector2Array(-36, -28, -28, -28, -32, -22, -36, -22, -22, -28, -14, -28, -18, -22, -26, -22, -8, -28, 0, -28, -4, -22, -12, -22, 6, -28, 14, -28, 10, -22, 2, -22, 20, -28, 28, -28, 24, -22, 16, -22, 30, -28, 36, -28, 36, -22, 30, -22)
+
+[node name="Hopper" type="Polygon2D" parent="Visual"]
+color = Color(0.3, 0.29, 0.27, 1)
+polygon = PackedVector2Array(14, 4, 34, 4, 34, 26, 14, 26)
+
+[node name="Ore" type="Polygon2D" parent="Visual"]
+color = Color(0.36, 0.18, 0.17, 1)
+polygon = PackedVector2Array(16, 8, 24, 6, 32, 9, 32, 24, 16, 24)
+
+[node name="Cab" type="Polygon2D" parent="Visual"]
+color = Color(0.71, 0.33, 0.14, 1)
+polygon = PackedVector2Array(-34, 8, -18, 8, -18, 26, -34, 26)
+
+[node name="CabWindow" type="Polygon2D" parent="Visual"]
+color = Color(0.25, 0.85, 1, 0.8)
+polygon = PackedVector2Array(-32, 10, -20, 10, -20, 14, -32, 14)
+
+[node name="DrillHousing" type="Polygon2D" parent="Visual"]
+color = Color(0.3, 0.3, 0.3, 1)
+polygon = PackedVector2Array(0, -18, 12.7, -12.7, 18, 0, 12.7, 12.7, 0, 18, -12.7, 12.7, -18, 0, -12.7, -12.7)
+
+[node name="Drill" type="Node2D" parent="Visual"]
+
+[node name="Blades" type="Polygon2D" parent="Visual/Drill"]
+color = Color(0.62, 0.6, 0.55, 1)
+polygon = PackedVector2Array(0, -15, 3, -3, 15, 0, 3, 3, 0, 15, -3, 3, -15, 0, -3, -3)
+
+[node name="Hub" type="Polygon2D" parent="Visual/Drill"]
+color = Color(0.79, 0.64, 0.15, 1)
+polygon = PackedVector2Array(0, -4, 4, 0, 0, 4, -4, 0)

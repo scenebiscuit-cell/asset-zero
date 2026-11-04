@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="LevelData" load_steps=9 format=3]
+
+[ext_resource type="Script" path="res://resources/level_data.gd" id="1_level"]
+[ext_resource type="Script" path="res://resources/wave_data.gd" id="1_wave_script"]
+[ext_resource type="Resource" path="res://data/waves/rd2_column5.tres" id="2_rd2_column5"]
+[ext_resource type="Resource" path="res://data/waves/rd2_v5.tres" id="3_rd2_v5"]
+[ext_resource type="Resource" path="res://data/waves/rd2_row4.tres" id="4_rd2_row4"]
+[ext_resource type="Resource" path="res://data/waves/rd2_scatter6.tres" id="5_rd2_scatter6"]
+[ext_resource type="Resource" path="res://data/waves/aa_single.tres" id="6_aa_single"]
+[ext_resource type="Resource" path="res://data/waves/aa_pair.tres" id="7_aa_pair"]
+
+[resource]
+script = ExtResource("1_level")
+sector_number = 1
+duration = 90.0
+wave_pool = Array[ExtResource("1_wave_script")]([ExtResource("2_rd2_column5"), ExtResource("3_rd2_v5"), ExtResource("4_rd2_row4"), ExtResource("5_rd2_scatter6"), ExtResource("6_aa_single"), ExtResource("7_aa_pair")])
+budget_rate = 1.2
+budget_growth = 0.008
+min_wave_gap = 1.2
+max_enemies_alive = 22

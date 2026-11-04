@@ -150,6 +150,7 @@ How to hand a milestone to Claude Code (in VS Code, terminal at `C:\Projects\ass
 
 Write down decisions here as you make them (date — decision), so the AI tools know about them.
 
+- 2026-11-04 — Enemies made tougher (~30% more HP): RD-2 25, ID-4 20, AA 80, HG-7 120, Transport 210, Mining Platform 290. The M20 now needs 3 rounds for an RD-2 (2 in Lance form).
 - 2026-11-04 — Missile line is now 4 levels: R1 Rocket Pod (unguided) at level 1, then Mk1 Seeker, Mk2 Seeker Pod, and the Cluster Missile / Bunker Buster variants at level 4, so homing missiles take longer to get. M20D Twin Autocannon toned down (7 damage per round, 0.09 s between shots). DESIGN.md §2/§5.1/§5.6/§6.
 - 2026-11-03 — Fullscreen: stretch aspect stays `keep`, so the 540×960 battlefield is centred at full screen height with dark bars at the sides, and the HUD and rails stay inside it on its edges (like Raptor). Tried first and dropped: a battlefield widened to the whole monitor (changed balance between screens) and HUD panels moved out into cockpit side panels (felt disconnected). The BREACH popup was removed (distracting); the salvage penalty and Perimeter Held bonus stay. DESIGN.md §9, §14.
 - 2026-11-03 — Added a sector progress track to the HUD (right rail) and an F11 / Alt+Enter fullscreen toggle (in SaveManager until the Settings screen exists). DESIGN.md §5.5, §13.

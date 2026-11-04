@@ -86,5 +86,17 @@ func _draw_module(module: ModuleData) -> void:
 		for i: int in 5:
 			var angle: float = -PI / 2.0 + (i - 2) * 0.35
 			draw_line(center + Vector2(0.0, radius * 0.45), center + Vector2.from_angle(angle) * radius * 0.6, sign_color, 1.0)
+	elif module is FlakBurstData:
+		draw_circle(center + Vector2(0.0, -2.0), radius * 0.22, sign_color)
+		for i: int in 8:
+			var ray: Vector2 = Vector2.from_angle(i * PI / 4.0)
+			draw_line(center + Vector2(0.0, -2.0) + ray * radius * 0.3, center + Vector2(0.0, -2.0) + ray * radius * 0.5, sign_color, 1.0)
+	elif module is DrillLanceData:
+		var drill: PackedVector2Array = PackedVector2Array([center + Vector2(-radius * 0.3, radius * 0.5),
+				center + Vector2(radius * 0.3, radius * 0.5), center + Vector2(0.0, -radius * 0.65)])
+		draw_colored_polygon(drill, sign_color)
+		for i: int in 3:
+			var y: float = radius * (0.3 - i * 0.3)
+			draw_line(center + Vector2(-radius * 0.2, y), center + Vector2(radius * 0.2, y - 2.0), module.color, 1.0)
 	else:
 		draw_circle(center, radius * 0.25, sign_color)

@@ -5,7 +5,7 @@
 [resource]
 script = ExtResource("1_enemy")
 layer = 0
-max_hp = 15
+max_hp = 20
 speed = 150.0
 salvage = 2
 contact_damage = 15

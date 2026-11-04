@@ -36,9 +36,13 @@ var _breaches: int = 0
 @onready var _mission_failed: MissionFailedScreen = $MissionFailed
 
 
-func _ready() -> void:
+## Before any child's _ready, so the Player and HUD start from the fresh run, not the old one.
+func _enter_tree() -> void:
 	if not GameState.run_active:
 		GameState.reset_run()
+
+
+func _ready() -> void:
 	_player.destroyed.connect(_on_player_destroyed)
 	_player.meltdown_pulse.connect(_on_meltdown_pulse)
 	_sector_clear.continue_pressed.connect(_on_continue_pressed)

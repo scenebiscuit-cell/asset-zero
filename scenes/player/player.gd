@@ -13,6 +13,7 @@ enum InputMode { KEYBOARD, MOUSE }
 @export var screen_margin: Vector2 = Vector2(26.0, 36.0)
 ## Set by whatever scene the player is placed in; rounds live there, not on the ship.
 @export var round_pool: RoundPool
+@export var missile_pool: MissilePool
 @export var invulnerable_time: float = 1.0
 @export var flash_interval: float = 0.08
 @export var collapse_time: float = 0.6
@@ -28,7 +29,7 @@ var _invulnerable_left: float = 0.0
 var _dead: bool = false
 var _glow_time: float = 0.0
 
-@onready var _autocannon: Autocannon = $Autocannon
+@onready var _hardpoints: Hardpoints = $Hardpoints
 @onready var _hitbox: CollisionShape2D = $Hitbox
 @onready var _airframe: Node2D = $Visual/Airframe
 @onready var _shadow: DropShadow = $Shadow
@@ -42,7 +43,8 @@ var _glow_time: float = 0.0
 
 
 func _ready() -> void:
-	_autocannon.round_pool = round_pool
+	_hardpoints.setup(round_pool, missile_pool)
+	_hardpoints.apply_shape(_combat_morph.current_shape(), 0.0)
 	area_entered.connect(_try_hit)
 	_morph_system.shape_changed.connect(_shadow.refresh)
 	_combat_morph.form_changed.connect(_on_form_changed)
@@ -72,7 +74,7 @@ func _physics_process(delta: float) -> void:
 
 	_clamp_to_screen()
 	_update_timed_autofire(delta)
-	_autocannon.firing = autofire or _autofire_left > 0.0 or Input.is_action_pressed("fire")
+	_hardpoints.set_firing(autofire or _autofire_left > 0.0 or Input.is_action_pressed("fire"))
 	_update_invulnerability(delta)
 	_update_overclock_glow(delta)
 
@@ -123,7 +125,7 @@ func _on_overclock_finished() -> void:
 ## Lance form and Overclock both boost damage; they multiply.
 func _refresh_damage() -> void:
 	var overclock_bonus: float = _overclock.damage_multiplier if _overclock.active else 1.0
-	_autocannon.damage_multiplier = _combat_morph.damage_multiplier() * overclock_bonus
+	_hardpoints.set_damage_multiplier(_combat_morph.damage_multiplier() * overclock_bonus)
 
 
 ## White-hot pulsing hull with a slight ripple while Overclocked (DESIGN.md §5.3).
@@ -157,11 +159,9 @@ func take_damage(amount: int) -> void:
 
 
 func _on_form_changed(is_lance: bool) -> void:
-	_autocannon.converged = is_lance
+	_hardpoints.set_converged(is_lance)
 	_refresh_damage()
-	# The muzzle (and its flash) slides out to the new nose as the shape flows.
-	var muzzle: Vector2 = _combat_morph.current_shape().muzzle_offset
-	create_tween().tween_property(_autocannon, "position", muzzle, _combat_morph.morph_time)
+	_hardpoints.apply_shape(_combat_morph.current_shape(), _combat_morph.morph_time)
 	_set_hitbox(_combat_morph.current_shape(), _combat_morph.morph_time)
 
 
@@ -208,7 +208,7 @@ func _update_invulnerability(delta: float) -> void:
 
 func _die() -> void:
 	_dead = true
-	_autocannon.firing = false
+	_hardpoints.shut_down()
 	set_physics_process(false)
 	_combat_morph.set_physics_process(false)
 	_hitbox.set_deferred("disabled", true)

@@ -1,9 +1,13 @@
-[gd_resource type="Resource" script_class="WeaponData" format=3 uid="uid://bhrv8kl1o8mvb"]
+[gd_resource type="Resource" script_class="GunData" load_steps=3 format=3 uid="uid://bhrv8kl1o8mvb"]
 
-[ext_resource type="Script" uid="uid://dl6hpmqrn2lh" path="res://resources/weapon_data.gd" id="1_weapon"]
+[ext_resource type="Script" path="res://resources/gun_data.gd" id="1_gun"]
+[ext_resource type="PackedScene" path="res://scenes/weapons/autocannon.tscn" id="2_scene"]
 
 [resource]
-script = ExtResource("1_weapon")
+script = ExtResource("1_gun")
+name_key = "WEAPON_M20"
+scene = ExtResource("2_scene")
 fire_interval = 0.08
+damage = 10
 round_speed = 1000.0
 spread_degrees = 4.0

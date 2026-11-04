@@ -32,7 +32,7 @@ Megacorporations are fighting over the resources of distant planets and strippin
 - **Assimilate** (4 enemy weapon modules)
 - **Overclock** meter
 - **Threat Level** (4 tiers tied to weight class)
-- **3 weapon systems** (Autocannon, Beam Laser, Seeker Missiles), each with 3 refit levels
+- **3 weapon systems** (Autocannon, Beam Laser, Missiles), each with 3 refit levels (the Missile line has 4)
 - **2 support systems** (Propulsion, Armor)
 - **4 weight classes** (Light → Medium → Heavy → Assault)
 - **6 regular enemy types (any can spawn as an elite) + 1 boss**
@@ -62,7 +62,7 @@ The airframe has **hardpoints**, like a mech:
 | Hardpoint | Holds | Starts with |
 |---|---|---|
 | Nose | Primary weapon (Autocannon or Beam Laser line) | M20 Autocannon |
-| Wing pylons (L+R) | Secondary weapon (Seeker Missile line) | Empty |
+| Wing pylons (L+R) | Secondary weapon (Missile line) | Empty |
 | Engine | Propulsion line | Stock thrusters |
 | Hull | Armor line | Bare frame (no plating) |
 | Salvage Mount | One assimilated enemy weapon (§5.8) | Empty |
@@ -130,7 +130,7 @@ XF-0 has two combat forms. **Hold** the Morph button for Lance form, and release
 | Fire pattern | Weapons use their normal spread | Every weapon **converges** forward into a tight stream |
 | Damage | 100% | 140% |
 | Ground targets | Normal | Normal |
-| Seeker Missiles | Seek any target | Seek only targets ahead of the ship |
+| Missiles | Seekers seek any target; rockets angle slightly outward | Seekers seek only targets ahead of the ship; rockets fire dead straight |
 | Hitbox | ~24 px wide | ~14 px wide (wings folded) |
 | Graze radius | 28 px | 36 px (easier to charge Overclock while threading bullets) |
 
@@ -181,7 +181,7 @@ Recon and Interceptor drones don't carry modules. The **Retention Matrix** field
 
 ## 6. Weapon and support systems
 
-All weapons fire while Fire is held. **Missiles fire automatically** on their own timer. Each system has **3 refit levels**, and at level 3 the player picks **one of two variants** (shown as "Variant A / Variant B"). Each level changes the *visual* and the *behavior*, not just the numbers. Names follow a military designation style: a model code plus a plain name. All weapons follow the Lance-form convergence rules in §5.6.
+All weapons fire while Fire is held. **Missiles fire automatically** on their own timer. Each system has **3 refit levels** (the Missile line has 4), and at the last level the player picks **one of two variants** (shown as "Variant A / Variant B"). Each level changes the *visual* and the *behavior*, not just the numbers. Names follow a military designation style: a model code plus a plain name. All weapons follow the Lance-form convergence rules in §5.6.
 
 ### Autocannon line (nose, starting weapon)
 
@@ -201,14 +201,17 @@ All weapons fire while Fire is held. **Missiles fire automatically** on their ow
 | 3A | HEL-3T Thermal Lance | Targets keep burning after the beam leaves | Red-hot heat sinks |
 | 3B | HEL-3S Split Array | Beam splits into 3 angled beams | Triple-emitter array |
 
-### Seeker Missile line (wing pylons, secondary)
+### Missile line (wing pylons, secondary)
+
+Starts with unguided rockets; homing is a later refit, because Seekers are very strong. This line has **4 levels** instead of 3.
 
 | Level | Designation | Behavior |
 |---|---|---|
-| 1 | Mk1 Seeker | 2 slow homing missiles every 1.5 s |
-| 2 | Mk2 Seeker Pod | 4 faster homing missiles |
-| 3A | Mk3 Cluster Missile | Missiles split into small homing submunitions |
-| 3B | GBU Bunker Buster | Big slow bombs, large blast radius, strong against ground targets |
+| 1 | R1 Rocket Pod | 2 unguided rockets every 1 s, fly straight ahead |
+| 2 | Mk1 Seeker | 2 slow homing missiles every 1.5 s |
+| 3 | Mk2 Seeker Pod | 4 faster homing missiles |
+| 4A | Mk3 Cluster Missile | Missiles split into small homing submunitions |
+| 4B | GBU Bunker Buster | Big slow bombs, large blast radius, strong against ground targets |
 
 > Nose rule: one primary weapon at a time (Autocannon line OR Beam Laser line). Taking a Beam Laser while holding the Autocannon offers a swap. Keeps balance simple.
 
@@ -475,7 +478,7 @@ Likely hand-painted art downscaled to sprites, possibly with a metallic sheen sh
 
 Title (Click to start) → Main menu (Deploy, R&D, Settings) → Mission briefing → Level 1 → Field Refit → Armory → Level 2 → … → Boss → Mission Complete / Mission Failed (shows Combat Data earned) → Main menu
 
-HUD: Armor bar, Plating bar, Overclock meter, salvage count, weight class, HSD Threat label, assimilated weapon icon, level number, auto-fire indicator, sector progress track (thin bar in the right rail that fills as the sector goes on).
+HUD: Armor bar, Plating bar, Overclock meter, salvage count, weight class, HSD Threat label, assimilated weapon icon, level number, auto-fire indicator, sector progress track (thin bar in the right rail that fills as the sector goes on), weapons panel bottom-left (icon + designation for the Nose and Wing Pylon weapons).
 
 Settings: master/music/SFX volume, screen shake on/off, Accessibility: auto-fire on/off (off by default, §7.3).
 

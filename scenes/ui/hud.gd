@@ -1,7 +1,7 @@
 class_name Hud
 extends CanvasLayer
 ## Gameplay HUD (DESIGN.md §11.6/§13): side rails, Armor/Plating top-left, salvage top-centre,
-## sector/class/threat top-right, module slot bottom-left, Overclock bottom-right, warnings bottom-centre.
+## sector/class/threat top-right, module slot and weapons bottom-left, Overclock bottom-right, warnings bottom-centre.
 ## Reads GameState and the Player each frame; nothing in the game needs to know the HUD exists.
 
 ## Below this fraction of max Armor, the bar turns red and the warning shows.
@@ -44,6 +44,10 @@ var _shown_overclock_secs: int = -1
 @onready var _warning: Label = $Root/BottomCenter/Warning
 @onready var _autofire: Label = $Root/BottomCenter/AutoFire
 @onready var _sector_progress: SectorProgress = $Root/SectorProgress
+@onready var _nose_icon: WeaponIcon = $Root/Weapons/NoseIcon
+@onready var _nose_name: Label = $Root/Weapons/NoseName
+@onready var _pylon_icon: WeaponIcon = $Root/Weapons/PylonIcon
+@onready var _pylon_name: Label = $Root/Weapons/PylonName
 
 
 func _ready() -> void:
@@ -63,6 +67,8 @@ func _process(delta: float) -> void:
 	_module_value.text = "—" if GameState.assimilated_module == null else GameState.assimilated_module.resource_name
 	_update_overclock(blink_on)
 	_update_autofire()
+	_update_weapon(_nose_icon, _nose_name, WeaponData.Hardpoint.NOSE)
+	_update_weapon(_pylon_icon, _pylon_name, WeaponData.Hardpoint.WING_PYLONS)
 
 
 func _update_armor(blink_on: bool) -> void:
@@ -129,3 +135,13 @@ func _update_autofire() -> void:
 	_shown_autofire = state
 	_autofire.visible = state != 0
 	_autofire.text = tr("HUD_AUTOFIRE_ON") if state == -1 else tr("HUD_AUTOFIRE_TIMED") % state
+
+
+## The icon remembers what it shows, so the name is only rebuilt when the weapon changes.
+## (The scene starts every name as "—", which matches an empty hardpoint.)
+func _update_weapon(icon: WeaponIcon, label: Label, hardpoint: WeaponData.Hardpoint) -> void:
+	var weapon: WeaponData = GameState.weapons.get(hardpoint, null) as WeaponData
+	if weapon == icon.weapon:
+		return
+	icon.weapon = weapon
+	label.text = "—" if weapon == null else tr(weapon.name_key)

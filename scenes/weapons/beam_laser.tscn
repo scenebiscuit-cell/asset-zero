@@ -1,0 +1,65 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://scenes/weapons/beam_laser.gd" id="1_beam"]
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_add"]
+blend_mode = 1
+
+[sub_resource type="Gradient" id="Gradient_sparks"]
+colors = PackedColorArray(0.91, 1, 1, 1, 0.25, 0.85, 0.82, 0)
+
+[node name="BeamLaser" type="Node2D"]
+script = ExtResource("1_beam")
+
+[node name="Cast" type="ShapeCast2D" parent="."]
+enabled = false
+target_position = Vector2(0, -600)
+max_results = 4
+collision_mask = 12
+collide_with_areas = true
+collide_with_bodies = false
+
+[node name="Visual" type="Node2D" parent="."]
+
+[node name="Glow" type="Line2D" parent="Visual"]
+material = SubResource("CanvasItemMaterial_add")
+points = PackedVector2Array(0, 0, 0, -600)
+width = 16.0
+default_color = Color(0.25, 0.85, 0.82, 0.45)
+begin_cap_mode = 2
+end_cap_mode = 2
+
+[node name="Core" type="Line2D" parent="Visual"]
+material = SubResource("CanvasItemMaterial_add")
+points = PackedVector2Array(0, 0, 0, -600)
+width = 3.0
+default_color = Color(0.91, 1, 1, 1)
+begin_cap_mode = 2
+end_cap_mode = 2
+
+[node name="EmitterFlare" type="Polygon2D" parent="Visual"]
+material = SubResource("CanvasItemMaterial_add")
+polygon = PackedVector2Array(0, -7, 4, -2, 6, 0, 4, 2, 0, 4, -4, 2, -6, 0, -4, -2)
+vertex_colors = PackedColorArray(0.25, 0.85, 0.82, 0, 0.91, 1, 1, 0.9, 0.25, 0.85, 0.82, 0, 0.91, 1, 1, 0.9, 0.25, 0.85, 0.82, 0, 0.91, 1, 1, 0.9, 0.25, 0.85, 0.82, 0, 0.91, 1, 1, 0.9)
+
+[node name="HitFlare" type="Polygon2D" parent="Visual"]
+material = SubResource("CanvasItemMaterial_add")
+polygon = PackedVector2Array(0, -8, 3, -3, 8, 0, 3, 3, 0, 8, -3, 3, -8, 0, -3, -3)
+vertex_colors = PackedColorArray(0.25, 0.85, 0.82, 0, 0.91, 1, 1, 1, 0.25, 0.85, 0.82, 0, 0.91, 1, 1, 1, 0.25, 0.85, 0.82, 0, 0.91, 1, 1, 1, 0.25, 0.85, 0.82, 0, 0.91, 1, 1, 1)
+
+[node name="HitSparks" type="CPUParticles2D" parent="Visual"]
+material = SubResource("CanvasItemMaterial_add")
+emitting = false
+amount = 12
+lifetime = 0.25
+local_coords = false
+direction = Vector2(0, 1)
+spread = 70.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 60.0
+initial_velocity_max = 160.0
+damping_min = 150.0
+damping_max = 250.0
+scale_amount_min = 1.5
+scale_amount_max = 2.5
+color_ramp = SubResource("Gradient_sparks")

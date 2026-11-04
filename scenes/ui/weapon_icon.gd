@@ -1,0 +1,69 @@
+class_name WeaponIcon
+extends Control
+## Small HUD picture of a weapon, drawn in code from its data (placeholder art, no image files):
+## tracer streams per barrel, a cyan beam, straight rockets or a curving seeker.
+
+const TRACER: Color = Color(0.94, 0.925, 0.88)
+const BEAM_CORE: Color = Color(0.91, 1.0, 1.0)
+const BEAM_GLOW: Color = Color(0.25, 0.85, 0.82, 0.45)
+const MISSILE: Color = Color(0.78, 0.8, 0.82)
+const EXHAUST: Color = Color(1.0, 0.7, 0.3)
+const SMOKE: Color = Color(0.55, 0.56, 0.58, 0.8)
+const EMPTY: Color = Color(1.0, 1.0, 1.0, 0.2)
+
+## The weapon to draw, or null for an empty hardpoint.
+var weapon: WeaponData:
+	set(new_weapon):
+		if new_weapon == weapon:
+			return
+		weapon = new_weapon
+		queue_redraw()
+
+
+func _draw() -> void:
+	draw_rect(Rect2(Vector2.ZERO, size), Color(0.08, 0.09, 0.1, 1.0))
+	if weapon is GunData:
+		_draw_gun(weapon as GunData)
+	elif weapon is BeamData:
+		_draw_beam()
+	elif weapon is MissileData:
+		_draw_missiles(weapon as MissileData)
+	else:
+		draw_rect(Rect2(Vector2(3.0, 3.0), size - Vector2(6.0, 6.0)), EMPTY, false, 1.0)
+
+
+func _draw_gun(gun: GunData) -> void:
+	var spacing: float = 6.0
+	for i: int in gun.barrel_count:
+		var x: float = size.x * 0.5 + (i - (gun.barrel_count - 1) * 0.5) * spacing
+		draw_line(Vector2(x, size.y - 5.0), Vector2(x, 5.0), Color(TRACER, 0.55), 1.0)
+		draw_line(Vector2(x, 8.0), Vector2(x, 3.0), TRACER, 2.0)
+		draw_rect(Rect2(x - 1.5, size.y - 6.0, 3.0, 4.0), MISSILE)
+
+
+func _draw_beam() -> void:
+	var x: float = size.x * 0.5
+	draw_line(Vector2(x, size.y - 4.0), Vector2(x, 2.0), BEAM_GLOW, 6.0)
+	draw_line(Vector2(x, size.y - 4.0), Vector2(x, 2.0), BEAM_CORE, 2.0)
+	draw_circle(Vector2(x, size.y - 4.0), 2.5, BEAM_CORE)
+
+
+func _draw_missiles(missile: MissileData) -> void:
+	if missile.homing:
+		# One seeker curving in from the side, with its smoke trail.
+		var center: Vector2 = Vector2(size.x - 4.0, size.y - 2.0)
+		draw_arc(center, size.x * 0.55, PI, PI * 1.45, 8, SMOKE, 1.0)
+		_draw_rocket(Vector2(size.x * 0.5 + 1.0, 7.0), 0.5)
+		return
+	# Two straight rockets side by side.
+	for x: float in [size.x * 0.32, size.x * 0.68]:
+		draw_line(Vector2(x, size.y - 2.0), Vector2(x, 12.0), SMOKE, 1.0)
+		_draw_rocket(Vector2(x, 7.0), 0.0)
+
+
+func _draw_rocket(tip: Vector2, tilt: float) -> void:
+	var forward: Vector2 = Vector2.UP.rotated(tilt)
+	var side: Vector2 = forward.orthogonal() * 1.5
+	var tail: Vector2 = tip - forward * 8.0
+	draw_colored_polygon(PackedVector2Array([tip, tail + side, tail - side]), MISSILE)
+	draw_line(tail, tail - forward * 3.0, EXHAUST, 2.0)

@@ -21,6 +21,8 @@ var weight_class: WeightClass = WeightClass.LIGHT
 var threat_level: int = 1
 ## The assimilated weapon module on the Salvage Mount (§5.8), or null. Filled in Step 11.
 var assimilated_module: Resource = null
+## What's mounted on each hardpoint (WeaponData.Hardpoint -> WeaponData). Empty = stock loadout.
+var weapons: Dictionary[int, WeaponData] = {}
 var overclock: float = 0.0
 ## Which sector of the run we're on (0 = Sector 1).
 var sector_index: int = 0
@@ -37,6 +39,7 @@ func reset_run() -> void:
 	weight_class = WeightClass.LIGHT
 	threat_level = 1
 	assimilated_module = null
+	weapons.clear()
 	overclock = 0.0
 	sector_index = 0
 	run_active = true

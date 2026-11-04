@@ -1,0 +1,63 @@
+[gd_scene load_steps=6 format=3]
+
+[ext_resource type="Script" path="res://scenes/weapons/missile.gd" id="1_missile"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_missile"]
+radius = 4.0
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_add"]
+blend_mode = 1
+
+[sub_resource type="Gradient" id="Gradient_trail"]
+colors = PackedColorArray(0.55, 0.56, 0.58, 0.7, 0.3, 0.31, 0.33, 0)
+
+[sub_resource type="Gradient" id="Gradient_burst"]
+offsets = PackedFloat32Array(0, 0.3, 1)
+colors = PackedColorArray(1, 0.95, 0.8, 1, 1, 0.69, 0.19, 1, 0.88, 0.31, 0.06, 0)
+
+[node name="Missile" type="Area2D"]
+collision_layer = 2
+collision_mask = 12
+monitorable = false
+script = ExtResource("1_missile")
+
+[node name="Hitbox" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_missile")
+
+[node name="Visual" type="Node2D" parent="."]
+
+[node name="Trail" type="Line2D" parent="Visual"]
+top_level = true
+points = PackedVector2Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+width = 2.0
+gradient = SubResource("Gradient_trail")
+joint_mode = 2
+
+[node name="Body" type="Node2D" parent="Visual"]
+
+[node name="Exhaust" type="Polygon2D" parent="Visual/Body"]
+material = SubResource("CanvasItemMaterial_add")
+polygon = PackedVector2Array(-2, 4, 2, 4, 0, 11)
+vertex_colors = PackedColorArray(1, 0.8, 0.4, 1, 1, 0.8, 0.4, 1, 1, 0.5, 0.15, 0)
+
+[node name="Shell" type="Polygon2D" parent="Visual/Body"]
+color = Color(0.78, 0.8, 0.82, 1)
+polygon = PackedVector2Array(0, -6, 1.5, -3, 1.5, 4, -1.5, 4, -1.5, -3)
+
+[node name="Burst" type="CPUParticles2D" parent="Visual"]
+material = SubResource("CanvasItemMaterial_add")
+emitting = false
+amount = 14
+lifetime = 0.35
+one_shot = true
+explosiveness = 1.0
+local_coords = false
+spread = 180.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 40.0
+initial_velocity_max = 130.0
+damping_min = 120.0
+damping_max = 220.0
+scale_amount_min = 1.5
+scale_amount_max = 3.5
+color_ramp = SubResource("Gradient_burst")

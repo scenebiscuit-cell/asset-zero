@@ -80,9 +80,9 @@ How to hand a milestone to Claude Code (in VS Code, terminal at `C:\Projects\ass
 
 ## Milestone C — Loadouts, refits and assimilation
 
-- [ ] **Step 10: Data-driven weapon systems + hardpoints**
+- [x] **Step 10: Data-driven weapon systems + hardpoints**
   - Weapon system using Resources; Nose, Wing Pylon, Engine, Hull and Salvage Mount hardpoints
-  - M20 Autocannon levels 1–2, HEL-1 Beam Laser, Mk1 Seeker missiles, each with its Lance-form behavior
+  - M20 Autocannon levels 1–2, HEL-1 Beam Laser, R1 Rocket Pod, Mk1 Seeker missiles, each with its Lance-form behavior
   - Debug keys (only in debug builds) to give yourself weapons for testing
   - **Done when:** you can switch between all of these with debug keys and each fires correctly in both forms
 
@@ -150,6 +150,7 @@ How to hand a milestone to Claude Code (in VS Code, terminal at `C:\Projects\ass
 
 Write down decisions here as you make them (date — decision), so the AI tools know about them.
 
+- 2026-11-04 — Missile line is now 4 levels: R1 Rocket Pod (unguided) at level 1, then Mk1 Seeker, Mk2 Seeker Pod, and the Cluster Missile / Bunker Buster variants at level 4, so homing missiles take longer to get. M20D Twin Autocannon toned down (7 damage per round, 0.09 s between shots). DESIGN.md §2/§5.1/§5.6/§6.
 - 2026-11-03 — Fullscreen: stretch aspect stays `keep`, so the 540×960 battlefield is centred at full screen height with dark bars at the sides, and the HUD and rails stay inside it on its edges (like Raptor). Tried first and dropped: a battlefield widened to the whole monitor (changed balance between screens) and HUD panels moved out into cockpit side panels (felt disconnected). The BREACH popup was removed (distracting); the salvage penalty and Perimeter Held bonus stay. DESIGN.md §9, §14.
 - 2026-11-03 — Added a sector progress track to the HUD (right rail) and an F11 / Alt+Enter fullscreen toggle (in SaveManager until the Settings screen exists). DESIGN.md §5.5, §13.
 - 2026-11-03 — Sector 1 shortened to 90 s (was 150 s) so the run gets going quickly; later sectors stay 2–3 minutes. DESIGN.md §9.

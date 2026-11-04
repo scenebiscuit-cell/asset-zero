@@ -14,6 +14,7 @@ parts = Dictionary[String, PackedVector2Array]({
 "EngineGlow": PackedVector2Array(-3, 24, 3, 24, 2, 34, -2, 34)
 })
 muzzle_offset = Vector2(0, -46)
+pylon_offset = Vector2(8, 13)
 hitbox_radius = 7.0
 hitbox_height = 44.0
 hitbox_offset = Vector2(0, -4)

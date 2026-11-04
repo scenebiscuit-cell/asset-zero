@@ -1,7 +1,7 @@
-[gd_scene load_steps=19 format=3]
+[gd_scene load_steps=25 format=3]
 
 [ext_resource type="Script" path="res://scenes/player/player.gd" id="1_player"]
-[ext_resource type="Script" path="res://scenes/weapons/autocannon.gd" id="2_autocannon"]
+[ext_resource type="Script" path="res://scenes/player/hardpoints.gd" id="2_hardpoints"]
 [ext_resource type="Resource" path="res://data/weapons/m20_autocannon.tres" id="3_m20"]
 [ext_resource type="Script" path="res://scenes/fx/drop_shadow.gd" id="4_shadow"]
 [ext_resource type="Script" path="res://scenes/fx/morph/morph_system.gd" id="5_morph"]
@@ -10,6 +10,12 @@
 [ext_resource type="Resource" path="res://data/shapes/xf0_light_lance.tres" id="8_lance"]
 [ext_resource type="Script" path="res://scenes/player/graze_area.gd" id="9_graze"]
 [ext_resource type="Script" path="res://scenes/player/overclock.gd" id="10_overclock"]
+[ext_resource type="Script" path="res://resources/weapon_data.gd" id="11_weapon_data"]
+[ext_resource type="Script" path="res://scenes/player/debug_loadout.gd" id="12_debug"]
+[ext_resource type="Resource" path="res://data/weapons/m20d_twin_autocannon.tres" id="13_m20d"]
+[ext_resource type="Resource" path="res://data/weapons/hel1_beam_laser.tres" id="14_hel1"]
+[ext_resource type="Resource" path="res://data/weapons/mk1_seeker.tres" id="15_mk1"]
+[ext_resource type="Resource" path="res://data/weapons/r1_rocket_pod.tres" id="16_r1"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_hitbox"]
 resource_local_to_scene = true
@@ -170,24 +176,29 @@ script = ExtResource("6_combat_morph")
 gunship_shape = ExtResource("7_gunship")
 lance_shape = ExtResource("8_lance")
 
-[node name="Autocannon" type="Node2D" parent="."]
+[node name="Hardpoints" type="Node2D" parent="."]
+script = ExtResource("2_hardpoints")
+start_loadout = Array[ExtResource("11_weapon_data")]([ExtResource("3_m20")])
+
+[node name="Nose" type="Node2D" parent="Hardpoints"]
 position = Vector2(0, -35)
-script = ExtResource("2_autocannon")
-data = ExtResource("3_m20")
 
-[node name="Visual" type="Node2D" parent="Autocannon"]
+[node name="WingPylons" type="Node2D" parent="Hardpoints"]
 
-[node name="FlashCone" type="Polygon2D" parent="Autocannon/Visual"]
-material = SubResource("CanvasItemMaterial_add")
-polygon = PackedVector2Array(0, 1, -4.5, -9, 0, -12, 4.5, -9)
-vertex_colors = PackedColorArray(0.973, 0.847, 0.596, 0.9, 0.973, 0.847, 0.596, 0, 0.973, 0.847, 0.596, 0, 0.973, 0.847, 0.596, 0)
+[node name="Left" type="Node2D" parent="Hardpoints/WingPylons"]
+position = Vector2(-14, 6)
 
-[node name="FlashSpikes" type="Polygon2D" parent="Autocannon/Visual"]
-material = SubResource("CanvasItemMaterial_add")
-polygon = PackedVector2Array(0, -15, 1.2, -4.5, 6, -6, 1.5, -1, 0, 1.5, -1.5, -1, -6, -6, -1.2, -4.5)
-vertex_colors = PackedColorArray(1, 0.94, 0.75, 0.15, 1, 0.94, 0.75, 0.95, 1, 0.94, 0.75, 0.1, 1, 0.94, 0.75, 0.95, 1, 0.94, 0.75, 0.95, 1, 0.94, 0.75, 0.95, 1, 0.94, 0.75, 0.1, 1, 0.94, 0.75, 0.95)
+[node name="Right" type="Node2D" parent="Hardpoints/WingPylons"]
+position = Vector2(14, 6)
 
-[node name="FlashDot" type="Polygon2D" parent="Autocannon/Visual"]
-material = SubResource("CanvasItemMaterial_add")
-color = Color(1, 0.97, 0.88, 1)
-polygon = PackedVector2Array(0, -2.5, 1.5, 0, 0, 1.5, -1.5, 0)
+[node name="Engine" type="Node2D" parent="Hardpoints"]
+
+[node name="Hull" type="Node2D" parent="Hardpoints"]
+
+[node name="SalvageMount" type="Node2D" parent="Hardpoints"]
+
+[node name="DebugLoadout" type="Node" parent="." node_paths=PackedStringArray("hardpoints")]
+script = ExtResource("12_debug")
+hardpoints = NodePath("../Hardpoints")
+nose_options = Array[ExtResource("11_weapon_data")]([ExtResource("3_m20"), ExtResource("13_m20d"), ExtResource("14_hel1")])
+pylon_options = Array[ExtResource("11_weapon_data")]([ExtResource("16_r1"), ExtResource("15_mk1")])

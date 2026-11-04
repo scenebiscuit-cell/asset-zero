@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="MissileData" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://resources/missile_data.gd" id="1_missile"]
+[ext_resource type="PackedScene" path="res://scenes/weapons/seeker_launcher.tscn" id="2_scene"]
+
+[resource]
+script = ExtResource("1_missile")
+name_key = "WEAPON_R1_ROCKET"
+hardpoint = 1
+scene = ExtResource("2_scene")
+fire_interval = 1.0
+damage = 25
+homing = false
+missiles_per_volley = 2
+speed = 520.0
+launch_angle_degrees = 5.0
+lifetime = 2.5

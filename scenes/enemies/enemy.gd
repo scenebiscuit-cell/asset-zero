@@ -29,6 +29,8 @@ var target: Node2D
 var ground_speed: float = 60.0
 
 var hp: int = 0
+## Yellow halo, only on elites.
+var elite_outline: EliteOutline
 var _flash_left: float = 0.0
 var _dead: bool = false
 
@@ -43,10 +45,10 @@ func _ready() -> void:
 	else:
 		collision_layer = LAYER_ENEMIES_AIR
 	if elite:
-		var outline: EliteOutline = EliteOutline.new()
-		outline.source = _visual
-		add_child(outline)
-		move_child(outline, 0) # Drawn first, so it sits under the shapes as a halo.
+		elite_outline = EliteOutline.new()
+		elite_outline.source = _visual
+		add_child(elite_outline)
+		move_child(elite_outline, 0) # Drawn first, so it sits under the shapes as a halo.
 
 
 func _process(delta: float) -> void:
@@ -78,6 +80,11 @@ func take_damage(amount: int) -> void:
 		return
 	_flash_left = FLASH_TIME
 	_visual.modulate = FLASH_MODULATE
+
+
+## False while an enemy can't be hit (e.g. a burrowed Mining Platform), so seekers skip it.
+func is_targetable() -> bool:
+	return true
 
 
 func salvage_value() -> int:

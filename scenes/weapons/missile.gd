@@ -78,7 +78,7 @@ func _physics_process(delta: float) -> void:
 func _steer(delta: float) -> void:
 	if not _data.homing:
 		return
-	if not is_instance_valid(_target) or _target.hp <= 0:
+	if not is_instance_valid(_target) or _target.hp <= 0 or not _target.is_targetable():
 		_target = null
 		_retarget_left -= delta
 		if _retarget_left <= 0.0:

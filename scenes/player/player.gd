@@ -212,6 +212,8 @@ func _try_hit(area: Area2D) -> void:
 			return
 		take_damage(enemy_round.damage)
 		enemy_round.deactivate()
+	elif area is EnemyHazard:
+		take_damage((area as EnemyHazard).damage)
 	elif area is Enemy:
 		take_damage((area as Enemy).data.contact_damage)
 

@@ -15,12 +15,16 @@ extends Node2D
 @export var escape_penalty: int = 2
 ## Salvage awarded at SECTOR CLEAR if no aircraft got away all sector.
 @export var perimeter_bonus: int = 25
+## Destructible radar dome placed on the background's barracks and SAM sites.
+@export var dome_scene: PackedScene
 
 var _level_data: LevelData
 var _player_dead: bool = false
 var _breaches: int = 0
 
 @onready var _enemies: Node2D = $Enemies
+## Background targets live apart from Enemies, so they never hold up SECTOR CLEAR or wave spawning.
+@onready var _ground_targets: Node2D = $GroundTargets
 @onready var _wave_director: WaveDirector = $WaveDirector
 @onready var _sector_clear: SectorClearScreen = $SectorClear
 @onready var _sector_banner: SectorBanner = $SectorBanner
@@ -48,6 +52,7 @@ func _ready() -> void:
 	_player.meltdown_pulse.connect(_on_meltdown_pulse)
 	_sector_clear.continue_pressed.connect(_on_continue_pressed)
 	_hud.player = _player
+	_ground_layer.dome_entering.connect(_on_dome_entering)
 	if not run_waves or sectors.is_empty():
 		return
 	_level_data = sectors[GameState.sector_index % sectors.size()]
@@ -92,6 +97,22 @@ func spawn_enemy(scene: PackedScene, at: Vector2, elite: bool = false) -> Enemy:
 	enemy.escaped.connect(_on_enemy_escaped)
 	_enemies.add_child(enemy)
 	return enemy
+
+
+func _on_dome_entering(at: Vector2) -> void:
+	if dome_scene == null:
+		return
+	var dome: Enemy = dome_scene.instantiate() as Enemy
+	dome.position = at
+	dome.ground_speed = _ground_layer.scroll_speed
+	dome.destroyed.connect(_on_ground_target_destroyed)
+	_ground_targets.add_child(dome)
+
+
+## Background targets only pay salvage: no Fire Control or repair rolls.
+func _on_ground_target_destroyed(target: Enemy) -> void:
+	_explosion_pool.spawn(target.global_position)
+	_salvage_pool.spawn_burst(target.global_position, target.salvage_value())
 
 
 func _on_enemy_destroyed(enemy: Enemy) -> void:

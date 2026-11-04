@@ -270,9 +270,10 @@ Air enemies fly over everything. Ground enemies scroll with the background. All 
 | RD-2 Recon Drone | Air | Flies straight down in lines/V formations; about a third fire one weak, slow aimed round (8 dmg; others 12) | Low | 1 | — |
 | ID-4 Interceptor Drone | Air | Sine-wave path, fires a single slow round | Low | 2 | — |
 | AA Emplacement | Ground | Stationary, aims and fires at the player | Medium | 3 | Flak Burst |
-| Mining Platform | Ground | Tanky, no attack, big salvage reward | High | 8 | Drill Lance |
+| Mining Platform | Ground | A drill tank on treads: tanky, big salvage reward. Its turret turns a large drill toward XF-0, winds up (glows red) and thrusts it out; burrows and resurfaces elsewhere on screen every few seconds | High | 8 | Drill Lance |
 | Armored Transport | Air | Slow, crosses sideways, sometimes drops a repair pickup | High | 6 | Drone Bay |
 | HG-7 Gunship | Air | Enters, hovers, fires spread patterns, leaves after ~6 s | Medium | 5 | Spread Cannon |
+| Radar Dome | Ground | Background target on barracks and SAM sites; no attack. Doesn't count toward waves or SECTOR CLEAR | Very low | 1 | — |
 
 ### Boss: HEG-X9 "MAWLER" Mining Crawler
 
@@ -454,7 +455,7 @@ Simple vector / geometric shapes drawn in Godot (Polygon2D, Line2D or `_draw()`)
 - **Halcyon forces:** blocky, utilitarian industrial machines in grey/orange with hazard-yellow stripes. Elites get a yellow outline.
 - **Weapon modules:** glowing hexagons in the color of the enemy that dropped them, pulsing
 - **Enemy rounds:** hot pink/orange, round, with an outline, always the highest-contrast thing on screen
-- **Background:** top-down terrain using the Verdance palette from §11.8: dark jungle greens over oxblood/rust mining earth (`#5b2d2c` family), teal water (`#1b6259` family), concrete-grey HEG structures with hazard trim. Built from simple shapes for now, scrolling slowly in layers.
+- **Background:** top-down terrain using the Verdance palette from §11.8: dark jungle greens over oxblood/rust mining earth (`#5b2d2c` family), teal water (`#1b6259` family), concrete-grey HEG structures with hazard trim: fenced barracks compounds and sandbagged SAM sites, each with a small radar dome you can shoot for 1 salvage. Built from simple shapes for now, scrolling slowly in layers.
 - **Grain:** a light noise/grain overlay on the background (one cheap shader or a tiled noise texture) so nothing reads as a flat fill.
 - **Drop shadows:** every air unit (player and enemies) gets a dark, semi-transparent copy of its shape offset down-right on the ground layer. Ground units get no shadow. This is cheap and makes air vs. ground instantly readable.
 - **Explosions:** combine both references: a bright warm flash, clustered round fireballs from yellow `#e4cc24` through orange to dark red `#9c3c24` (Raptor), then sparks, embers and debris with dark smoke trails (Mech Havoc), a white shockwave ring on big kills, and a lingering scorch mark on the ground.

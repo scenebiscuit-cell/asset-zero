@@ -1,10 +1,14 @@
-[gd_scene load_steps=4 format=3]
+[gd_scene load_steps=6 format=3]
 
 [ext_resource type="Script" path="res://scenes/enemies/mining_platform/mining_platform.gd" id="1_platform"]
 [ext_resource type="Resource" path="res://data/enemies/mining_platform.tres" id="2_data"]
+[ext_resource type="Script" path="res://scenes/enemies/enemy_hazard.gd" id="3_hazard"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_platform"]
-size = Vector2(76, 60)
+size = Vector2(80, 76)
+
+[sub_resource type="Gradient" id="Gradient_dirt"]
+colors = PackedColorArray(0.5, 0.27, 0.21, 1, 0.24, 0.15, 0.12, 1)
 
 [node name="MiningPlatform" type="Area2D"]
 collision_layer = 8
@@ -16,54 +20,252 @@ data = ExtResource("2_data")
 [node name="Hitbox" type="CollisionShape2D" parent="."]
 shape = SubResource("RectangleShape2D_platform")
 
+[node name="BurrowMound" type="Node2D" parent="."]
+
+[node name="Earth" type="Polygon2D" parent="BurrowMound"]
+color = Color(0.36, 0.18, 0.17, 1)
+polygon = PackedVector2Array(-8, -50, 22, -44, 44, -26, 52, 2, 42, 30, 18, 48, -12, 50, -38, 38, -52, 10, -46, -22, -30, -42)
+
+[node name="EarthLight" type="Polygon2D" parent="BurrowMound"]
+color = Color(0.5, 0.27, 0.21, 1)
+polygon = PackedVector2Array(-8, -50, 22, -44, 44, -26, 36, -20, 16, -34, -6, -38, -26, -30, -40, -14, -46, -22, -30, -42)
+
+[node name="Churn" type="Polygon2D" parent="BurrowMound"]
+color = Color(0.25, 0.14, 0.12, 1)
+polygon = PackedVector2Array(-4, -32, 18, -26, 32, -8, 30, 14, 14, 30, -10, 32, -28, 20, -34, -2, -24, -22)
+
+[node name="Hole" type="Polygon2D" parent="BurrowMound"]
+color = Color(0.09, 0.06, 0.05, 1)
+polygon = PackedVector2Array(0, -18, 14, -10, 18, 4, 8, 16, -8, 16, -18, 4, -14, -12)
+
+[node name="Clod1" type="Polygon2D" parent="BurrowMound"]
+color = Color(0.5, 0.27, 0.21, 1)
+polygon = PackedVector2Array(-44, 28, -36, 24, -32, 32, -40, 36)
+
+[node name="Clod2" type="Polygon2D" parent="BurrowMound"]
+color = Color(0.5, 0.27, 0.21, 1)
+polygon = PackedVector2Array(40, -40, 48, -42, 50, -34, 42, -32)
+
+[node name="Clod3" type="Polygon2D" parent="BurrowMound"]
+color = Color(0.43, 0.23, 0.19, 1)
+polygon = PackedVector2Array(30, 40, 38, 38, 40, 46, 32, 48)
+
 [node name="Visual" type="Node2D" parent="."]
 
-[node name="PadShadow" type="Polygon2D" parent="Visual"]
-color = Color(0.035, 0.047, 0.031, 0.55)
-polygon = PackedVector2Array(-34, -24, 48, -24, 48, 42, -34, 42)
+[node name="TreadLeft" type="Polygon2D" parent="Visual"]
+color = Color(0.13, 0.13, 0.12, 1)
+polygon = PackedVector2Array(-41, -36, -29, -36, -29, 40, -41, 40)
 
-[node name="Deck" type="Polygon2D" parent="Visual"]
-color = Color(0.43, 0.43, 0.43, 1)
-polygon = PackedVector2Array(-40, -32, 40, -32, 40, 32, -40, 32)
+[node name="LinkLeft0" type="Line2D" parent="Visual/TreadLeft"]
+points = PackedVector2Array(-40, -32, -30, -32)
+width = 2.5
+default_color = Color(0.3, 0.29, 0.27, 1)
 
-[node name="DeckLight" type="Polygon2D" parent="Visual"]
-color = Color(0.54, 0.51, 0.42, 1)
-polygon = PackedVector2Array(-40, -32, 40, -32, 38, -30, -38, -30, -38, 30, -40, 32)
+[node name="LinkLeft1" type="Line2D" parent="Visual/TreadLeft"]
+points = PackedVector2Array(-40, -24, -30, -24)
+width = 2.5
+default_color = Color(0.3, 0.29, 0.27, 1)
 
-[node name="DeckDark" type="Polygon2D" parent="Visual"]
-color = Color(0.21, 0.2, 0.19, 1)
-polygon = PackedVector2Array(40, -32, 40, 32, -40, 32, -38, 30, 38, 30, 38, -30)
+[node name="LinkLeft2" type="Line2D" parent="Visual/TreadLeft"]
+points = PackedVector2Array(-40, -16, -30, -16)
+width = 2.5
+default_color = Color(0.3, 0.29, 0.27, 1)
 
-[node name="HazardTop" type="Polygon2D" parent="Visual"]
+[node name="LinkLeft3" type="Line2D" parent="Visual/TreadLeft"]
+points = PackedVector2Array(-40, -8, -30, -8)
+width = 2.5
+default_color = Color(0.3, 0.29, 0.27, 1)
+
+[node name="LinkLeft4" type="Line2D" parent="Visual/TreadLeft"]
+points = PackedVector2Array(-40, 0, -30, 0)
+width = 2.5
+default_color = Color(0.3, 0.29, 0.27, 1)
+
+[node name="LinkLeft5" type="Line2D" parent="Visual/TreadLeft"]
+points = PackedVector2Array(-40, 8, -30, 8)
+width = 2.5
+default_color = Color(0.3, 0.29, 0.27, 1)
+
+[node name="LinkLeft6" type="Line2D" parent="Visual/TreadLeft"]
+points = PackedVector2Array(-40, 16, -30, 16)
+width = 2.5
+default_color = Color(0.3, 0.29, 0.27, 1)
+
+[node name="LinkLeft7" type="Line2D" parent="Visual/TreadLeft"]
+points = PackedVector2Array(-40, 24, -30, 24)
+width = 2.5
+default_color = Color(0.3, 0.29, 0.27, 1)
+
+[node name="LinkLeft8" type="Line2D" parent="Visual/TreadLeft"]
+points = PackedVector2Array(-40, 32, -30, 32)
+width = 2.5
+default_color = Color(0.3, 0.29, 0.27, 1)
+
+[node name="TreadRight" type="Polygon2D" parent="Visual"]
+color = Color(0.13, 0.13, 0.12, 1)
+polygon = PackedVector2Array(29, -36, 41, -36, 41, 40, 29, 40)
+
+[node name="LinkRight0" type="Line2D" parent="Visual/TreadRight"]
+points = PackedVector2Array(30, -32, 40, -32)
+width = 2.5
+default_color = Color(0.3, 0.29, 0.27, 1)
+
+[node name="LinkRight1" type="Line2D" parent="Visual/TreadRight"]
+points = PackedVector2Array(30, -24, 40, -24)
+width = 2.5
+default_color = Color(0.3, 0.29, 0.27, 1)
+
+[node name="LinkRight2" type="Line2D" parent="Visual/TreadRight"]
+points = PackedVector2Array(30, -16, 40, -16)
+width = 2.5
+default_color = Color(0.3, 0.29, 0.27, 1)
+
+[node name="LinkRight3" type="Line2D" parent="Visual/TreadRight"]
+points = PackedVector2Array(30, -8, 40, -8)
+width = 2.5
+default_color = Color(0.3, 0.29, 0.27, 1)
+
+[node name="LinkRight4" type="Line2D" parent="Visual/TreadRight"]
+points = PackedVector2Array(30, 0, 40, 0)
+width = 2.5
+default_color = Color(0.3, 0.29, 0.27, 1)
+
+[node name="LinkRight5" type="Line2D" parent="Visual/TreadRight"]
+points = PackedVector2Array(30, 8, 40, 8)
+width = 2.5
+default_color = Color(0.3, 0.29, 0.27, 1)
+
+[node name="LinkRight6" type="Line2D" parent="Visual/TreadRight"]
+points = PackedVector2Array(30, 16, 40, 16)
+width = 2.5
+default_color = Color(0.3, 0.29, 0.27, 1)
+
+[node name="LinkRight7" type="Line2D" parent="Visual/TreadRight"]
+points = PackedVector2Array(30, 24, 40, 24)
+width = 2.5
+default_color = Color(0.3, 0.29, 0.27, 1)
+
+[node name="LinkRight8" type="Line2D" parent="Visual/TreadRight"]
+points = PackedVector2Array(30, 32, 40, 32)
+width = 2.5
+default_color = Color(0.3, 0.29, 0.27, 1)
+
+[node name="Hull" type="Polygon2D" parent="Visual"]
+color = Color(0.43, 0.43, 0.41, 1)
+polygon = PackedVector2Array(-24, -34, 24, -34, 30, -28, 30, 32, 22, 40, -22, 40, -30, 32, -30, -28)
+
+[node name="HullLight" type="Polygon2D" parent="Visual"]
+color = Color(0.56, 0.53, 0.45, 1)
+polygon = PackedVector2Array(-24, -34, 24, -34, 22, -31, -22, -31, -27, -27, -27, 31, -30, 32, -30, -28)
+
+[node name="HullDark" type="Polygon2D" parent="Visual"]
+color = Color(0.22, 0.21, 0.2, 1)
+polygon = PackedVector2Array(30, -28, 30, 32, 22, 40, -22, 40, -30, 32, -27, 31, -21, 37, 21, 37, 27, 31, 27, -27)
+
+[node name="EngineDeck" type="Polygon2D" parent="Visual"]
+color = Color(0.2, 0.19, 0.18, 1)
+polygon = PackedVector2Array(-18, -30, 18, -30, 18, -20, -18, -20)
+
+[node name="Grille1" type="Line2D" parent="Visual/EngineDeck"]
+points = PackedVector2Array(-15, -27, 15, -27)
+width = 1.5
+default_color = Color(0.4, 0.38, 0.35, 1)
+
+[node name="Grille2" type="Line2D" parent="Visual/EngineDeck"]
+points = PackedVector2Array(-15, -23, 15, -23)
+width = 1.5
+default_color = Color(0.4, 0.38, 0.35, 1)
+
+[node name="HazardFront" type="Polygon2D" parent="Visual"]
 color = Color(0.79, 0.64, 0.15, 1)
-polygon = PackedVector2Array(-36, -28, -28, -28, -32, -22, -36, -22, -22, -28, -14, -28, -18, -22, -26, -22, -8, -28, 0, -28, -4, -22, -12, -22, 6, -28, 14, -28, 10, -22, 2, -22, 20, -28, 28, -28, 24, -22, 16, -22, 30, -28, 36, -28, 36, -22, 30, -22)
-
-[node name="Hopper" type="Polygon2D" parent="Visual"]
-color = Color(0.3, 0.29, 0.27, 1)
-polygon = PackedVector2Array(14, 4, 34, 4, 34, 26, 14, 26)
-
-[node name="Ore" type="Polygon2D" parent="Visual"]
-color = Color(0.36, 0.18, 0.17, 1)
-polygon = PackedVector2Array(16, 8, 24, 6, 32, 9, 32, 24, 16, 24)
-
-[node name="Cab" type="Polygon2D" parent="Visual"]
-color = Color(0.71, 0.33, 0.14, 1)
-polygon = PackedVector2Array(-34, 8, -18, 8, -18, 26, -34, 26)
-
-[node name="CabWindow" type="Polygon2D" parent="Visual"]
-color = Color(0.25, 0.85, 1, 0.8)
-polygon = PackedVector2Array(-32, 10, -20, 10, -20, 14, -32, 14)
-
-[node name="DrillHousing" type="Polygon2D" parent="Visual"]
-color = Color(0.3, 0.3, 0.3, 1)
-polygon = PackedVector2Array(0, -18, 12.7, -12.7, 18, 0, 12.7, 12.7, 0, 18, -12.7, 12.7, -18, 0, -12.7, -12.7)
+polygon = PackedVector2Array(-20, 30, -14, 30, -18, 36, -24, 36, -8, 30, -2, 30, -6, 36, -12, 36, 4, 30, 10, 30, 6, 36, 0, 36, 16, 30, 22, 30, 18, 36, 12, 36)
 
 [node name="Drill" type="Node2D" parent="Visual"]
 
-[node name="Blades" type="Polygon2D" parent="Visual/Drill"]
-color = Color(0.62, 0.6, 0.55, 1)
-polygon = PackedVector2Array(0, -15, 3, -3, 15, 0, 3, 3, 0, 15, -3, 3, -15, 0, -3, -3)
+[node name="Bit" type="Node2D" parent="Visual/Drill"]
 
-[node name="Hub" type="Polygon2D" parent="Visual/Drill"]
+[node name="Cone" type="Polygon2D" parent="Visual/Drill/Bit"]
+color = Color(0.58, 0.57, 0.53, 1)
+polygon = PackedVector2Array(-17, 0, 17, 0, 4, -86, 0, -100, -4, -86)
+
+[node name="ConeDark" type="Polygon2D" parent="Visual/Drill/Bit"]
+color = Color(0.36, 0.35, 0.33, 1)
+polygon = PackedVector2Array(6, 0, 17, 0, 4, -86, 0, -100, 1, -86)
+
+[node name="Threads" type="Node2D" parent="Visual/Drill/Bit"]
+
+[node name="Thread1" type="Line2D" parent="Visual/Drill/Bit/Threads"]
+points = PackedVector2Array(-17, 0, 17, -9)
+width = 2.0
+default_color = Color(0.9, 0.88, 0.8, 1)
+
+[node name="Thread2" type="Line2D" parent="Visual/Drill/Bit/Threads"]
+points = PackedVector2Array(-17, 0, 17, -9)
+width = 2.0
+default_color = Color(0.9, 0.88, 0.8, 1)
+
+[node name="Thread3" type="Line2D" parent="Visual/Drill/Bit/Threads"]
+points = PackedVector2Array(-17, 0, 17, -9)
+width = 2.0
+default_color = Color(0.9, 0.88, 0.8, 1)
+
+[node name="Thread4" type="Line2D" parent="Visual/Drill/Bit/Threads"]
+points = PackedVector2Array(-17, 0, 17, -9)
+width = 2.0
+default_color = Color(0.9, 0.88, 0.8, 1)
+
+[node name="Thread5" type="Line2D" parent="Visual/Drill/Bit/Threads"]
+points = PackedVector2Array(-17, 0, 17, -9)
+width = 2.0
+default_color = Color(0.9, 0.88, 0.8, 1)
+
+[node name="Thread6" type="Line2D" parent="Visual/Drill/Bit/Threads"]
+points = PackedVector2Array(-17, 0, 17, -9)
+width = 2.0
+default_color = Color(0.9, 0.88, 0.8, 1)
+
+[node name="Collar" type="Polygon2D" parent="Visual/Drill"]
+color = Color(0.71, 0.33, 0.14, 1)
+polygon = PackedVector2Array(-19, -14, 19, -14, 19, -24, -19, -24)
+
+[node name="Turret" type="Polygon2D" parent="Visual/Drill"]
+color = Color(0.38, 0.38, 0.36, 1)
+polygon = PackedVector2Array(-12, -18, 12, -18, 20, -8, 20, 12, 12, 20, -12, 20, -20, 12, -20, -8)
+
+[node name="TurretLight" type="Polygon2D" parent="Visual/Drill"]
+color = Color(0.52, 0.5, 0.44, 1)
+polygon = PackedVector2Array(-12, -18, 12, -18, 10, -15, -10, -15, -17, -7, -17, 10, -20, 12, -20, -8)
+
+[node name="Hatch" type="Polygon2D" parent="Visual/Drill"]
+color = Color(0.25, 0.24, 0.23, 1)
+polygon = PackedVector2Array(-5, 2, 5, 2, 8, 6, 8, 12, 5, 15, -5, 15, -8, 12, -8, 6)
+
+[node name="Light" type="Polygon2D" parent="Visual/Drill"]
 color = Color(0.79, 0.64, 0.15, 1)
-polygon = PackedVector2Array(0, -4, 4, 0, 0, 4, -4, 0)
+polygon = PackedVector2Array(10, 4, 14, 4, 14, 8, 10, 8)
+
+[node name="BurrowDirt" type="CPUParticles2D" parent="."]
+emitting = false
+amount = 40
+lifetime = 0.6
+local_coords = false
+emission_shape = 1
+emission_sphere_radius = 30.0
+spread = 180.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 60.0
+initial_velocity_max = 150.0
+damping_min = 120.0
+damping_max = 200.0
+scale_amount_min = 2.5
+scale_amount_max = 5.0
+color_initial_ramp = SubResource("Gradient_dirt")
+
+[node name="DrillHazard" type="Area2D" parent="."]
+collision_layer = 16
+collision_mask = 0
+monitoring = false
+script = ExtResource("3_hazard")
+
+[node name="Shape" type="CollisionShape2D" parent="DrillHazard"]
+disabled = true

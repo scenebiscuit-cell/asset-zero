@@ -115,6 +115,7 @@ The ship always looks like a hard-edged military aircraft. The liquid metal show
 | Overclock | E or L | Middle mouse button |
 | Auto-fire | — (no key) | Only from Fire Control power-ups (§7.3) or the accessibility setting |
 | Pause | Esc / P | — |
+| Fullscreen | F11 / Alt+Enter | — |
 
 Keyboard and mouse can both work in the same session. Whichever moved last takes control.
 
@@ -285,7 +286,7 @@ A giant armored strip-mining machine that fills the top third of the screen.
 - A **wave director** spawns enemy waves from a pool, using a difficulty budget that grows over time and per level, multiplied by the Threat Level.
 - Waves are defined as data (which enemies, formation, entry side, path), so new waves can be added without new code.
 - Each level ends with a short "SECTOR CLEAR" moment, then the between-level screens.
-- **Breaches:** each enemy aircraft that gets away (off the bottom, or out its exit route) costs a little salvage (2, tunable) and shows "BREACH" under the salvage counter. Ground units scrolling away don't count. If none get away all sector, SECTOR CLEAR pays a **Perimeter Held** bonus (25 salvage, tunable).
+- **Breaches:** each enemy aircraft that gets away (off the bottom, or out its exit route) costs a little salvage (2, tunable), with no on-screen popup (it distracted from play). Ground units scrolling away don't count. If none get away all sector, SECTOR CLEAR pays a **Perimeter Held** bonus (25 salvage, tunable).
 - Level 1: drones and AA emplacements. Level 2: adds interceptors, mining platforms, transports. Level 3: adds gunships and denser waves. Then the boss.
 
 ### 9.1 Threat Level
@@ -474,7 +475,7 @@ Likely hand-painted art downscaled to sprites, possibly with a metallic sheen sh
 
 Title (Click to start) → Main menu (Deploy, R&D, Settings) → Mission briefing → Level 1 → Field Refit → Armory → Level 2 → … → Boss → Mission Complete / Mission Failed (shows Combat Data earned) → Main menu
 
-HUD: Armor bar, Plating bar, Overclock meter, salvage count, weight class, HSD Threat label, assimilated weapon icon, level number, auto-fire indicator.
+HUD: Armor bar, Plating bar, Overclock meter, salvage count, weight class, HSD Threat label, assimilated weapon icon, level number, auto-fire indicator, sector progress track (thin bar in the right rail that fills as the sector goes on).
 
 Settings: master/music/SFX volume, screen shake on/off, Accessibility: auto-fire on/off (off by default, §7.3).
 
@@ -482,7 +483,7 @@ Settings: master/music/SFX volume, screen shake on/off, Accessibility: auto-fire
 
 - **Engine:** Godot 4 (latest stable, 4.4 or newer), GDScript with static typing
 - **Renderer:** Compatibility (required for web export)
-- **Base resolution:** 540 × 960 (portrait), stretch mode `canvas_items`, aspect `keep`; the web page shows it centered with bars at the sides
+- **Base resolution:** 540 × 960 (portrait), stretch mode `canvas_items`, aspect `keep`: the 540 × 960 battlefield is centred and scaled to the full screen height, with dark bars at the sides (same game on every screen). The HUD and the metal rails stay inside the battlefield, on its edges, like Raptor
 - **Web export:** single-threaded (no SharedArrayBuffer needed, so itch.io works without special settings)
 - **Performance:** object pooling for rounds, missiles and pickups; target max ~400 projectiles on screen
 - **Data-driven:** weapon systems, refits, weapon modules, enemies and waves are Godot Resources (`.tres`) so balancing doesn't need code changes

@@ -49,6 +49,7 @@ func _ready() -> void:
 	_hud.sector_number = _level_data.sector_number
 	_sector_banner.show_banner(_level_data.sector_number)
 	_wave_director.level_data = _level_data
+	_hud.wave_director = _wave_director
 	_wave_director.enemies = _enemies
 	_wave_director.spawn_requested.connect(_on_spawn_requested)
 	_wave_director.sector_cleared.connect(_on_sector_cleared)
@@ -102,7 +103,7 @@ func _on_enemy_escaped(_enemy: Enemy) -> void:
 	if _player_dead:
 		return
 	_breaches += 1
-	_hud.show_breach(GameState.lose_salvage(escape_penalty))
+	GameState.lose_salvage(escape_penalty)
 
 
 ## Overclock's Meltdown pulse: every enemy round in the circle becomes a salvage pickup.

@@ -7,8 +7,6 @@ extends CanvasLayer
 ## Below this fraction of max Armor, the bar turns red and the warning shows.
 @export var armor_warning_fraction: float = 0.25
 @export var blink_speed: float = 6.0
-## How long the "BREACH" penalty stays under the salvage counter.
-@export var breach_show_time: float = 1.4
 
 const WEIGHT_KEYS: Array[String] = ["CLASS_LIGHT", "CLASS_MEDIUM", "CLASS_HEAVY", "CLASS_ASSAULT"]
 const THREAT_KEYS: Array[String] = ["THREAT_LOW", "THREAT_ELEVATED", "THREAT_HIGH", "THREAT_SEVERE"]
@@ -20,6 +18,8 @@ const OVERCLOCK_HOT: Color = Color(1.0, 0.45, 0.1)
 ## Set by the Level.
 var player: Player
 var sector_number: int = 1
+## Set by the Level when waves are running; the progress track stays hidden without it.
+var wave_director: WaveDirector
 
 var _time: float = 0.0
 # Last values written, so labels only rebuild their text when something changed.
@@ -30,7 +30,6 @@ var _shown_class: int = -1
 var _shown_threat: int = -1
 var _shown_autofire: int = -2
 var _shown_overclock_secs: int = -1
-var _breach_left: float = 0.0
 
 @onready var _armor_bar: HudBar = $Root/TopLeft/ArmorBar
 @onready var _armor_value: Label = $Root/TopLeft/ArmorValue
@@ -44,7 +43,7 @@ var _breach_left: float = 0.0
 @onready var _overclock_state: Label = $Root/BottomRight/OverclockState
 @onready var _warning: Label = $Root/BottomCenter/Warning
 @onready var _autofire: Label = $Root/BottomCenter/AutoFire
-@onready var _breach: Label = $Root/TopCenter/Breach
+@onready var _sector_progress: SectorProgress = $Root/SectorProgress
 
 
 func _ready() -> void:
@@ -57,7 +56,9 @@ func _process(delta: float) -> void:
 	_update_armor(blink_on)
 	_plating_bar.value = 0.0 if GameState.max_plating <= 0 else float(GameState.plating) / GameState.max_plating
 	_update_salvage()
-	_update_breach(delta)
+	_sector_progress.visible = wave_director != null
+	if wave_director != null:
+		_sector_progress.value = wave_director.progress()
 	_update_status()
 	_module_value.text = "—" if GameState.assimilated_module == null else GameState.assimilated_module.resource_name
 	_update_overclock(blink_on)
@@ -80,21 +81,6 @@ func _update_salvage() -> void:
 		return
 	_shown_salvage = GameState.salvage
 	_salvage_value.text = "%08d" % GameState.salvage
-
-
-## Called by the Level when an aircraft gets away. Shows what it cost.
-func show_breach(lost: int) -> void:
-	_breach.text = tr("HUD_BREACH") % lost if lost > 0 else tr("HUD_BREACH_EMPTY")
-	_breach_left = breach_show_time
-
-
-func _update_breach(delta: float) -> void:
-	_breach.visible = _breach_left > 0.0
-	if _breach_left <= 0.0:
-		return
-	_breach_left -= delta
-	# Holds, then fades over the last half second.
-	_breach.modulate.a = clampf(_breach_left / 0.5, 0.0, 1.0)
 
 
 func _update_status() -> void:

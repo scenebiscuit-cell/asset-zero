@@ -150,6 +150,8 @@ How to hand a milestone to Claude Code (in VS Code, terminal at `C:\Projects\ass
 
 Write down decisions here as you make them (date — decision), so the AI tools know about them.
 
+- 2026-11-03 — Fullscreen: stretch aspect stays `keep`, so the 540×960 battlefield is centred at full screen height with dark bars at the sides, and the HUD and rails stay inside it on its edges (like Raptor). Tried first and dropped: a battlefield widened to the whole monitor (changed balance between screens) and HUD panels moved out into cockpit side panels (felt disconnected). The BREACH popup was removed (distracting); the salvage penalty and Perimeter Held bonus stay. DESIGN.md §9, §14.
+- 2026-11-03 — Added a sector progress track to the HUD (right rail) and an F11 / Alt+Enter fullscreen toggle (in SaveManager until the Settings screen exists). DESIGN.md §5.5, §13.
 - 2026-11-03 — Sector 1 shortened to 90 s (was 150 s) so the run gets going quickly; later sectors stay 2–3 minutes. DESIGN.md §9.
 - 2026-11-03 — Breach penalty: each enemy aircraft that escapes costs 2 salvage; a sector with no escapes pays a 25-salvage Perimeter Held bonus at SECTOR CLEAR. Enemy round damage raised (RD-2 8, others 12). DESIGN.md §8, §9.
 - 2026-11-03 — RD-2 Recon Drones now fire one weak, slow aimed round (about a third of them since 2026-11-03 retune, at a random moment) so Sector 1 has rounds to dodge and graze. AA Emplacements fire 2-round bursts every 1.4 s and appear more often (pairs from 45 s). DESIGN.md §8.

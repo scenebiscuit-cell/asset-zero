@@ -44,6 +44,13 @@ func _physics_process(delta: float) -> void:
 		sector_cleared.emit()
 
 
+## 0-1: how far through the sector's spawning time we are (for the HUD progress track).
+func progress() -> float:
+	if level_data == null or level_data.duration <= 0.0:
+		return 0.0
+	return clampf(_elapsed / level_data.duration, 0.0, 1.0)
+
+
 func _update_spawning(delta: float) -> void:
 	if _elapsed >= level_data.duration:
 		_finished_spawning = true

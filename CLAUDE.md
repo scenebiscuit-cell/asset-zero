@@ -64,6 +64,7 @@ res://
     pickups/       salvage, repair, weapon_module
     levels/        level.tscn, wave_director.gd, background
     ui/            hud, menus, field_refit, armory, briefing
+    map/           ops_map screen, map_generator.gd, stop types
     fx/            explosions, particles, screen_shake, morph (shared shape-tween system)
   data/
     weapons/  refits/  modules/  enemies/  waves/  levels/  shapes/
@@ -110,7 +111,7 @@ art-source/        source art (has a .gdignore file so Godot never imports the .
 
 ## Theme words (use these in code, UI and file names)
 
-Military hardware style, like a mech game's loadout screen. XF-0 (the player's aircraft), Armor (health), Plating (regenerating shield), Salvage (in-run currency), Combat Data (meta currency), Refits (upgrades), Hardpoints (Nose, Wing Pylons, Engine, Hull, Salvage Mount), Weight class (Light/Medium/Heavy/Assault), Field Refit (the pick-1-of-3 screen), Armory (the shop), R&D (meta unlocks), Combat Morph (switching between **Gunship form** and **Lance form**), Graze / near miss, Overclock (meter + white-hot burst), Meltdown pulse, Assimilate (absorbing an enemy weapon), Weapon module, Elite (yellow-outlined enemy), HSD Threat Level (LOW/ELEVATED/HIGH/SEVERE). Weapons use designations like "M20 Autocannon" (see DESIGN.md §6). Don't use old names like biomass, mutation, reform, scrap currency, Foundry or Integrity. Precision mode is now Lance form.
+Military hardware style, like a mech game's loadout screen. XF-0 (the player's aircraft), Armor (health), Plating (regenerating shield), Salvage (in-run currency), Combat Data (meta currency), Refits (upgrades), Hardpoints (Nose, Wing Pylons, Engine, Hull, Salvage Mount), Weight class (Light/Medium/Heavy/Assault), Field Refit (the pick-1-of-3 screen), Armory (the shop), R&D (meta unlocks), Combat Morph (switching between **Gunship form** and **Lance form**), Graze / near miss, Overclock (meter + white-hot burst), Meltdown pulse, Assimilate (absorbing an enemy weapon), Weapon module, Elite (yellow-outlined enemy), HSD Threat Level (LOW/ELEVATED/HIGH/SEVERE). Ops Map (the branching sector map) and its stops: Strike, Salvage Run, Strongpoint (mini-boss), Refit Depot (Repair / Overhaul), Armory, Primary Target (boss). Use "mission" or "stop", not "level". Weapons use designations like "M20 Autocannon" (see DESIGN.md §6). Don't use old names like biomass, mutation, reform, scrap currency, Foundry or Integrity. Precision mode is now Lance form.
 
 ## Don't
 

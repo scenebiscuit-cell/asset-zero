@@ -42,12 +42,12 @@ ASSET ZERO is a modern take on *Raptor: Call of the Shadows* (1994): a vertical-
   - Seeker Missiles
   - Propulsion
   - Armor
-- **Between levels:** a free Field Refit (pick 1 of 3 on a loadout schematic), then the Armory shop.
+- **Ops Map (Slay the Spire-style):** each sector is a branching map of 7 rows. Stops: Strike (mission + free Field Refit), Salvage Run (more salvage, no refit), Strongpoint (mini-boss), Refit Depot (Repair or Overhaul), Armory (shop), and the boss at the top. A run visits about 6 stops.
 - **Currencies:** Salvage is spent during a run. Combat Data is kept between runs and spent in R&D to unlock new parts.
 - **Health:** Armor is health, Plating is a regenerating shield.
 
 ## Demo scope
-- 1 sector, 3 levels plus the boss HEG-X9 "MAWLER" Mining Crawler (3 phases).
+- 1 sector Ops Map with 2 mini-bosses (HG-9 Warden gunship, SF-4 Sentinel Flak Battery) and the boss HEG-X9 "MAWLER" Mining Crawler (3 phases).
 - Six enemy types: RD-2 Recon Drone, ID-4 Interceptor Drone, AA Emplacement, Mining Platform, Armored Transport, HG-7 Gunship.
 - Keyboard and mouse controls. Web build on itch.io. A run lasts about 10–15 minutes.
 
@@ -71,7 +71,7 @@ ASSET ZERO is a modern take on *Raptor: Call of the Shadows* (1994): a vertical-
   - Milestone A: Steps 0–5 (setup → Combat Morph)
   - Milestone B: Steps 6–9 (enemies, waves, HUD, Overclock)
   - Milestone C: Steps 10–15 (weapons, Assimilate, refits, Armory, weight classes, Threat)
-  - Milestone D: Steps 16–17 (boss, full run)
+  - Milestone D: Steps 16–17c (boss, mini-bosses, Ops Map, full run)
   - Milestone E: Steps 18–20 (polish, balance, itch.io release)
 - `CLAUDE.md`: rules for Claude Code (milestone at a time, checked steps, branch + PR, explain simply, folder layout, collision layers, game terms)
 - `.github/copilot-instructions.md`: copy of the same rules, kept as project notes (Copilot no longer used)
@@ -84,7 +84,7 @@ Each milestone goes to Claude Code (VS Code terminal in `C:\Projects\asset-zero`
 Each milestone gets its own branch and pull request; I merge only when I say "merge". Then `/clear` and start the next milestone.
 
 ## Current status
-Milestone A (Steps 0–5: setup, flying, Autocannon, terrain and first enemy, damage and death, Combat Morph) is done and merged. Milestone B is in progress. After it: ART-1 (Blender pipeline test) and ART-2, then Milestone C.
+Milestones A and B are done and merged. Milestone C is in progress (Step 10 done, Step 11 next). ART-1 and ART-2 (Blender) come before Milestone D. Milestone D now includes the mini-bosses and the Ops Map (Steps 16b, 17a, 17b, 17c).
 
 ## Preference
 When referring back to earlier instructions or steps, paste them in full rather than saying "from earlier."

@@ -80,7 +80,7 @@ How to hand a milestone to Claude Code (in VS Code, terminal at `C:\Projects\ass
   - Overclock activation: Meltdown pulse turns nearby enemy rounds into salvage, 5 s of ×1.5 damage + heat aura that destroys rounds, salvage extends it (max 10 s), 0.5 s invulnerability at the end
   - **Done when:** you can fill the meter by grazing and collecting, trigger Overclock, and survive a dense bullet pattern with it
 
-### ART-1: Blender pipeline test (do this when Milestone B is finished, before ART-2)
+### ART-1: Blender pipeline test (Milestone B is done: do this before Milestone D, then ART-2)
 
 - [ ] **ART-1a: Install Blender and connect it to Claude Code** (you do this part by hand; Claude Code can help)
   - Install **Blender 5.1 or newer** from blender.org (free)
@@ -127,13 +127,15 @@ How to hand a milestone to Claude Code (in VS Code, terminal at `C:\Projects\ass
   - **Done when:** killing each elite type drops its module, and each module works in both forms
 
 - [ ] **Step 12: Field Refit (loadout) screen**
-  - After a level: pick 1 of 3 random refits on a ship schematic (both forms side by side) that highlights the hardpoint; one reroll that costs salvage (rising price)
+  - After a mission: pick 1 of 3 random refits on a ship schematic (both forms side by side) that highlights the hardpoint; one reroll that costs salvage (rising price)
   - Refits as Resources (`data/refits/*.tres`); handles level-ups and the level-3 Variant A/B choice
   - Nose swap rule (Autocannon line OR Beam Laser line)
-  - **Done when:** finishing a level shows the offer and the chosen refit actually changes the ship
+  - Build it as a standalone screen that returns to whatever opened it (the Ops Map from Step 17a; until then, the next mission)
+  - **Done when:** finishing a mission shows the offer and the chosen refit actually changes the ship
 
 - [ ] **Step 13: Armory shop**
-  - 4 items for salvage, always at least one repair, prices scale per level
+  - 4 items for salvage, always at least one repair, prices scale with progress (map row from Step 17a)
+  - Standalone screen that returns to whatever opened it (it becomes an Ops Map stop in Step 17b)
   - **Done when:** you can buy, can't buy what you can't afford, and can leave
 
 - [ ] **Step 14: All systems, weight classes + refit morph**
@@ -158,15 +160,38 @@ How to hand a milestone to Claude Code (in VS Code, terminal at `C:\Projects\ass
   - Three phases from DESIGN.md §8 (turrets drop Flak Burst modules), boss health bar, big death sequence
   - **Done when:** the boss can be fought and beaten with all three phases working
 
-- [ ] **Step 17: Full run structure**
-  - Title (click to start) → menu (Deploy, R&D, Settings) → mission briefing → L1 → Field Refit → Armory → L2 → … → boss → Mission Complete / Mission Failed
+- [ ] **Step 16b: Mini-bosses**
+  - HG-9 Warden (air: shield drones, strafing phase, coral-telegraphed missile salvo) and SF-4 Sentinel Flak Battery (ground: scroll stops, four turret pods, core opens) from DESIGN.md §8
+  - Each is a **Strongpoint** mission: short escort wave, then the mini-boss with a small health bar; guaranteed module drop (Spread Cannon / Flak Burst)
+  - Mini-boss stats as Resources (`data/enemies/`), reusing the boss health-bar and phase code from Step 16
+  - **Done when:** both mini-bosses can be fought and beaten from a test scene, each phase works, and the module drops
+
+- [ ] **Step 17a: Ops Map screen and generation**
+  - Map generator from DESIGN.md §9.2: 4 columns × 7 rows, stop types per row, connection and placement rules, built from a seed stored in GameState
+  - Ops Map screen in the tactical CRT style: stop icons, connecting lines, XF-0 marker, reachable stops pulse, visited stops dim, tooltip with type/reward/row; mouse and keyboard selection
+  - Map data as Resources or plain data (no hardcoded maps); a debug key regenerates with a new seed
+  - **Done when:** the map shows a valid branching network every time (try 20 seeds), you can only pick connected stops, and the same seed always gives the same map
+
+- [ ] **Step 17b: Stop types wired to the map**
+  - **Strike** → mission (difficulty from map row) → salvage + Field Refit → map
+  - **Salvage Run** → 60 s salvage-heavy mission → salvage ×1.75, doubled Perimeter Held, no Field Refit → map
+  - **Strongpoint** → mini-boss mission (Step 16b) → big salvage, module, boosted Field Refit, bonus Combat Data → map
+  - **Refit Depot** → choose Repair (40% Armor) or Overhaul (one installed system +1 level) → map
+  - **Armory** → the Step 13 shop, prices by row → map
+  - **Primary Target** → MAWLER (Step 16) → Mission Complete
+  - Wave director takes its difficulty from the map row instead of a level number
+  - **Done when:** every stop type can be entered from the map, gives the right reward, and returns to the map with the run state (Armor, salvage, refits, module, Threat) intact
+
+- [ ] **Step 17c: Full run structure**
+  - Title (click to start) → menu (Deploy, R&D, Settings) → mission briefing → Ops Map → stops … → Primary Target (boss) → Mission Complete / Mission Failed
   - Combat Data earned (includes highest Threat reached), saved to `user://save.cfg`, R&D screen with ~6 unlocks
   - Mission briefing sometimes offers the FC-1 Fire Control Computer for Combat Data (auto-fire for that run only); Settings → Accessibility → Auto-fire (DESIGN.md §7.3)
-  - **Done when:** a full run works start to finish, and unlocks persist after closing the game
+  - **Done when:** a full run works start to finish through the Ops Map in about 12–15 minutes, and unlocks persist after closing the game
 
-- [ ] **ART-4: MAWLER boss** (end of Milestone D)
+- [ ] **ART-4: MAWLER boss and mini-bosses** (end of Milestone D)
   - Model the HEG-X9 MAWLER as separate parts (body, flank turrets, jaws, core) so phases can break pieces off; render each part and its damaged version
-  - **Done when:** the boss fight uses the rendered parts and each phase visibly damages the machine
+  - Same for the HG-9 Warden (with its shield drones) and the SF-4 Sentinel Flak Battery (pods and core)
+  - **Done when:** the boss and mini-boss fights use the rendered parts and each phase visibly damages the machine
 
 ## Milestone E — Polish and release
 
@@ -197,6 +222,7 @@ How to hand a milestone to Claude Code (in VS Code, terminal at `C:\Projects\ass
 
 Write down decisions here as you make them (date — decision), so the AI tools know about them.
 
+- 2026-11-05 — Ops Map added (DESIGN.md §9.2): a Slay the Spire-style branching sector map replaces the fixed 3-level run. Stops: Strike (salvage + free Field Refit), Salvage Run (more salvage, no refit), Strongpoint (mini-boss), Refit Depot (Repair or Overhaul), Armory (shop), Primary Target (boss). Two mini-bosses added: HG-9 Warden and SF-4 Sentinel Flak Battery. New Steps 16b, 17a, 17b; Step 17 became 17c. Replaces the old "contract board" Later idea.
 - 2026-11-03 — Fullscreen: stretch aspect stays `keep`, so the 540×960 battlefield is centred at full screen height with dark bars at the sides, and the HUD and rails stay inside it on its edges (like Raptor). Tried first and dropped: a battlefield widened to the whole monitor (changed balance between screens) and HUD panels moved out into cockpit side panels (felt disconnected). The BREACH popup was removed (distracting); the salvage penalty and Perimeter Held bonus stay. DESIGN.md §9, §14.
 - 2026-11-03 — Added a sector progress track to the HUD (right rail) and an F11 / Alt+Enter fullscreen toggle (in SaveManager until the Settings screen exists). DESIGN.md §5.5, §13.
 - 2026-11-03 — Sector 1 shortened to 90 s (was 150 s) so the run gets going quickly; later sectors stay 2–3 minutes. DESIGN.md §9.

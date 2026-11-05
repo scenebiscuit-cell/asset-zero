@@ -27,7 +27,7 @@ var play_area_bottom: float = 0.0
 @export var fire_control_duration: float = 10.0
 @export var max_fire_control_charges: int = 2
 ## Enemies to destroy for one Saturation Strike charge.
-@export var kills_per_strike: int = 40
+@export var kills_per_strike: int = 80
 @export var max_strike_charges: int = 3
 
 ## Always-on auto-fire: the FC-1 refit or the accessibility setting (DESIGN.md §7.3), never a key.

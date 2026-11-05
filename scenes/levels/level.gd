@@ -15,6 +15,9 @@ extends Node2D
 @export var escape_penalty: int = 2
 ## Salvage awarded at SECTOR CLEAR if no aircraft got away all sector.
 @export var perimeter_bonus: int = 25
+## Enemy salvage is worth this much more (sectors were shortened). The number of pickups stays
+## the same, so Overclock charges as before; each pickup is just worth more.
+@export var salvage_multiplier: float = 1.5
 ## Every this many enemies destroyed drops a repair kit (counts carry over between sectors).
 @export var kills_per_repair: int = 20
 ## Armor restored by that kill-count repair kit.
@@ -150,7 +153,7 @@ func _on_ground_target_destroyed(target: Enemy) -> void:
 
 func _on_enemy_destroyed(enemy: Enemy) -> void:
 	_explosion_pool.spawn(enemy.global_position)
-	_salvage_pool.spawn_burst(enemy.global_position, enemy.salvage_value())
+	_drop_enemy_salvage(enemy.global_position, enemy.salvage_value())
 	if enemy.elite:
 		GameState.add_overclock(GameState.OVERCLOCK_PER_ELITE)
 		if enemy.data.module != null:
@@ -165,6 +168,17 @@ func _on_enemy_destroyed(enemy: Enemy) -> void:
 		drop_repair(enemy.global_position + Vector2(12.0, 0.0), kill_repair_amount)
 	if randf() < fire_control_drop_chance:
 		drop_pickup(_fire_control_pool, enemy.global_position + Vector2(0.0, -12.0))
+
+
+## Same pickup count as the enemy's salvage value, with the boosted total spread across them.
+func _drop_enemy_salvage(at: Vector2, base: int) -> void:
+	if base <= 0:
+		return
+	var total: int = roundi(base * salvage_multiplier)
+	var each: int = floori(float(total) / base)
+	var extra: int = total % base
+	_salvage_pool.spawn_burst(at, base - extra, each)
+	_salvage_pool.spawn_burst(at, extra, each + 1)
 
 
 func _on_enemy_escaped(_enemy: Enemy) -> void:

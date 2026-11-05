@@ -150,6 +150,8 @@ How to hand a milestone to Claude Code (in VS Code, terminal at `C:\Projects\ass
 
 Write down decisions here as you make them (date — decision), so the AI tools know about them.
 
+- 2026-11-04 — Shorter sectors (Sector 1 60 s, others 105 s, was 90/150) and a slower strike meter (80 kills, was 40), after playtesting. Enemy salvage ×1.5 to compensate (same number of pickups, each worth more, so Overclock charge is unchanged). DESIGN.md §9, §7.4.
+- 2026-11-04 — Debug loadout keys (debug builds only) now cycle: 1 = next nose weapon, 2 = pylons, 3 = Salvage Mount module, since there are now more weapons than number keys.
 - 2026-11-04 — Added Saturation Strike (developer request): kill meter in the left rail, 40 kills = 1 charge (max 3), R/U clears the screen. Bomb meters are an allowed genre idea (§15); name and numbers are ours. Console panels enlarged; Fire Control panel now always shown (EMPTY when nothing stored). DESIGN.md §5.5, §7.4, §13.
 - 2026-11-04 — Bottom HUD moved into a solid 100 px console strip; the player can't fly below it and enemies behind it count as off screen (no firing, no missile lock). Chosen over fading panels so nothing ever hides behind the HUD. DESIGN.md §13 HUD line.
 - 2026-11-04 — Repair kit (+20 Armor) drops after every 20 enemies destroyed; the count carries over between sectors, radar domes don't count. DESIGN.md §5 Armor row.

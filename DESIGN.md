@@ -241,7 +241,7 @@ Small simple upgrades: AP Rounds (+10% damage), Improved Feed (+10% fire rate), 
 
 ## 7. Economy
 
-- **Salvage** (in-run currency): destroyed enemies break into scrap pickups that get magnetically pulled into XF-0 when close. Ground targets, big enemies and elites drop more. Lost when the run ends. Salvage pickups also charge Overclock.
+- **Salvage** (in-run currency): destroyed enemies break into scrap pickups that get magnetically pulled into XF-0 when close. Ground targets, big enemies and elites drop more. Enemy salvage values in the table (§8) are the number of pickups; the game pays ×1.5 that total, spread across the same pickups. Lost when the run ends. Salvage pickups also charge Overclock.
 - **Combat Data** (meta currency): earned at the end of every run, win or lose (based on distance reached, boss kills and highest Threat Level reached). Kept forever, saved to disk.
 
 ### 7.1 Between levels (in order)
@@ -267,7 +267,7 @@ Separately, **Settings → Accessibility → Auto-fire** (off by default) gives 
 
 A bomb meter, earned by fighting rather than found:
 
-- The **strike meter** in the left HUD rail fills from the bottom with every enemy destroyed (40 kills, tunable). Full = one **strike charge**, and the meter starts over. Up to 3 charges are stored and kept between sectors; with storage full the meter stays full until one is used. Radar domes don't count, and kills made by the strike itself don't refill it.
+- The **strike meter** in the left HUD rail fills from the bottom with every enemy destroyed (80 kills, tunable). Full = one **strike charge**, and the meter starts over. Up to 3 charges are stored and kept between sectors; with storage full the meter stays full until one is used. Radar domes don't count, and kills made by the strike itself don't refill it.
 - Press the **Strike key (R / U)** to spend a charge: a white flash, every enemy round on screen disappears, every enemy in the play area takes heavy damage (600, enough for anything but a boss), and a barrage of blasts ripples up the screen. Enemies still burrowed or behind the HUD console aren't hit.
 - The console's STRIKE panel shows the stored charges as pips, "PRESS R" while one is ready, or the kill count toward the next one.
 - Different from Overclock: Overclock is earned by flying close to danger and turns nearby rounds into salvage; the strike is earned by kills and wipes the whole screen but pays nothing extra for the rounds.
@@ -297,7 +297,7 @@ A giant armored strip-mining machine that fills the top third of the screen.
 
 ## 9. Levels
 
-- Each level is about **2–3 minutes** of vertical scrolling, except Sector 1, which is about **1.5 minutes** so the run gets going quickly.
+- Each level is about **1 min 45 s** of vertical scrolling, except Sector 1, which is about **1 minute** so the run gets going quickly.
 - A **wave director** spawns enemy waves from a pool, using a difficulty budget that grows over time and per level, multiplied by the Threat Level.
 - Waves are defined as data (which enemies, formation, entry side, path), so new waves can be added without new code.
 - Each level ends with a short "SECTOR CLEAR" moment, then the between-level screens.

@@ -27,6 +27,7 @@ var _breaches: int = 0
 @onready var _ground_targets: Node2D = $GroundTargets
 @onready var _wave_director: WaveDirector = $WaveDirector
 @onready var _sector_clear: SectorClearScreen = $SectorClear
+@onready var _field_refit: FieldRefitScreen = $FieldRefit
 @onready var _sector_banner: SectorBanner = $SectorBanner
 @onready var _hud: Hud = $Hud
 @onready var _pause_menu: PauseMenu = $PauseMenu
@@ -51,6 +52,7 @@ func _ready() -> void:
 	_player.destroyed.connect(_on_player_destroyed)
 	_player.meltdown_pulse.connect(_on_meltdown_pulse)
 	_sector_clear.continue_pressed.connect(_on_continue_pressed)
+	_field_refit.finished.connect(_on_field_refit_finished)
 	_hud.player = _player
 	_ground_layer.dome_entering.connect(_on_dome_entering)
 	if not run_waves or sectors.is_empty():
@@ -79,8 +81,15 @@ func _on_sector_cleared() -> void:
 	_sector_clear.show_screen(_level_data.sector_number, _breaches, bonus)
 
 
+## Between sectors (DESIGN.md §7.1): Field Refit, then (Step 13) the Armory, then the next sector.
 func _on_continue_pressed() -> void:
+	# Advance first, so the dissolved module is already gone from the loadout the refit screen shows.
 	GameState.advance_sector()
+	_sector_clear.visible = false
+	_field_refit.open(_level_data.sector_number)
+
+
+func _on_field_refit_finished() -> void:
 	# Same scene, next sector's data. Nothing on screen carries over; the run does.
 	get_tree().reload_current_scene()
 

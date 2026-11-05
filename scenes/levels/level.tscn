@@ -1,4 +1,4 @@
-[gd_scene load_steps=30 format=3]
+[gd_scene load_steps=31 format=3]
 
 [ext_resource type="Script" path="res://scenes/levels/level.gd" id="1_level"]
 [ext_resource type="Script" path="res://scenes/levels/background_layer.gd" id="2_bg"]
@@ -28,6 +28,7 @@
 [ext_resource type="PackedScene" path="res://scenes/weapons/missile.tscn" id="26_missile"]
 [ext_resource type="PackedScene" path="res://scenes/pickups/module_pickup.tscn" id="27_module"]
 [ext_resource type="PackedScene" path="res://scenes/enemies/radar_dome/radar_dome.tscn" id="28_dome"]
+[ext_resource type="PackedScene" path="res://scenes/ui/field_refit/field_refit.tscn" id="29_field_refit"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_grain"]
 shader = ExtResource("10_grain")
@@ -109,6 +110,8 @@ script = ExtResource("20_wave_director")
 [node name="SectorBanner" parent="." instance=ExtResource("22_sector_banner")]
 
 [node name="SectorClear" parent="." instance=ExtResource("21_sector_clear")]
+
+[node name="FieldRefit" parent="." instance=ExtResource("29_field_refit")]
 
 [node name="MissionFailed" parent="." instance=ExtResource("13_mission_failed")]
 

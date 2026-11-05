@@ -1,0 +1,203 @@
+[gd_scene load_steps=13 format=3]
+
+[ext_resource type="Script" path="res://scenes/ui/field_refit/field_refit.gd" id="1_refit"]
+[ext_resource type="Script" path="res://scenes/ui/field_refit/ship_schematic.gd" id="2_schematic"]
+[ext_resource type="Resource" path="res://data/refits/catalog.tres" id="3_catalog"]
+[ext_resource type="Resource" path="res://data/shapes/xf0_light_gunship.tres" id="4_gunship"]
+[ext_resource type="Resource" path="res://data/shapes/xf0_light_lance.tres" id="5_lance"]
+
+[sub_resource type="SystemFont" id="SystemFont_mono"]
+font_names = PackedStringArray("Consolas", "Lucida Console", "Courier New", "monospace")
+font_weight = 600
+multichannel_signed_distance_field = true
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_frame"]
+bg_color = Color(0.035, 0.045, 0.045, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.36, 0.38, 0.4, 1)
+border_blend = true
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_card"]
+bg_color = Color(0.08, 0.09, 0.1, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(1, 0.7, 0.2, 0.3)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_card_focus"]
+bg_color = Color(0.2, 0.14, 0.05, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(1, 0.7, 0.2, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_card_disabled"]
+bg_color = Color(0.06, 0.065, 0.07, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(1, 1, 1, 0.1)
+
+[sub_resource type="Theme" id="Theme_refit"]
+default_font = SubResource("SystemFont_mono")
+default_font_size = 14
+Button/colors/font_color = Color(1, 0.7, 0.2, 1)
+Button/colors/font_disabled_color = Color(1, 0.7, 0.2, 0.35)
+Button/colors/font_focus_color = Color(1, 0.9, 0.6, 1)
+Button/colors/font_hover_color = Color(1, 0.9, 0.6, 1)
+Button/styles/disabled = SubResource("StyleBoxFlat_card_disabled")
+Button/styles/focus = SubResource("StyleBoxFlat_card_focus")
+Button/styles/hover = SubResource("StyleBoxFlat_card_focus")
+Button/styles/normal = SubResource("StyleBoxFlat_card")
+Button/styles/pressed = SubResource("StyleBoxFlat_card_focus")
+Label/colors/font_color = Color(1, 0.7, 0.2, 1)
+Label/colors/font_outline_color = Color(0.05, 0.03, 0.02, 1)
+Label/constants/outline_size = 2
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_screen"]
+bg_color = Color(0.02, 0.05, 0.05, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.35, 0.85, 1, 0.25)
+
+[node name="FieldRefit" type="CanvasLayer"]
+process_mode = 3
+layer = 15
+script = ExtResource("1_refit")
+catalog = ExtResource("3_catalog")
+
+[node name="Root" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 540.0
+offset_bottom = 960.0
+theme = SubResource("Theme_refit")
+
+[node name="Frame" type="Panel" parent="Root"]
+layout_mode = 0
+offset_left = 8.0
+offset_top = 8.0
+offset_right = 532.0
+offset_bottom = 952.0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_frame")
+
+[node name="Title" type="Label" parent="Root"]
+layout_mode = 0
+offset_top = 22.0
+offset_right = 540.0
+offset_bottom = 54.0
+theme_override_font_sizes/font_size = 28
+text = "FIELD_REFIT"
+horizontal_alignment = 1
+
+[node name="Subtitle" type="Label" parent="Root"]
+layout_mode = 0
+offset_top = 56.0
+offset_right = 540.0
+offset_bottom = 74.0
+theme_override_colors/font_color = Color(0.55, 1, 0.6, 1)
+theme_override_font_sizes/font_size = 13
+text = "REFIT_SUBTITLE"
+horizontal_alignment = 1
+
+[node name="ScreenBack" type="Panel" parent="Root"]
+layout_mode = 0
+offset_left = 24.0
+offset_top = 84.0
+offset_right = 516.0
+offset_bottom = 422.0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_screen")
+
+[node name="Schematic" type="Control" parent="Root"]
+layout_mode = 0
+anchors_preset = 0
+offset_left = 24.0
+offset_top = 88.0
+offset_right = 516.0
+offset_bottom = 278.0
+mouse_filter = 2
+script = ExtResource("2_schematic")
+gunship_shape = ExtResource("4_gunship")
+lance_shape = ExtResource("5_lance")
+
+[node name="GunshipLabel" type="Label" parent="Root"]
+layout_mode = 0
+offset_left = 24.0
+offset_top = 278.0
+offset_right = 290.0
+offset_bottom = 294.0
+theme_override_colors/font_color = Color(0.35, 0.85, 1, 0.75)
+theme_override_font_sizes/font_size = 11
+text = "FORM_GUNSHIP"
+horizontal_alignment = 1
+
+[node name="LanceLabel" type="Label" parent="Root"]
+layout_mode = 0
+offset_left = 250.0
+offset_top = 278.0
+offset_right = 516.0
+offset_bottom = 294.0
+theme_override_colors/font_color = Color(0.35, 0.85, 1, 0.75)
+theme_override_font_sizes/font_size = 11
+text = "FORM_LANCE"
+horizontal_alignment = 1
+
+[node name="Loadout" type="VBoxContainer" parent="Root"]
+layout_mode = 0
+offset_left = 44.0
+offset_top = 304.0
+offset_right = 500.0
+offset_bottom = 416.0
+mouse_filter = 2
+theme_override_constants/separation = 3
+
+[node name="Cards" type="VBoxContainer" parent="Root"]
+layout_mode = 0
+offset_left = 24.0
+offset_top = 434.0
+offset_right = 516.0
+offset_bottom = 860.0
+theme_override_constants/separation = 10
+
+[node name="Reroll" type="Button" parent="Root"]
+layout_mode = 0
+offset_left = 24.0
+offset_top = 872.0
+offset_right = 300.0
+offset_bottom = 908.0
+text = "REFIT_REROLL"
+
+[node name="Salvage" type="Label" parent="Root"]
+layout_mode = 0
+offset_left = 310.0
+offset_top = 872.0
+offset_right = 516.0
+offset_bottom = 908.0
+theme_override_font_sizes/font_size = 13
+text = "REFIT_SALVAGE"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="Installed" type="Label" parent="Root"]
+layout_mode = 0
+offset_top = 914.0
+offset_right = 540.0
+offset_bottom = 940.0
+theme_override_colors/font_color = Color(0.55, 1, 0.6, 1)
+theme_override_font_sizes/font_size = 16
+text = "REFIT_INSTALLED"
+horizontal_alignment = 1

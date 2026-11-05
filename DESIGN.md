@@ -245,7 +245,7 @@ Small simple upgrades: AP Rounds (+10% damage), Improved Feed (+10% fire rate), 
 
 ### 7.1 Between levels (in order)
 
-1. **Field Refit (free):** pick 1 of 3 random refits. Shown on a **loadout screen**: a top-down schematic of the ship (both forms side by side) with its hardpoints, where the offered refit highlights the hardpoint it goes into. Can reroll once for salvage (cost rises each reroll).
+1. **Field Refit (free):** pick 1 of 3 random refits. Shown on a **loadout screen**: a top-down schematic of the ship (both forms side by side) with its hardpoints, where the offered refit highlights the hardpoint it goes into. Each card shows the designation, level and hardpoint; a Beam Laser offered while you carry the Autocannon line says what it replaces (nose rule). When a line reaches its last level, its Variant A and Variant B share one card and you pick one. One reroll per screen for salvage: 15, plus 10 for every reroll already bought this run. If there aren't enough system refits to fill 3 cards, field mods fill the gaps.
 2. **Armory (shop):** a black-market arms dealer selling 4 items for salvage. Always includes at least one repair. Prices scale with level. Can leave without buying.
 3. Next level.
 

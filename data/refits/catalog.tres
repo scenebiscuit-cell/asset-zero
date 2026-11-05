@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="RefitCatalog" load_steps=9 format=3]
+
+[ext_resource type="Script" path="res://resources/refit_catalog.gd" id="1_catalog"]
+[ext_resource type="Script" path="res://resources/refit_data.gd" id="2_refit"]
+[ext_resource type="Resource" path="res://data/refits/autocannon_2.tres" id="3_ac2"]
+[ext_resource type="Resource" path="res://data/refits/beam_laser_1.tres" id="4_bl1"]
+[ext_resource type="Resource" path="res://data/refits/missile_1.tres" id="5_ms1"]
+[ext_resource type="Resource" path="res://data/refits/missile_2.tres" id="6_ms2"]
+[ext_resource type="Resource" path="res://data/refits/field_repair.tres" id="7_repair"]
+[ext_resource type="Resource" path="res://data/refits/armor_kit.tres" id="8_kit"]
+
+[resource]
+script = ExtResource("1_catalog")
+refits = Array[ExtResource("2_refit")]([ExtResource("3_ac2"), ExtResource("4_bl1"), ExtResource("5_ms1"), ExtResource("6_ms2"), ExtResource("7_repair"), ExtResource("8_kit")])

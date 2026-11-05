@@ -18,6 +18,11 @@ var weapon: WeaponData:
 			return
 		weapon = new_weapon
 		queue_redraw()
+## Field mods have no weapon; the Field Refit screen sets this instead.
+var field_mod: FieldModData:
+	set(new_mod):
+		field_mod = new_mod
+		queue_redraw()
 
 
 func _draw() -> void:
@@ -30,6 +35,8 @@ func _draw() -> void:
 		_draw_beam()
 	elif weapon is MissileData:
 		_draw_missiles(weapon as MissileData)
+	elif field_mod != null:
+		_draw_field_mod(field_mod)
 	else:
 		draw_rect(Rect2(Vector2(3.0, 3.0), size - Vector2(6.0, 6.0)), EMPTY, false, 1.0)
 
@@ -107,3 +114,19 @@ func _draw_module(module: ModuleData) -> void:
 		draw_circle(center, 1.5, sign_color)
 	else:
 		draw_circle(center, radius * 0.25, sign_color)
+
+
+## Repair: a green cross. Armor Kit: an amber shield.
+func _draw_field_mod(mod: FieldModData) -> void:
+	var center: Vector2 = size * 0.5
+	var r: float = minf(size.x, size.y) * 0.32
+	if mod.effect == FieldModData.Effect.REPAIR:
+		var color: Color = Color(0.45, 1.0, 0.55)
+		draw_rect(Rect2(center - Vector2(r * 0.3, r), Vector2(r * 0.6, r * 2.0)), color)
+		draw_rect(Rect2(center - Vector2(r, r * 0.3), Vector2(r * 2.0, r * 0.6)), color)
+	else:
+		var shield: PackedVector2Array = PackedVector2Array([center + Vector2(-r, -r), center + Vector2(r, -r),
+				center + Vector2(r * 0.8, r * 0.3), center + Vector2(0.0, r * 1.1), center + Vector2(-r * 0.8, r * 0.3)])
+		draw_colored_polygon(shield, Color(1.0, 0.7, 0.2, 0.35))
+		shield.append(shield[0])
+		draw_polyline(shield, Color(1.0, 0.7, 0.2), 1.5)

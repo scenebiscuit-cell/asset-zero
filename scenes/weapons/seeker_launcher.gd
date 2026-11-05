@@ -25,7 +25,7 @@ func _physics_process(delta: float) -> void:
 	if missile_pool.find_target(global_position, converged, _missile.lance_seek_cone_degrees) == null:
 		_cooldown = 0.0
 		return
-	_cooldown = _missile.fire_interval
+	_cooldown = interval(_missile.fire_interval)
 	for i: int in _missile.missiles_per_volley:
 		var point: Node2D = launch_points[i % launch_points.size()]
 		# Extra missiles from the same pylon fan out a little further.

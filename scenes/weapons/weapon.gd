@@ -18,3 +18,8 @@ var launch_points: Array[Node2D] = []
 
 func scaled_damage(base: int) -> int:
 	return roundi(base * damage_multiplier)
+
+
+## Time between shots after Improved Feed (+10% fire rate each).
+func interval(base: float) -> float:
+	return base / (1.0 + GameState.fire_rate_bonus)

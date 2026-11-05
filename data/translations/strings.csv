@@ -111,9 +111,19 @@ REFIT_REACTIVE,Reactive Armor
 REFIT_NANITE,Nanite Repair
 REFIT_DESC_AFTERBURNER,+15% speed.
 REFIT_DESC_SWEPT_WING,"+30% speed. Lance form moves at 70% speed, not 55%."
-REFIT_DESC_RAZOR_WING,Blade-edged wings cut any aircraft you touch. You still take contact damage.
-REFIT_DESC_VECTOR_DASH,Double-tap a direction to dash. You can't be hit mid-dash.
+REFIT_DESC_RAZOR_WING,Blade-edged wings cut any aircraft you touch. Ramming no longer hurts you.
+REFIT_DESC_VECTOR_DASH,"Double-tap a direction (or press RB) to dash. You can't be hit mid-dash."
 REFIT_DESC_ABLATIVE,25 Plating: a shield that soaks hits and recharges after 3 seconds.
 REFIT_DESC_COMPOSITE,"50 Plating, recharges sooner and faster."
 REFIT_DESC_REACTIVE,Every hit you take blasts a ring of shrapnel outward.
 REFIT_DESC_NANITE,Slowly restores Armor while it's below half.
+REFIT_AP_ROUNDS,AP Rounds
+REFIT_IMPROVED_FEED,Improved Feed
+REFIT_SALVAGE_MAGNET,Salvage Magnet
+REFIT_HEAT_CAPACITOR,Heat Capacitor
+REFIT_RETENTION_MATRIX,Retention Matrix
+REFIT_DESC_AP_ROUNDS,+10% damage on every weapon.
+REFIT_DESC_IMPROVED_FEED,+10% fire rate on every weapon.
+REFIT_DESC_SALVAGE_MAGNET,+15% pickup range.
+REFIT_DESC_HEAT_CAPACITOR,Overclock lasts 1.5 s longer.
+REFIT_DESC_RETENTION_MATRIX,Keep your assimilated weapon module through one extra sector.

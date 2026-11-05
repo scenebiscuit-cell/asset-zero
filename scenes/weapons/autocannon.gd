@@ -41,7 +41,7 @@ func _physics_process(delta: float) -> void:
 	if _cooldown <= 0.0:
 		for i: int in _gun.barrel_count:
 			_fire_barrel(i)
-		_cooldown += _gun.fire_interval * (_gun.lance_interval_scale if converged else 1.0)
+		_cooldown += interval(_gun.fire_interval) * (_gun.lance_interval_scale if converged else 1.0)
 		_show_flash()
 
 

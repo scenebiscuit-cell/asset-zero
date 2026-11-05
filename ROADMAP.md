@@ -150,6 +150,7 @@ How to hand a milestone to Claude Code (in VS Code, terminal at `C:\Projects\ass
 
 Write down decisions here as you make them (date — decision), so the AI tools know about them.
 
+- 2026-11-05 — Field mods: AP Rounds, Improved Feed, Salvage Magnet stack up to 3, Heat Capacitor up to 2, Retention Matrix one charge at a time. Prices 30–45, offered less often than system refits. DESIGN.md §6.
 - 2026-11-05 — Controls are now keyboard + gamepad; mouse flying is removed (the wheel and mouse-flick dashes were awkward). Gamepad moved out of the "Later" list. Vector Dash on gamepad is the right bumper. Cursor hidden during play, small green reticle in menus. DESIGN.md §2, §5.5, §6, Later list.
 - 2026-11-05 — After playtest: Razor Wing ignores ramming damage (was "you still take contact damage"); Vector Dash also on the mouse wheel; Plating shown as a hex-plate ring; Reactive shrapnel ring wider (16 rounds, 300 px); Nanite Repair shows repair drones while healing. DESIGN.md §5.5, §6.
 - 2026-11-04 — Propulsion/Armor numbers set (Razor Wing ~120 dps on air units only, Vector Dash keyboard-only with 0.7 s cooldown, Plating recharge rates, Nanite ~0.7 Armor/s). Plating refills at the start of each sector. Debug keys 4/5 cycle Propulsion/Armor. DESIGN.md §6.

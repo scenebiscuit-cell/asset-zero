@@ -67,11 +67,13 @@ func _ready() -> void:
 	refresh_systems()
 
 
-## Propulsion sets the speeds (Swept-Wing raises Lance form speed). Re-run after a refit.
+## Propulsion sets the speeds (Swept-Wing raises Lance form speed). Re-run after a refit or field mod.
 func refresh_systems() -> void:
 	_systems.refresh()
 	var lance: float = _systems.lance_speed_multiplier()
 	_combat_morph.lance_speed_multiplier = lance if lance > 0.0 else _default_lance_speed
+	# Field mods (AP Rounds) change damage too.
+	_refresh_damage()
 
 
 ## Flying is keyboard or gamepad only, so the cursor hides during play and shows in menus
@@ -187,6 +189,10 @@ func assimilate(module: ModuleData) -> void:
 func dissolve_module() -> void:
 	if _hardpoints.equipped(WeaponData.Hardpoint.SALVAGE_MOUNT) == null:
 		return
+	# Retention Matrix: this sector end keeps the module.
+	if GameState.retention_charges > 0:
+		GameState.retention_charges -= 1
+		return
 	_hardpoints.unequip(WeaponData.Hardpoint.SALVAGE_MOUNT)
 	_hit_splash.restart()
 
@@ -211,10 +217,11 @@ func _on_overclock_finished() -> void:
 	grant_invulnerability(_overclock.end_invulnerability)
 
 
-## Lance form and Overclock both boost damage; they multiply.
+## Lance form, Overclock and AP Rounds all boost damage; they multiply.
 func _refresh_damage() -> void:
 	var overclock_bonus: float = _overclock.damage_multiplier if _overclock.active else 1.0
-	_hardpoints.set_damage_multiplier(_combat_morph.damage_multiplier() * overclock_bonus)
+	var field_bonus: float = 1.0 + GameState.damage_bonus
+	_hardpoints.set_damage_multiplier(_combat_morph.damage_multiplier() * overclock_bonus * field_bonus)
 
 
 ## White-hot pulsing hull with a slight ripple while Overclocked (DESIGN.md §5.3).

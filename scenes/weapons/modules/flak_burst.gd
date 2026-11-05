@@ -24,7 +24,7 @@ func _physics_process(delta: float) -> void:
 		return
 	if _cooldown > 0.0:
 		return
-	_cooldown += _flak.fire_interval
+	_cooldown += interval(_flak.fire_interval)
 	var distance: float = _flak.lance_burst_distance if converged else _flak.burst_distance
 	for i: int in _flak.rounds:
 		var t: float = 0.0 if _flak.rounds < 2 else float(i) / (_flak.rounds - 1) - 0.5

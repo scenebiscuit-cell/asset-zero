@@ -44,7 +44,7 @@ func _physics_process(delta: float) -> void:
 	_drill_visual.queue_redraw()
 	_tick -= delta
 	if _tick <= 0.0:
-		_tick += _drill.fire_interval
+		_tick += interval(_drill.fire_interval)
 		for area: Area2D in _bore.get_overlapping_areas():
 			var enemy: Enemy = area as Enemy
 			if enemy != null:

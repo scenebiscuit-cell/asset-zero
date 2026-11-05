@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="RefitCatalog" load_steps=25 format=3]
+[gd_resource type="Resource" script_class="RefitCatalog" load_steps=30 format=3]
 
 [ext_resource type="Script" path="res://resources/refit_catalog.gd" id="1_catalog"]
 [ext_resource type="Script" path="res://resources/refit_data.gd" id="2_refit"]
@@ -20,11 +20,16 @@
 [ext_resource type="Resource" path="res://data/refits/missile_3.tres" id="18_missile_3"]
 [ext_resource type="Resource" path="res://data/refits/missile_4a.tres" id="19_missile_4a"]
 [ext_resource type="Resource" path="res://data/refits/missile_4b.tres" id="20_missile_4b"]
-[ext_resource type="Resource" path="res://data/refits/propulsion_1.tres" id="21_propulsion_1"]
-[ext_resource type="Resource" path="res://data/refits/propulsion_2.tres" id="22_propulsion_2"]
-[ext_resource type="Resource" path="res://data/refits/propulsion_3a.tres" id="23_propulsion_3a"]
-[ext_resource type="Resource" path="res://data/refits/propulsion_3b.tres" id="24_propulsion_3b"]
+[ext_resource type="Resource" path="res://data/refits/mod_ap_rounds.tres" id="21_mod_ap_rounds"]
+[ext_resource type="Resource" path="res://data/refits/mod_heat_capacitor.tres" id="22_mod_heat_capacitor"]
+[ext_resource type="Resource" path="res://data/refits/mod_improved_feed.tres" id="23_mod_improved_feed"]
+[ext_resource type="Resource" path="res://data/refits/mod_retention_matrix.tres" id="24_mod_retention_matrix"]
+[ext_resource type="Resource" path="res://data/refits/mod_salvage_magnet.tres" id="25_mod_salvage_magnet"]
+[ext_resource type="Resource" path="res://data/refits/propulsion_1.tres" id="26_propulsion_1"]
+[ext_resource type="Resource" path="res://data/refits/propulsion_2.tres" id="27_propulsion_2"]
+[ext_resource type="Resource" path="res://data/refits/propulsion_3a.tres" id="28_propulsion_3a"]
+[ext_resource type="Resource" path="res://data/refits/propulsion_3b.tres" id="29_propulsion_3b"]
 
 [resource]
 script = ExtResource("1_catalog")
-refits = Array[ExtResource("2_refit")]([ExtResource("3_armor_1"), ExtResource("4_armor_2"), ExtResource("5_armor_3a"), ExtResource("6_armor_3b"), ExtResource("7_armor_kit"), ExtResource("8_autocannon_2"), ExtResource("9_autocannon_3a"), ExtResource("10_autocannon_3b"), ExtResource("11_beam_laser_1"), ExtResource("12_beam_laser_2"), ExtResource("13_beam_laser_3a"), ExtResource("14_beam_laser_3b"), ExtResource("15_field_repair"), ExtResource("16_missile_1"), ExtResource("17_missile_2"), ExtResource("18_missile_3"), ExtResource("19_missile_4a"), ExtResource("20_missile_4b"), ExtResource("21_propulsion_1"), ExtResource("22_propulsion_2"), ExtResource("23_propulsion_3a"), ExtResource("24_propulsion_3b")])
+refits = Array[ExtResource("2_refit")]([ExtResource("3_armor_1"), ExtResource("4_armor_2"), ExtResource("5_armor_3a"), ExtResource("6_armor_3b"), ExtResource("7_armor_kit"), ExtResource("8_autocannon_2"), ExtResource("9_autocannon_3a"), ExtResource("10_autocannon_3b"), ExtResource("11_beam_laser_1"), ExtResource("12_beam_laser_2"), ExtResource("13_beam_laser_3a"), ExtResource("14_beam_laser_3b"), ExtResource("15_field_repair"), ExtResource("16_missile_1"), ExtResource("17_missile_2"), ExtResource("18_missile_3"), ExtResource("19_missile_4a"), ExtResource("20_missile_4b"), ExtResource("21_mod_ap_rounds"), ExtResource("22_mod_heat_capacitor"), ExtResource("23_mod_improved_feed"), ExtResource("24_mod_retention_matrix"), ExtResource("25_mod_salvage_magnet"), ExtResource("26_propulsion_1"), ExtResource("27_propulsion_2"), ExtResource("28_propulsion_3a"), ExtResource("29_propulsion_3b")])

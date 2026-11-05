@@ -40,7 +40,7 @@ func _physics_process(delta: float) -> void:
 			_cooldowns[i] = maxf(_cooldowns[i], 0.0)
 			continue
 		if _cooldowns[i] <= 0.0:
-			_cooldowns[i] += _bay.fire_interval
+			_cooldowns[i] += interval(_bay.fire_interval)
 			round_pool.fire(drone.global_position, aim * _bay.round_speed, scaled_damage(_bay.damage), _bay.round_tint)
 
 

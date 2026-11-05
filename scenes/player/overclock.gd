@@ -71,8 +71,9 @@ func cancel() -> void:
 
 func _begin() -> void:
 	active = true
-	_time_left = duration
-	_granted = duration
+	# Heat Capacitor field mods add time.
+	_time_left = duration + GameState.overclock_bonus_time
+	_granted = _time_left
 	_age = 0.0
 	_ring_age = 0.0
 	GameState.overclock = 0.0
@@ -102,7 +103,7 @@ func _on_aura_touched(area: Area2D) -> void:
 func _on_salvage_collected() -> void:
 	if not active:
 		return
-	var extra: float = minf(extend_per_salvage, max_duration - _granted)
+	var extra: float = minf(extend_per_salvage, max_duration + GameState.overclock_bonus_time - _granted)
 	if extra > 0.0:
 		_granted += extra
 		_time_left += extra

@@ -39,7 +39,7 @@ func _physics_process(delta: float) -> void:
 			deactivate()
 			return
 		# Once caught it stays caught, so it can't fall back out of range.
-		if distance < magnet_radius:
+		if distance < magnet_radius * (1.0 + GameState.magnet_bonus):
 			_magnetized = true
 		if _magnetized:
 			_velocity = _velocity.move_toward(to_target / distance * pull_speed, pull_accel * delta)

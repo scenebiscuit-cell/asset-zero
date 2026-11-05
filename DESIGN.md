@@ -238,7 +238,7 @@ Starts with unguided rockets; homing is a later refit, because Seekers are very 
 
 ### Field mods (filler offers)
 
-Small simple upgrades: AP Rounds (+10% damage), Improved Feed (+10% fire rate), Armor Kit (+20 max Armor), Salvage Magnet (+15% pickup radius), Field Repair (restore 30 Armor), Heat Capacitor (Overclock lasts +1.5 s), Retention Matrix (keep your assimilated weapon one extra level). Keep the list short. **Field mods don't count toward weight class.**
+Small simple upgrades: AP Rounds (+10% damage), Improved Feed (+10% fire rate), Armor Kit (+20 max Armor), Salvage Magnet (+15% pickup radius), Field Repair (restore 30 Armor), Heat Capacitor (Overclock lasts +1.5 s), Retention Matrix (keep your assimilated weapon one extra level). Keep the list short. **Field mods don't count toward weight class.** Stat mods stack: AP Rounds, Improved Feed and Salvage Magnet up to 3 times each, Heat Capacitor up to 2. Retention Matrix holds one charge at a time and is used up the next time a sector ends with a module mounted. Improved Feed also speeds up beam and drill damage ticks.
 
 ## 7. Economy
 

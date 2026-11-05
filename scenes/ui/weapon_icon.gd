@@ -220,17 +220,55 @@ func _draw_system(refit: SystemRefitData) -> void:
 		draw_rect(plate, cyan, false, 1.0)
 
 
-## Repair: a green cross. Armor Kit: an amber shield.
+## One simple symbol per field mod.
 func _draw_field_mod(mod: FieldModData) -> void:
 	var center: Vector2 = size * 0.5
 	var r: float = minf(size.x, size.y) * 0.32
-	if mod.effect == FieldModData.Effect.REPAIR:
-		var color: Color = Color(0.45, 1.0, 0.55)
-		draw_rect(Rect2(center - Vector2(r * 0.3, r), Vector2(r * 0.6, r * 2.0)), color)
-		draw_rect(Rect2(center - Vector2(r, r * 0.3), Vector2(r * 2.0, r * 0.6)), color)
-	else:
-		var shield: PackedVector2Array = PackedVector2Array([center + Vector2(-r, -r), center + Vector2(r, -r),
-				center + Vector2(r * 0.8, r * 0.3), center + Vector2(0.0, r * 1.1), center + Vector2(-r * 0.8, r * 0.3)])
-		draw_colored_polygon(shield, Color(1.0, 0.7, 0.2, 0.35))
-		shield.append(shield[0])
-		draw_polyline(shield, Color(1.0, 0.7, 0.2), 1.5)
+	match mod.effect:
+		FieldModData.Effect.REPAIR:
+			var color: Color = Color(0.45, 1.0, 0.55)
+			draw_rect(Rect2(center - Vector2(r * 0.3, r), Vector2(r * 0.6, r * 2.0)), color)
+			draw_rect(Rect2(center - Vector2(r, r * 0.3), Vector2(r * 2.0, r * 0.6)), color)
+		FieldModData.Effect.MAX_ARMOR:
+			var shield: PackedVector2Array = PackedVector2Array([center + Vector2(-r, -r), center + Vector2(r, -r),
+					center + Vector2(r * 0.8, r * 0.3), center + Vector2(0.0, r * 1.1), center + Vector2(-r * 0.8, r * 0.3)])
+			_draw_outlined(shield, Color(1.0, 0.7, 0.2))
+		FieldModData.Effect.DAMAGE:
+			# A pointed armor-piercing round.
+			_draw_outlined(PackedVector2Array([center + Vector2(0.0, -r * 1.1), center + Vector2(r * 0.4, -r * 0.4),
+					center + Vector2(r * 0.4, r), center + Vector2(-r * 0.4, r), center + Vector2(-r * 0.4, -r * 0.4)]),
+					Color(1.0, 0.55, 0.3))
+		FieldModData.Effect.FIRE_RATE:
+			# Three rounds stacked in a feed.
+			for i: int in 3:
+				var x: float = (i - 1) * r * 0.7
+				draw_rect(Rect2(center + Vector2(x - r * 0.2, -r * 0.8), Vector2(r * 0.4, r * 1.6)), Color(1.0, 0.85, 0.4))
+		FieldModData.Effect.MAGNET:
+			# A horseshoe magnet.
+			var blue: Color = Color(0.4, 0.85, 1.0)
+			draw_arc(center + Vector2(0.0, r * 0.1), r * 0.75, 0.0, PI, 16, blue, r * 0.4)
+			for side: float in [-1.0, 1.0]:
+				var leg_x: float = side * r * 0.75 - r * 0.2
+				draw_rect(Rect2(center + Vector2(leg_x, -r * 0.5), Vector2(r * 0.4, r * 0.62)), blue)
+				draw_rect(Rect2(center + Vector2(leg_x, -r), Vector2(r * 0.4, r * 0.5)), Color.WHITE)
+		FieldModData.Effect.HEAT_CAPACITOR:
+			# Two capacitor plates with a lightning bolt between them.
+			var heat: Color = Color(1.0, 0.5, 0.2)
+			draw_rect(Rect2(center + Vector2(-r, -r * 0.9), Vector2(r * 0.25, r * 1.8)), heat)
+			draw_rect(Rect2(center + Vector2(r * 0.75, -r * 0.9), Vector2(r * 0.25, r * 1.8)), heat)
+			draw_polyline(PackedVector2Array([center + Vector2(r * 0.2, -r * 0.8), center + Vector2(-r * 0.25, 0.0),
+					center + Vector2(r * 0.25, 0.0), center + Vector2(-r * 0.2, r * 0.8)]), Color(1.0, 0.9, 0.5), 2.0)
+		FieldModData.Effect.RETENTION:
+			# A module hexagon held inside a ring.
+			var hexagon: PackedVector2Array = PackedVector2Array()
+			for k: int in 6:
+				hexagon.append(center + Vector2.from_angle(PI / 6.0 + k * PI / 3.0) * r * 0.6)
+			_draw_outlined(hexagon, Color(0.75, 0.5, 1.0))
+			draw_arc(center, r * 1.05, 0.0, TAU, 24, Color(0.75, 0.5, 1.0), 1.5)
+
+
+func _draw_outlined(points: PackedVector2Array, color: Color) -> void:
+	draw_colored_polygon(points, Color(color, 0.35))
+	var closed: PackedVector2Array = points.duplicate()
+	closed.append(points[0])
+	draw_polyline(closed, color, 1.5)

@@ -19,7 +19,7 @@ func _physics_process(delta: float) -> void:
 		return
 	if _cooldown > 0.0:
 		return
-	_cooldown += _spread.fire_interval
+	_cooldown += interval(_spread.fire_interval)
 	var damage: int = scaled_damage(_spread.damage)
 	for i: int in _spread.rounds:
 		var start: Vector2 = global_position

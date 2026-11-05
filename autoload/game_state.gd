@@ -37,6 +37,15 @@ var strike_progress: int = 0
 var strike_charges: int = 0
 ## Enemies destroyed since the last kill-count repair kit dropped.
 var kills_toward_repair: int = 0
+## Field mod totals (DESIGN.md §6). Bonuses are fractions (0.1 = +10%); the time is seconds.
+var damage_bonus: float = 0.0
+var fire_rate_bonus: float = 0.0
+var magnet_bonus: float = 0.0
+var overclock_bonus_time: float = 0.0
+## Retention Matrix: sector ends that keep the assimilated module instead of dissolving it.
+var retention_charges: int = 0
+## How many of each field mod were taken (FieldModData.Effect -> count), for stack limits.
+var field_mod_counts: Dictionary[int, int] = {}
 ## Which sector of the run we're on (0 = Sector 1).
 var sector_index: int = 0
 ## False until a level starts a run; the Level resets everything when it finds no run in progress.
@@ -59,10 +68,20 @@ func reset_run() -> void:
 	refit_count = 0
 	rerolls_bought = 0
 	kills_toward_repair = 0
+	damage_bonus = 0.0
+	fire_rate_bonus = 0.0
+	magnet_bonus = 0.0
+	overclock_bonus_time = 0.0
+	retention_charges = 0
+	field_mod_counts.clear()
 	strike_progress = 0
 	strike_charges = 0
 	sector_index = 0
 	run_active = true
+
+
+func field_mod_count(effect: int) -> int:
+	return field_mod_counts.get(effect, 0)
 
 
 func system_level(line: RefitData.Line) -> int:

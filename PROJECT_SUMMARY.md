@@ -24,6 +24,8 @@ ASSET ZERO is a modern take on *Raptor: Call of the Shadows* (1994): a vertical-
 - Placeholder art is simple vector shapes drawn in Godot: gunmetal and cyan for the player; orange, grey and hazard yellow for the enemy.
 - The interface looks like a military cockpit display.
 - **Art reference: Raptor: Call of the Shadows (2015 Edition).** Grounded top-down military terrain with a muted earthy palette (oxblood earth, teal water, concrete grey), fine grain, top-left lighting, drop shadows under aircraft, big clustered fireballs, scorched craters, minimal HUD and a terminal-style shop. Adapted to Verdance as jungle over rust-red mining pits. We keep our own pink enemy bullets and gunmetal/cyan jet. Details in DESIGN.md §11.
+- **Final art pipeline: Blender (free) driven by Claude Code** through Blender Lab's official MCP connection: 3D models rendered top-down into shaded sprites. Art steps ART-1 to ART-5 run alongside the milestones; ART-1 (pipeline test with the RD-2 drone and the XF-0 morph) comes when Milestone B is finished, followed by ART-2 (enemy renders). Effects stay code-made.
+- **Terrain backgrounds:** the code-drawn terrain looked cartoony, so final ground will be Blender procedural terrain with free CC0 textures, rendered into seamless scrolling strips per zone (Jungle Fringe, Strip Mine, Tailings River, HEG Compound, MAWLER Pit). The first art test is a Jungle Fringe background.
 - **Effects reference: Mech Havoc.** Glowing muzzle-flash cones, thin pale tracers, thick cyan lasers with a white core and bloom, red glowing enemy streaks, coral warning circles before area attacks, and explosions that go flash → sparks → debris with dark smoke trails → lingering scorch marks.
 
 ## Core hook (4 unique mechanics)
@@ -41,12 +43,12 @@ ASSET ZERO is a modern take on *Raptor: Call of the Shadows* (1994): a vertical-
   - Seeker Missiles
   - Propulsion
   - Armor
-- **Between levels:** a free Field Refit (pick 1 of 3 on a loadout schematic), then the Armory shop.
+- **Ops Map (Slay the Spire-style):** each sector is a branching map of 7 rows. Stops: Strike (mission + free Field Refit), Salvage Run (more salvage, no refit), Strongpoint (mini-boss), Refit Depot (Repair or Overhaul), Armory (shop), and the boss at the top. A run visits about 6 stops.
 - **Currencies:** Salvage is spent during a run. Combat Data is kept between runs and spent in R&D to unlock new parts.
 - **Health:** Armor is health, Plating is a regenerating shield.
 
 ## Demo scope
-- 1 sector, 3 levels plus the boss HEG-X9 "MAWLER" Mining Crawler (3 phases).
+- 1 sector Ops Map with 2 mini-bosses (HG-9 Warden gunship, SF-4 Sentinel Flak Battery) and the boss HEG-X9 "MAWLER" Mining Crawler (3 phases).
 - Six enemy types: RD-2 Recon Drone, ID-4 Interceptor Drone, AA Emplacement, Mining Platform, Armored Transport, HG-7 Gunship.
 - Keyboard and mouse controls. Web build on itch.io. A run lasts about 10–15 minutes.
 
@@ -70,7 +72,7 @@ ASSET ZERO is a modern take on *Raptor: Call of the Shadows* (1994): a vertical-
   - Milestone A: Steps 0–5 (setup → Combat Morph)
   - Milestone B: Steps 6–9 (enemies, waves, HUD, Overclock)
   - Milestone C: Steps 10–15 (weapons, Assimilate, refits, Armory, weight classes, Threat)
-  - Milestone D: Steps 16–17 (boss, full run)
+  - Milestone D: Steps 16–17c (boss, mini-bosses, Ops Map, full run)
   - Milestone E: Steps 18–20 (polish, balance, itch.io release)
 - `CLAUDE.md`: rules for Claude Code (milestone at a time, checked steps, branch + PR, explain simply, folder layout, collision layers, game terms)
 - `.github/copilot-instructions.md`: copy of the same rules, kept as project notes (Copilot no longer used)
@@ -83,7 +85,7 @@ Each milestone goes to Claude Code (VS Code terminal in `C:\Projects\asset-zero`
 Each milestone gets its own branch and pull request; I merge only when I say "merge". Then `/clear` and start the next milestone.
 
 ## Current status
-Planning is done. The build hasn't started yet; next is Milestone A, starting with Step 0 (project setup and a test web export).
+Milestones A and B are done and merged. Milestone C is in progress (Steps 10–13 built, Step 14 in progress). ART-1 and ART-2 (Blender) come before Milestone D. Milestone D now includes the mini-bosses and the Ops Map (Steps 16b, 17a, 17b, 17c).
 
 ## Preference
 When referring back to earlier instructions or steps, paste them in full rather than saying "from earlier."

@@ -15,6 +15,7 @@ Megacorporations are fighting over the resources of distant planets and strippin
 2. **Assimilate:** destroy an elite enemy, fly into its dropped weapon, and your metal absorbs it as a new gun (§5.8).
 3. **Overclock:** fly close to danger and collect salvage to charge a white-hot burst that melts enemy fire into salvage (§5.7).
 4. **Threat Level:** the stronger you get, the harder the corporation fights back, and the better the rewards (§9.1).
+5. **Ops Map:** a branching route through the sector, like Slay the Spire's map. You choose where to fly next: regular strikes, salvage runs, mini-boss strongpoints, Refit Depots and the Armory, with the boss at the end (§9.2).
 
 ## 2. Pillars
 
@@ -27,7 +28,7 @@ Megacorporations are fighting over the resources of distant planets and strippin
 ## 3. Demo scope (target for first itch.io release)
 
 - **1 sector** (one planet, one enemy corporation)
-- **3 levels + 1 boss**, played in order as a single run
+- **Ops Map** (§9.2): one sector as a branching map of 7 rows; a run visits about 6 stops and ends at the boss
 - **Combat Morph** (Gunship form ↔ Lance form)
 - **Assimilate** (4 enemy weapon modules)
 - **Overclock** meter
@@ -35,13 +36,13 @@ Megacorporations are fighting over the resources of distant planets and strippin
 - **3 weapon systems** (Autocannon, Beam Laser, Seeker Missiles), each with 3 refit levels
 - **2 support systems** (Propulsion, Armor)
 - **4 weight classes** (Light → Medium → Heavy → Assault)
-- **6 regular enemy types (any can spawn as an elite) + 1 boss**
-- **Pick-1-of-3 Field Refit after each level + Armory shop**
+- **6 regular enemy types (any can spawn as an elite) + 2 mini-bosses + 1 boss**
+- **Free Field Refit (pick 1 of 3) after every combat mission**, plus **Refit Depot** and **Armory** stops on the map
 - **Small meta progression** (persistent currency that unlocks new systems)
 - **Platform:** Web browser (itch.io), Godot 4 HTML5 export
 - **Controls:** Keyboard and mouse
 
-**Out of scope for the demo** (write ideas into the "Later" list at the bottom, don't build them): more sectors, multiple starting airframes, heat management, contract board, laser-designated strikes, gamepad, touch, story cutscenes, online leaderboards, co-op, Steam features.
+**Out of scope for the demo** (write ideas into the "Later" list at the bottom, don't build them): more sectors, multiple starting airframes, heat management, mission modifiers and event nodes on the map, mid-run saving, laser-designated strikes, gamepad, touch, story cutscenes, online leaderboards, co-op, Steam features.
 
 ## 4. Setting (sector 1)
 
@@ -237,13 +238,17 @@ Small simple upgrades: AP Rounds (+10% damage), Improved Feed (+10% fire rate), 
 ## 7. Economy
 
 - **Salvage** (in-run currency): destroyed enemies break into scrap pickups that get magnetically pulled into XF-0 when close. Ground targets, big enemies and elites drop more. Lost when the run ends. Salvage pickups also charge Overclock.
-- **Combat Data** (meta currency): earned at the end of every run, win or lose (based on distance reached, boss kills and highest Threat Level reached). Kept forever, saved to disk.
+- **Combat Data** (meta currency): earned at the end of every run, win or lose (based on map rows reached, Strongpoints and boss destroyed, and highest Threat Level reached). Kept forever, saved to disk.
 
-### 7.1 Between levels (in order)
+### 7.1 Between stops
 
-1. **Field Refit (free):** pick 1 of 3 random refits. Shown on a **loadout screen**: a top-down schematic of the ship (both forms side by side) with its hardpoints, where the offered refit highlights the hardpoint it goes into. Can reroll once for salvage (cost rises each reroll).
-2. **Armory (shop):** a black-market arms dealer selling 4 items for salvage. Always includes at least one repair. Prices scale with level. Can leave without buying.
-3. Next level.
+After each stop the player returns to the **Ops Map** (§9.2) and picks the next one.
+
+1. **Field Refit (free, after every Strike and Strongpoint):** pick 1 of 3 random refits. Shown on a **loadout screen**: a top-down schematic of the ship (both forms side by side) with its hardpoints, where the offered refit highlights the hardpoint it goes into. Can reroll once for salvage (cost rises each reroll). Salvage Runs skip it (they pay salvage instead).
+2. **Armory (map stop, shop):** a black-market arms dealer selling 4 items for salvage. Always includes at least one repair. Prices scale with map row. Can leave without buying.
+3. **Refit Depot (map stop, free):** choose one: **Repair** (restore 40% of max Armor) or **Overhaul** (raise one installed system by one level, including the level-3 Variant choice).
+
+Salvage is what you save for the Armory: Salvage Runs exist so the player can choose to bank salvage now and spend it later.
 
 ### 7.2 Meta unlocks (demo)
 
@@ -271,6 +276,17 @@ Air enemies fly over everything. Ground enemies scroll with the background. All 
 | Armored Transport | Air | Slow, crosses sideways, sometimes drops a repair pickup | High | 6 | Drone Bay |
 | HG-7 Gunship | Air | Enters, hovers, fires spread patterns, leaves after ~6 s | Medium | 5 | Spread Cannon |
 
+### Mini-bosses (Strongpoint stops, §9.2)
+
+Each run's map has 1–2 Strongpoints; each picks one of these. A short escort wave comes first, then the mini-boss. Its health bar shows at the top like the boss's, but smaller.
+
+| Mini-boss | Layer | Behavior | Guaranteed drop |
+|---|---|---|---|
+| HG-9 Warden | Air | Heavy gunship about twice the size of an HG-7. **Phase 1:** wide spread fans while two orbiting RD-2 "shield drones" absorb shots until destroyed. **Phase 2 (50%):** strafes side to side firing aimed bursts, plus a missile salvo announced by coral warning circles. | Spread Cannon module |
+| SF-4 Sentinel Flak Battery | Ground | Fortified emplacement; the scroll **stops** while it's on screen. Four turret pods fire rotating flak rings; each destroyed pod slows the pattern. When all pods are gone the armored core opens and fires aimed bursts until destroyed. | Flak Burst module |
+
+Strongpoint rewards: big salvage drop, the guaranteed weapon module, a Field Refit where one offer is always a level-up of a system you already have (when possible), and bonus Combat Data.
+
 ### Boss: HEG-X9 "MAWLER" Mining Crawler
 
 A giant armored strip-mining machine that fills the top third of the screen.
@@ -285,9 +301,9 @@ A giant armored strip-mining machine that fills the top third of the screen.
 - Each level is about **2–3 minutes** of vertical scrolling, except Sector 1, which is about **1.5 minutes** so the run gets going quickly.
 - A **wave director** spawns enemy waves from a pool, using a difficulty budget that grows over time and per level, multiplied by the Threat Level.
 - Waves are defined as data (which enemies, formation, entry side, path), so new waves can be added without new code.
-- Each level ends with a short "SECTOR CLEAR" moment, then the between-level screens.
+- Each mission ends with a short "SECTOR CLEAR" moment, then its rewards, then the Ops Map.
 - **Breaches:** each enemy aircraft that gets away (off the bottom, or out its exit route) costs a little salvage (2, tunable), with no on-screen popup (it distracted from play). Ground units scrolling away don't count. If none get away all sector, SECTOR CLEAR pays a **Perimeter Held** bonus (25 salvage, tunable).
-- Level 1: drones and AA emplacements. Level 2: adds interceptors, mining platforms, transports. Level 3: adds gunships and denser waves. Then the boss.
+- Difficulty grows with the **map row** instead of a fixed level number: rows 1–2 use drones and AA emplacements; rows 3–4 add interceptors, mining platforms and transports; rows 5+ add gunships and denser waves. Then the boss.
 
 ### 9.1 Threat Level
 
@@ -301,6 +317,47 @@ Halcyon reacts to how dangerous the prototype has become. **Threat Level = weigh
 | 4 | Assault | HSD THREAT: SEVERE | ×1.5 | 25% | +35% |
 
 When Threat rises, show a radio-chatter pop-up ("HSD-Control: Asset has grown. Escalate response.") and a short alarm sound. The bigger and stronger you get, the more elites (and modules) show up: power growth feeds itself, but so does danger.
+
+### 9.2 Ops Map (Slay the Spire-style route)
+
+Before the first mission and after every stop, the player sees the **Ops Map**: the whole sector laid out as a branching network of stops, bottom to top, with the boss at the top. You can see every stop from the start and plan a route; you can only move along the lines to a connected stop in the next row.
+
+**Stop types**
+
+| Stop | Icon idea | What happens | Reward |
+|---|---|---|---|
+| **Strike** | Crosshair | Standard combat mission (~75–90 s, harder each row) | Salvage + free Field Refit |
+| **Salvage Run** | Crate | Short mission (~60 s) full of Mining Platforms and Armored Transports, a bit denser and riskier | Salvage ×1.75 and a doubled Perimeter Held bonus; **no** Field Refit |
+| **Strongpoint** | Fortified chevron | Escort wave + mini-boss (above) | Big salvage, guaranteed module, boosted Field Refit, bonus Combat Data |
+| **Refit Depot** | Wrench | No combat: Repair (40% Armor) or Overhaul (one system +1 level) | One of the two |
+| **Armory** | Ammo crate with "$" | No combat: the shop (§7.1) | Spend salvage |
+| **Primary Target** | Large target | The MAWLER boss | Run victory |
+
+**Map layout (demo, Sector 1)**: 4 columns, 7 rows.
+
+| Row | Possible stops |
+|---|---|
+| 1 | Strike (every start point) |
+| 2 | Strike, Salvage Run |
+| 3 | Strike, Salvage Run, Armory, Refit Depot |
+| 4 | Strongpoint on 1–2 paths; others Strike or Salvage Run |
+| 5 | Strike, Salvage Run, Armory, Refit Depot, Strongpoint (at most 2 Strongpoints on the whole map) |
+| 6 | Refit Depot on every path (last chance to repair or overhaul before the boss) |
+| 7 | Primary Target (boss), single stop |
+
+**Generation rules**
+- Each stop connects to 1–2 stops in the next row, in the same or a neighbouring column; lines never cross.
+- At least one path reaches an Armory; no path has two Armories in a row; Armories never appear in rows 1–2.
+- Every map has at least one Strongpoint, and at least one path that avoids all Strongpoints (risk is a choice).
+- The map comes from a **seed** stored in GameState, so the same seed gives the same map (ready for a daily run later).
+
+**Look and controls**
+- A tactical CRT display in the cockpit style (§11): dark panel, green/amber lines, faint topographic contour lines of Verdance behind the network, HEG installations marked with designation codes (e.g. "STR-04", "ARM-02").
+- Visited stops are dimmed, the XF-0 marker sits on the current stop, reachable stops pulse.
+- Hover or select a stop to see its type, reward and row difficulty. Mouse click, or arrows/WASD + Space/Enter.
+- A mission briefing line pops up when a combat stop is chosen (e.g. "STR-04: Disrupt HEG haul road. Expected resistance: MODERATE.").
+
+**Run length check:** about 6 stops (4–5 of them missions at 60–90 s) plus the boss keeps a demo run at roughly 12–15 minutes.
 
 ## 10. Feel ("juice") checklist
 
@@ -451,7 +508,7 @@ Simple vector / geometric shapes drawn in Godot (Polygon2D, Line2D or `_draw()`)
 - **Halcyon forces:** blocky, utilitarian industrial machines in grey/orange with hazard-yellow stripes. Elites get a yellow outline.
 - **Weapon modules:** glowing hexagons in the color of the enemy that dropped them, pulsing
 - **Enemy rounds:** hot pink/orange, round, with an outline, always the highest-contrast thing on screen
-- **Background:** top-down terrain using the Verdance palette from §11.8: dark jungle greens over oxblood/rust mining earth (`#5b2d2c` family), teal water (`#1b6259` family), concrete-grey HEG structures with hazard trim. Built from simple shapes for now, scrolling slowly in layers.
+- **Background:** top-down terrain using the Verdance palette from §11.8: dark jungle greens over oxblood/rust mining earth (`#5b2d2c` family), teal water (`#1b6259` family), concrete-grey HEG structures with hazard trim. Built from simple shapes for now, scrolling slowly in layers. **Placeholder only:** replaced by rendered terrain strips from ART-1b / ART-BG (see "Terrain backgrounds").
 - **Grain:** a light noise/grain overlay on the background (one cheap shader or a tiled noise texture) so nothing reads as a flat fill.
 - **Drop shadows:** every air unit (player and enemies) gets a dark, semi-transparent copy of its shape offset down-right on the ground layer. Ground units get no shadow. This is cheap and makes air vs. ground instantly readable.
 - **Explosions:** combine both references: a bright warm flash, clustered round fireballs from yellow `#e4cc24` through orange to dark red `#9c3c24` (Raptor), then sparks, embers and debris with dark smoke trails (Mech Havoc), a white shockwave ring on big kills, and a lingering scorch mark on the ground.
@@ -460,10 +517,42 @@ Simple vector / geometric shapes drawn in Godot (Polygon2D, Line2D or `_draw()`)
 
 The look should say "military hardware" first. The liquid metal is the surprise in how it changes shape.
 
-### Final art (later, decided after the game is fun)
+### Final art pipeline: Blender (decided 2026-11-02)
 
-Likely hand-painted art downscaled to sprites, possibly with a metallic sheen shader. Placeholders must be easy to swap: each object's visuals live in one child node named `Visual`, so art can be replaced without touching game logic. The morph system may need to switch to blended sprites or a shader for final art; decide later.
+Ships, vehicles and buildings are **3D models in Blender, rendered top-down into shaded sprites**, the same way the Raptor reference got its look. Claude Code drives Blender through Blender Lab's official MCP connection; the developer art-directs and touches up by hand (Blender or Krita) where needed. Both tools are free.
 
+- **What Blender makes:** terrain backgrounds (see "Terrain backgrounds" below), XF-0 (every weight class, Gunship and Lance forms), enemies, the mini-bosses and MAWLER boss, weapon modules, buildings and terrain props.
+- **What stays code-made in Godot:** explosions, smoke, sparks, tracers, lasers, glows, grain and drop shadows (see the Effects reference above).
+- **Render rig** (`art-source/blender/render_rig.blend`): orthographic camera straight down, transparent background, top-left key light with a soft fill (matching the terrain lighting), shared metal materials in the §11 palette (XF-0 gunmetal with cyan accents; HEG grey/orange with hazard yellow).
+- **Repeatable renders:** a Python script (`art-source/render/render_sprites.py`) renders models to `assets/sprites/<category>/<name>.png` at 4× in-game size; Godot scales them down with filtering on. Re-running the script must give the same result.
+- **Morphing with sprites:** the Lance form is a **shape key** on the Gunship model (a stored second shape Blender can blend toward). The morph is rendered as a frame strip (~8 frames). The existing MorphSystem gets a frame-strip mode with the same API, so Combat Morph, refit morphs and weight-class changes keep working. Polygon mode remains for anything without sprites.
+- **Hit flash, elite outline, drop shadow** are done in Godot on top of the sprite (white flash shader, yellow outline shader, shadow from the sprite silhouette), so they never need extra renders.
+- **Visual node rule stays:** each object's art lives in its `Visual` child, so swapping placeholder → sprite never touches game logic.
+- Exact numbers (sprite sizes, render scale, light angle, frame count, background strip size) get locked in ART-1e and written here.
+- Schedule: ART-1 (starting with a background test), ART-BG and ART-2 before Milestone D, then ART-3 to ART-5 alongside Milestones D–E (ROADMAP.md).
+
+#### Terrain backgrounds (decided 2026-11-05)
+
+The code-drawn terrain (round tree blobs, ring-shaped pits, a smooth road) reads as cartoon and is **placeholder only**. Final ground is **rendered, not drawn**:
+
+- **Procedural terrain in Blender:** real height (dug-out pits with terraces and slopes, river banks, road cuts with ruts), so the top-left light makes real shadows. No flat fills, no outlines, no concentric rings.
+- **Real surface detail from free CC0 textures** (Poly Haven, ambientCG: forest floor, mud, red soil, rock, gravel, concrete). CC0 means free for commercial use with no credit needed; each texture's source is still listed in `art-source/textures/CREDITS.md`.
+- **Density and scale like the reference:** thousands of small, varied trees, bushes and rocks scattered automatically, small next to the jet so the world feels big. Variation in size, rotation and color everywhere.
+- **Muted and darker than the action:** keep the §11 palette (dark jungle greens, oxblood/rust earth, teal water, concrete grey) at lower saturation than ships, effects and pickups, so the jet, enemy rounds and salvage always stand out.
+- **Format:** seamless vertical strips 540 px wide (rendered at 2× and scaled down), 2–3 screens tall, saved as WebP in `assets/backgrounds/<sector>/<zone>_NN.webp`. The top edge of each strip matches its bottom edge so strips can follow each other. Each strip is loaded only for the mission that uses it (web memory).
+- **Still added in Godot on top:** the grain overlay, drop shadows, scorch marks, ground targets and effects.
+
+#### Zones (Sector 1: Verdance)
+
+Each mission's level settings name a **zone**, so the Ops Map can pick scenery to match the stop.
+
+| Zone | Used for | Look |
+|---|---|---|
+| Jungle Fringe | Map rows 1–2 | Dense canopy, first haul roads and survey clearings cutting in, small creeks |
+| Strip Mine | Rows 3–4, Salvage Runs | Rust-red terraced pits, spoil heaps, conveyor lines, Mining Platforms |
+| Tailings River | Mixed rows | Toxic green-teal water, earth dams, bridges, pipelines |
+| HEG Compound | Strongpoints, rows 5–6 | Concrete pads, hazard stripes, bunkers, fuel tanks, lights |
+| MAWLER Pit | Boss | A huge excavation with the crawler's track scars and collapsed terraces |
 ## 12. Audio
 
 - SFX: generated with jsfxr (free) during development. Heavy, punchy military sounds (cannon thumps, missile whooshes, alarm beeps), plus a metallic liquid sound for morphs, refits, assimilating and salvage pickups.
@@ -473,9 +562,9 @@ Likely hand-painted art downscaled to sprites, possibly with a metallic sheen sh
 
 ## 13. Screens
 
-Title (Click to start) → Main menu (Deploy, R&D, Settings) → Mission briefing → Level 1 → Field Refit → Armory → Level 2 → … → Boss → Mission Complete / Mission Failed (shows Combat Data earned) → Main menu
+Title (Click to start) → Main menu (Deploy, R&D, Settings) → Mission briefing → **Ops Map** → chosen stop (Strike / Salvage Run / Strongpoint → rewards, or Refit Depot / Armory) → Ops Map → … → Primary Target (boss) → Mission Complete / Mission Failed (shows Combat Data earned) → Main menu
 
-HUD: Armor bar, Plating bar, Overclock meter, salvage count, weight class, HSD Threat label, assimilated weapon icon, level number, auto-fire indicator, sector progress track (thin bar in the right rail that fills as the sector goes on).
+HUD: Armor bar, Plating bar, Overclock meter, salvage count, weight class, HSD Threat label, assimilated weapon icon, map row / stop code, auto-fire indicator, sector progress track (thin bar in the right rail that fills as the sector goes on).
 
 Settings: master/music/SFX volume, screen shake on/off, Accessibility: auto-fire on/off (off by default, §7.3).
 
@@ -503,7 +592,9 @@ Inspired by the *formula* of 90s shooters and by mech-combat loadout games, usin
 
 ## 16. Later (ideas parking lot, not for the demo)
 
-- **Contract board:** between levels, pick 1 of 2–3 missions with modifiers (night op, storm, convoy escort) and different rewards
+- **Mission modifiers on map stops:** night op, storm, convoy escort, each changing rewards (replaces the old "contract board" idea, now that the Ops Map exists)
+- **Event stops ("Signal")** on the Ops Map: short text choices with risks and rewards, like Slay the Spire's "?" rooms
+- **Mid-run saving:** resume a run after closing the game
 - **Ramming build:** Assault class + Razor Wing deals crash damage based on mass
 - **Laser-designated strikes:** a reticle ahead of the ship paints ground targets; bonus salvage for multi-locks (possible rework of the Seeker Missile line)
 - **Heat system** (MechWarrior-style): firing builds heat, overheating jams weapons, heat sinks as a refit line

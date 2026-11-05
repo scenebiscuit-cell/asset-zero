@@ -4,6 +4,8 @@ Build **one milestone at a time** (A → E). Inside a milestone, Claude Code bui
 
 Git: each milestone gets its own branch from `main` and ends with a pull request. Merge only when you say "merge".
 
+**Art steps (ART-1 to ART-5)** make the final ship and building art in Blender (DESIGN.md §11 "Final art pipeline"). Each one is its own Claude Code session and branch (e.g. `art-1-pipeline`), done at the point shown below, with the same rules: small checked steps, pull request, merge only on "merge". Explosions, smoke, tracers and lasers stay code-made in Godot; Blender makes the terrain backgrounds (procedural terrain + free CC0 textures), ships, vehicles and buildings. The first art test is a background, because the current code-drawn terrain looks the least like the Raptor reference.
+
 How to hand a milestone to Claude Code (in VS Code, terminal at `C:\Projects\asset-zero`, run `claude`):
 > "Read CLAUDE.md, DESIGN.md and ROADMAP.md. Do Milestone A on a new branch. Build one step at a time, tell me how to check each one worked, and wait for my OK before the next step. Open a pull request when the milestone is done."
 
@@ -78,6 +80,51 @@ How to hand a milestone to Claude Code (in VS Code, terminal at `C:\Projects\ass
   - Overclock activation: Meltdown pulse turns nearby enemy rounds into salvage, 5 s of ×1.5 damage + heat aura that destroys rounds, salvage extends it (max 10 s), 0.5 s invulnerability at the end
   - **Done when:** you can fill the meter by grazing and collecting, trigger Overclock, and survive a dense bullet pattern with it
 
+### ART-1: Blender pipeline test (Milestone B is done: do this before Milestone D, then ART-2)
+
+- [ ] **ART-1a: Install Blender and connect it to Claude Code** (you do this part by hand; Claude Code can help)
+  - Install **Blender 5.1 or newer** from blender.org (free)
+  - Install the official **Blender MCP add-on and server** from Blender Lab, following its Setup wiki: https://projects.blender.org/lab/blender_mcp/wiki/Setup (overview: https://www.blender.org/lab/mcp-server/). An MCP server is a plug-in that lets Claude Code control Blender.
+  - Add it to Claude Code (check the exact command against the Setup wiki), e.g. `claude mcp add blender -- uv --directory C:\blender_mcp\mcp run blender-mcp`
+  - Safety: the connection runs Claude's Python code inside Blender with no guards. Only open project files in Blender while it's connected, and save often.
+  - **Done when:** with Blender open and the add-on running, `claude mcp list` shows `blender` as connected, and asking Claude Code to "add a cube in Blender" makes a cube appear.
+
+- [ ] **ART-1b: Background test: one Jungle Fringe strip** (first art test)
+  - Download free **CC0 textures** (free for commercial use, no credit needed) by hand into `art-source/textures/`, 2K JPG with color, normal, roughness and displacement maps. From polyhaven.com/textures and ambientcg.com search for: forest ground / forest floor, mud or dirt, red or brown soil, rock, gravel, and a dirt road or tyre-track ground. Note each one's name and source link in `art-source/textures/CREDITS.md`.
+  - In Blender, build **procedural terrain** for the Jungle Fringe zone (DESIGN.md §11 "Zones"): real height (a dug-out mining pit with terraces, not flat rings), a haul road with ruts cut into the ground, a small creek, and **thousands of small varied trees and rocks** scattered automatically (Blender's geometry nodes or a scatter script). Trees and rocks are simple low-poly models with varied size, rotation and color.
+  - Render it from straight above with the top-left light into a seamless vertical strip: `assets/backgrounds/verdance/jungle_fringe_01.webp`, 540 px wide (render at 2× and scale down), 2–3 screens tall, top edge matching the bottom edge so strips can follow each other
+  - Swap it into the game as the scrolling ground, replacing the code-drawn trees, pits and road for this zone; keep grain, drop shadows and enemies on top
+  - **Done when:** side by side with the Raptor reference screenshots, the ground reads as real terrain seen from high above (dense detail, real height and shadow, no flat or outlined shapes), the jet and enemy rounds still stand out clearly, and the scroll has no visible seam
+
+- [ ] **ART-1c: Render rig + RD-2 Recon Drone**
+  - Create `art-source/blender/render_rig.blend`: orthographic camera looking straight down, transparent background, top-left key light + soft fill, metal materials (gunmetal, HEG grey/orange, hazard yellow) matching DESIGN.md §11
+  - A repeatable render script `art-source/render/render_sprites.py` that renders any model in the rig to `assets/sprites/<category>/<name>.png` at 4× the in-game size
+  - Model the RD-2 Recon Drone (simple, chunky shapes), render it, and swap it into the game in place of the polygon placeholder (keep the `Visual` node rule; the drop shadow must still work)
+  - **Done when:** the drone in-game looks like a shaded metal machine lit from the top-left, matches the Raptor reference feel, and still flashes white on hit and casts a shadow
+
+- [ ] **ART-1d: XF-0 Light class, both forms + morph frames**
+  - Model the XF-0 Light-class airframe in Gunship form, then make the Lance form as a **shape key** (a stored second shape of the same model that Blender can blend toward)
+  - Render the morph as a frame strip: Gunship → Lance in ~8 frames (`assets/sprites/player/xf0_light_morph.png`)
+  - Extend the existing **MorphSystem** with a frame-strip mode (same `morph_to()` / `snap_to()` API, tween drives the frame instead of polygon points). Don't write a second morph system. Polygon mode stays for anything without sprites yet.
+  - Drop shadow uses the current sprite frame's silhouette
+  - **Done when:** holding morph flows the rendered jet from Gunship to Lance and back as smoothly as the placeholder did, at 0.15 s, with the shadow following
+
+- [ ] **ART-1e: Lock the art rules**
+  - Write the final numbers into DESIGN.md §11 "Final art pipeline" (sprite sizes, render scale, light angle, material colors, morph frame count, background strip size and texture list) and add a line to the decisions log
+  - **Done when:** DESIGN.md has the rules and you're happy with the look. If you're not, decide here whether to adjust the rig, paint over renders in Krita, or stay with placeholders for now.
+
+- [ ] **ART-BG: All Sector 1 terrain zones** (right after ART-1)
+  - Using the ART-1b method, build and render the other zones from DESIGN.md §11 "Zones": Strip Mine, Tailings River, HEG Compound and MAWLER Pit (Jungle Fringe already exists), 2–3 strips each so missions don't repeat visibly
+  - Ground targets that sit in the terrain (AA Emplacements, Mining Platforms) get matching ground pads and scorch decals
+  - Add a `zone` setting to each mission's level settings Resource so the game loads the right strips; until the Ops Map exists (Step 17b), pick the zone from the mission number
+  - Retire the code-drawn terrain (keep it only as a fallback if a strip fails to load)
+  - **Done when:** each zone looks distinct and real, matches the reference feel, and switching zones between missions works
+
+- [ ] **ART-2: Enemy renders** (right after ART-BG)
+  - Model and render the remaining enemies with the ART-1 rig: ID-4 Interceptor Drone, AA Emplacement, Mining Platform, Armored Transport, HG-7 Gunship (plus destroyed/wreck versions for ground targets)
+  - Elites reuse the same sprites with a yellow outline added in Godot (no extra renders)
+  - **Done when:** every Milestone B enemy uses its rendered sprite in-game with hit flash and shadows working
+
 ## Milestone C — Loadouts, refits and assimilation
 
 - [ ] **Step 10: Data-driven weapon systems + hardpoints**
@@ -114,19 +161,57 @@ How to hand a milestone to Claude Code (in VS Code, terminal at `C:\Projects\ass
   - HUD label updates; radio-chatter pop-up + alarm when Threat rises
   - **Done when:** growing to each weight class visibly increases enemy pressure, elites and salvage
 
+- [ ] **ART-3: XF-0 refits, weight classes and weapon modules** (end of Milestone C)
+  - Render the XF-0 for each weight class (Light, Medium, Heavy, Assault), each in Gunship and Lance form with morph frames, plus visible refit parts (barrels, pylons, plating) as separate overlay sprites where that's simpler than full re-renders
+  - Render the 4 weapon modules (Spread Cannon, Flak Burst, Drill Lance, Drone Bay) and their Salvage Mount versions
+  - **Done when:** every refit and weight class looks right in both forms, and refit/class-change morphs still play
+
 ## Milestone D — Complete run
 
 - [ ] **Step 16: Boss — HEG-X9 MAWLER**
   - Three phases from DESIGN.md §8 (turrets drop Flak Burst modules), boss health bar, big death sequence
   - **Done when:** the boss can be fought and beaten with all three phases working
 
-- [ ] **Step 17: Full run structure**
-  - Title (click to start) → menu (Deploy, R&D, Settings) → mission briefing → L1 → Field Refit → Armory → L2 → … → boss → Mission Complete / Mission Failed
+- [ ] **Step 16b: Mini-bosses**
+  - HG-9 Warden (air: shield drones, strafing phase, coral-telegraphed missile salvo) and SF-4 Sentinel Flak Battery (ground: scroll stops, four turret pods, core opens) from DESIGN.md §8
+  - Each is a **Strongpoint** mission: short escort wave, then the mini-boss with a small health bar; guaranteed module drop (Spread Cannon / Flak Burst)
+  - Mini-boss stats as Resources (`data/enemies/`), reusing the boss health-bar and phase code from Step 16
+  - **Done when:** both mini-bosses can be fought and beaten from a test scene, each phase works, and the module drops
+
+- [ ] **Step 17a: Ops Map screen and generation**
+  - Map generator from DESIGN.md §9.2: 4 columns × 7 rows, stop types per row, connection and placement rules, built from a seed stored in GameState
+  - Ops Map screen in the tactical CRT style: stop icons, connecting lines, XF-0 marker, reachable stops pulse, visited stops dim, tooltip with type/reward/row; mouse and keyboard selection
+  - Map data as Resources or plain data (no hardcoded maps); a debug key regenerates with a new seed
+  - **Done when:** the map shows a valid branching network every time (try 20 seeds), you can only pick connected stops, and the same seed always gives the same map
+
+- [ ] **Step 17b: Stop types wired to the map**
+  - **Strike** → mission (difficulty from map row) → salvage + Field Refit → map
+  - **Salvage Run** → 60 s salvage-heavy mission → salvage ×1.75, doubled Perimeter Held, no Field Refit → map
+  - **Strongpoint** → mini-boss mission (Step 16b) → big salvage, module, boosted Field Refit, bonus Combat Data → map
+  - **Refit Depot** → choose Repair (40% Armor) or Overhaul (one installed system +1 level) → map
+  - **Armory** → the Step 13 shop, prices by row → map
+  - **Primary Target** → MAWLER (Step 16) → Mission Complete
+  - Rework the existing Field Refit (Step 12) and Armory (Step 13) screens so they're opened by the map and return to it, instead of running in a fixed order after each level; Armory prices scale with map row
+  - Wave director takes its difficulty from the map row instead of a level number
+  - **Done when:** every stop type can be entered from the map, gives the right reward, and returns to the map with the run state (Armor, salvage, refits, module, Threat) intact
+
+- [ ] **Step 17c: Full run structure**
+  - Title (click to start) → menu (Deploy, R&D, Settings) → mission briefing → Ops Map → stops … → Primary Target (boss) → Mission Complete / Mission Failed
   - Combat Data earned (includes highest Threat reached), saved to `user://save.cfg`, R&D screen with ~6 unlocks
   - Mission briefing sometimes offers the FC-1 Fire Control Computer for Combat Data (auto-fire for that run only); Settings → Accessibility → Auto-fire (DESIGN.md §7.3)
-  - **Done when:** a full run works start to finish, and unlocks persist after closing the game
+  - **Done when:** a full run works start to finish through the Ops Map in about 12–15 minutes, and unlocks persist after closing the game
+
+- [ ] **ART-4: MAWLER boss and mini-bosses** (end of Milestone D)
+  - Model the HEG-X9 MAWLER as separate parts (body, flank turrets, jaws, core) so phases can break pieces off; render each part and its damaged version
+  - Same for the HG-9 Warden (with its shield drones) and the SF-4 Sentinel Flak Battery (pods and core)
+  - **Done when:** the boss and mini-boss fights use the rendered parts and each phase visibly damages the machine
 
 ## Milestone E — Polish and release
+
+- [ ] **ART-5: Final art pass** (start of Milestone E, before Step 18)
+  - Extra terrain props and HSD/HEG bases (buildings, tanks, pipes, landing pads) rendered with the same rig and placed into the zone strips; optional touch-ups painted in Krita
+  - Consistency pass: same light angle, scale and palette everywhere
+  - **Done when:** no polygon placeholders are left in normal play, and everything reads clearly at game speed
 
 - [ ] **Step 18: Juice and sound**
   - Hit-stop, screen shake (with toggle), muzzle flashes, more particles, Overclock and Assimilate effects, clustered explosions with shockwave rings and ground scorch marks (DESIGN.md §11)
@@ -150,12 +235,14 @@ How to hand a milestone to Claude Code (in VS Code, terminal at `C:\Projects\ass
 
 Write down decisions here as you make them (date — decision), so the AI tools know about them.
 
+- 2026-11-05 — Backgrounds: the code-drawn terrain looks too cartoony. Final terrain will be Blender procedural terrain with free CC0 textures (Poly Haven, ambientCG), rendered top-down into seamless scrolling strips, one set per zone (Jungle Fringe, Strip Mine, Tailings River, HEG Compound, MAWLER Pit). The first art test (ART-1b) is now a Jungle Fringe background; ART-BG builds the other zones before ART-2. DESIGN.md §11.
+- 2026-11-05 — Ops Map added (DESIGN.md §9.2): a Slay the Spire-style branching sector map replaces the fixed 3-level run. Stops: Strike (salvage + free Field Refit), Salvage Run (more salvage, no refit), Strongpoint (mini-boss), Refit Depot (Repair or Overhaul), Armory (shop), Primary Target (boss). Two mini-bosses added: HG-9 Warden and SF-4 Sentinel Flak Battery. New Steps 16b, 17a, 17b; Step 17 became 17c. Replaces the old "contract board" Later idea.
 - 2026-11-03 — Fullscreen: stretch aspect stays `keep`, so the 540×960 battlefield is centred at full screen height with dark bars at the sides, and the HUD and rails stay inside it on its edges (like Raptor). Tried first and dropped: a battlefield widened to the whole monitor (changed balance between screens) and HUD panels moved out into cockpit side panels (felt disconnected). The BREACH popup was removed (distracting); the salvage penalty and Perimeter Held bonus stay. DESIGN.md §9, §14.
 - 2026-11-03 — Added a sector progress track to the HUD (right rail) and an F11 / Alt+Enter fullscreen toggle (in SaveManager until the Settings screen exists). DESIGN.md §5.5, §13.
 - 2026-11-03 — Sector 1 shortened to 90 s (was 150 s) so the run gets going quickly; later sectors stay 2–3 minutes. DESIGN.md §9.
 - 2026-11-03 — Breach penalty: each enemy aircraft that escapes costs 2 salvage; a sector with no escapes pays a 25-salvage Perimeter Held bonus at SECTOR CLEAR. Enemy round damage raised (RD-2 8, others 12). DESIGN.md §8, §9.
 - 2026-11-03 — RD-2 Recon Drones now fire one weak, slow aimed round (about a third of them since 2026-11-03 retune, at a random moment) so Sector 1 has rounds to dodge and graze. AA Emplacements fire 2-round bursts every 1.4 s and appear more often (pairs from 45 s). DESIGN.md §8.
-
+- 2026-11-02 — Final art will be made in Blender (free) driven by Claude Code through Blender Lab's official MCP connection: 3D models rendered top-down into shaded sprites, like Raptor's pre-rendered look. Art steps ART-1 to ART-5 added; ART-1 (pipeline test) happens when Milestone B is finished, then ART-2. Effects stay code-made in Godot.
 - 2026-11-02 — XF-0 hitbox changed from a ~6 px circle to a capsule over the body + wing roots (~24 px wide in Gunship form, ~14 px in Lance form), stored per airframe shape and morphing with it. Lance form is now also the dodge form. Same size in every weight class. DESIGN.md §5.2, §5.4, §5.6.
 
 - 2026-11-02 — Auto-fire is no longer a standard control (F key removed). It comes from the FC-1 Fire Control Computer (one-run purchase for Combat Data at the briefing, only when offered) or a rare timed Fire Control pickup; an Accessibility setting keeps it available for players who need it. DESIGN.md §5.5, §7.3, §13.

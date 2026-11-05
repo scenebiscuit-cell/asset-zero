@@ -5,12 +5,16 @@ extends Area2D
 signal destroyed
 ## Overclock's Meltdown pulse: the Level turns enemy rounds in this circle into salvage.
 signal meltdown_pulse(center: Vector2, radius: float)
+## The player called in a Saturation Strike (DESIGN.md §7.4); the Level clears the screen.
+signal strike_called
 
 enum InputMode { KEYBOARD, MOUSE }
 
 @export var move_speed: float = 300.0
 ## Keeps the airframe visual fully on screen, not just its centre.
 @export var screen_margin: Vector2 = Vector2(26.0, 36.0)
+## Lowest y the play area reaches (the top of the HUD console). 0 = the bottom of the screen.
+var play_area_bottom: float = 0.0
 ## Set by whatever scene the player is placed in; rounds live there, not on the ship.
 @export var round_pool: RoundPool
 @export var missile_pool: MissilePool
@@ -22,6 +26,9 @@ enum InputMode { KEYBOARD, MOUSE }
 ## Fire Control: seconds of auto-fire per activation, and how many pickups can be stored.
 @export var fire_control_duration: float = 10.0
 @export var max_fire_control_charges: int = 2
+## Enemies to destroy for one Saturation Strike charge.
+@export var kills_per_strike: int = 40
+@export var max_strike_charges: int = 3
 
 ## Always-on auto-fire: the FC-1 refit or the accessibility setting (DESIGN.md §7.3), never a key.
 var autofire: bool = false
@@ -78,6 +85,7 @@ func _physics_process(delta: float) -> void:
 
 	_clamp_to_screen()
 	_try_activate_fire_control()
+	_try_call_strike()
 	_update_timed_autofire(delta)
 	_hardpoints.set_firing(autofire or _autofire_left > 0.0 or Input.is_action_pressed("fire"))
 	_update_invulnerability(delta)
@@ -102,6 +110,33 @@ func _try_activate_fire_control() -> void:
 	GameState.fire_control_charges -= 1
 	grant_autofire(fire_control_duration)
 	AudioManager.play("overclock_on", -8.0)
+
+
+## Each kill fills the strike meter; a full meter becomes a stored charge. With storage full the
+## meter stays full until a charge is used.
+func register_kill() -> void:
+	if GameState.strike_charges >= max_strike_charges:
+		GameState.strike_progress = kills_per_strike
+		return
+	GameState.strike_progress += 1
+	if GameState.strike_progress >= kills_per_strike:
+		GameState.strike_charges += 1
+		GameState.strike_progress = kills_per_strike if GameState.strike_charges >= max_strike_charges else 0
+
+
+## 0-1 fill of the strike meter.
+func strike_fill() -> float:
+	return clampf(float(GameState.strike_progress) / maxi(kills_per_strike, 1), 0.0, 1.0)
+
+
+func _try_call_strike() -> void:
+	if _dead or not Input.is_action_just_pressed("strike") or GameState.strike_charges <= 0:
+		return
+	GameState.strike_charges -= 1
+	if GameState.strike_progress >= kills_per_strike:
+		# Storage was full, so the waiting full meter starts over.
+		GameState.strike_progress = 0
+	strike_called.emit()
 
 
 func grant_autofire(seconds: float) -> void:
@@ -279,4 +314,6 @@ func _die() -> void:
 
 func _clamp_to_screen() -> void:
 	var screen: Vector2 = get_viewport_rect().size
+	if play_area_bottom > 0.0:
+		screen.y = minf(screen.y, play_area_bottom)
 	position = position.clamp(screen_margin, screen - screen_margin)

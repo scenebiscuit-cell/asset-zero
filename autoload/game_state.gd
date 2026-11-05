@@ -30,6 +30,9 @@ var system_levels: Dictionary[int, int] = {}
 var refit_count: int = 0
 ## Field Refit rerolls bought this run; each one makes the next cost more.
 var rerolls_bought: int = 0
+## Kills toward the next Saturation Strike charge (§7.4), and charges stored. Both carry over.
+var strike_progress: int = 0
+var strike_charges: int = 0
 ## Enemies destroyed since the last kill-count repair kit dropped.
 var kills_toward_repair: int = 0
 ## Which sector of the run we're on (0 = Sector 1).
@@ -53,6 +56,8 @@ func reset_run() -> void:
 	refit_count = 0
 	rerolls_bought = 0
 	kills_toward_repair = 0
+	strike_progress = 0
+	strike_charges = 0
 	sector_index = 0
 	run_active = true
 

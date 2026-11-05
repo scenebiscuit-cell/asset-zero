@@ -20,6 +20,9 @@ const LAYER_ENEMIES_GROUND: int = 1 << 3
 ## Ground units draw between the terrain (-10) and air-unit shadows (-8).
 const GROUND_Z_INDEX: int = -9
 
+## Bottom of the play area (top of the HUD console), set by the Level. 0 = the screen bottom.
+static var play_area_bottom: float = 0.0
+
 @export var data: EnemyData
 
 ## All set by the spawner (Level / wave director) before add_child().
@@ -104,8 +107,12 @@ func direction_to_target() -> Vector2:
 	return global_position.direction_to(target.global_position)
 
 
+## Visible and in the play area: anything behind the HUD console doesn't fire or get targeted.
 func is_on_screen() -> bool:
-	return get_viewport_rect().has_point(global_position)
+	var area: Rect2 = get_viewport_rect()
+	if play_area_bottom > 0.0:
+		area.end.y = minf(area.end.y, play_area_bottom)
+	return area.has_point(global_position)
 
 
 func is_below_screen() -> bool:

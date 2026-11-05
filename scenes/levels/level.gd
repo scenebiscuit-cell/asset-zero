@@ -21,12 +21,20 @@ extends Node2D
 @export var kill_repair_amount: int = 20
 ## Armor restored by repair kits that enemies drop by chance (Armored Transport).
 @export var enemy_repair_amount: int = 25
+## Saturation Strike (DESIGN.md §7.4): damage to every enemy in the play area. High enough to
+## destroy anything but a boss.
+@export var strike_damage: int = 600
+## Extra explosions scattered over the screen for show, and the gap between them.
+@export var strike_blasts: int = 14
+@export var strike_blast_gap: float = 0.035
 ## Destructible radar dome placed on the background's barracks and SAM sites.
 @export var dome_scene: PackedScene
 
 var _level_data: LevelData
 var _player_dead: bool = false
 var _breaches: int = 0
+## True while a strike is dealing its damage, so its own kills don't refill the strike meter.
+var _striking: bool = false
 
 @onready var _enemies: Node2D = $Enemies
 ## Background targets live apart from Enemies, so they never hold up SECTOR CLEAR or wave spawning.
@@ -47,6 +55,7 @@ var _breaches: int = 0
 @onready var _module_pool: ObjectPool = $ModulePool
 @onready var _player: Player = $Player
 @onready var _mission_failed: MissionFailedScreen = $MissionFailed
+@onready var _strike_flash: StrikeFlash = $StrikeFlash
 
 
 ## Before any child's _ready, so the Player and HUD start from the fresh run, not the old one.
@@ -58,10 +67,13 @@ func _enter_tree() -> void:
 func _ready() -> void:
 	_player.destroyed.connect(_on_player_destroyed)
 	_player.meltdown_pulse.connect(_on_meltdown_pulse)
+	_player.strike_called.connect(_on_strike_called)
 	_sector_clear.continue_pressed.connect(_on_continue_pressed)
 	_field_refit.finished.connect(_on_field_refit_finished)
 	_armory.finished.connect(_on_armory_finished)
 	_hud.player = _player
+	_player.play_area_bottom = _hud.console_top()
+	Enemy.play_area_bottom = _hud.console_top()
 	_ground_layer.dome_entering.connect(_on_dome_entering)
 	if not run_waves or sectors.is_empty():
 		return
@@ -145,6 +157,8 @@ func _on_enemy_destroyed(enemy: Enemy) -> void:
 			drop_module(enemy.data.module, enemy.global_position)
 	if randf() < enemy.data.repair_drop_chance:
 		drop_repair(enemy.global_position, enemy_repair_amount)
+	if not _striking:
+		_player.register_kill()
 	GameState.kills_toward_repair += 1
 	if GameState.kills_toward_repair >= kills_per_repair:
 		GameState.kills_toward_repair = 0
@@ -168,6 +182,33 @@ func _on_meltdown_pulse(center: Vector2, radius: float) -> void:
 			var at: Vector2 = enemy_round.global_position
 			enemy_round.deactivate()
 			_salvage_pool.spawn_burst(at, 1)
+
+
+## Clears the screen: every enemy round is gone and every enemy in the play area takes heavy damage.
+func _on_strike_called() -> void:
+	_strike_flash.play()
+	AudioManager.play("strike", -2.0)
+	for child: Node in _enemy_round_pool.get_children():
+		var enemy_round: EnemyRound = child as EnemyRound
+		if enemy_round.is_active():
+			enemy_round.deactivate()
+	_striking = true
+	for container: Node in [_enemies, _ground_targets]:
+		for child: Node in container.get_children():
+			var enemy: Enemy = child as Enemy
+			if enemy != null and enemy.hp > 0 and enemy.is_on_screen() and enemy.is_targetable():
+				enemy.take_damage(strike_damage)
+	_striking = false
+	_strike_barrage()
+
+
+## Purely visual: blasts ripple up the screen after the flash.
+func _strike_barrage() -> void:
+	var area: Vector2 = Vector2(get_viewport_rect().size.x, _hud.console_top())
+	for i: int in strike_blasts:
+		var row: float = 1.0 - (float(i) + randf()) / strike_blasts
+		_explosion_pool.spawn(Vector2(randf_range(40.0, area.x - 40.0), lerpf(60.0, area.y - 30.0, row)))
+		await get_tree().create_timer(strike_blast_gap).timeout
 
 
 func drop_repair(at: Vector2, amount: int = 25) -> void:

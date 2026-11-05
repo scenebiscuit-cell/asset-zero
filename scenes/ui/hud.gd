@@ -1,7 +1,8 @@
 class_name Hud
 extends CanvasLayer
 ## Gameplay HUD (DESIGN.md §11.6/§13): side rails, Armor/Plating top-left, salvage top-centre,
-## sector/class/threat top-right, module slot and weapons bottom-left, Overclock bottom-right, warnings bottom-centre.
+## sector/class/threat top-right, strike meter in the left rail, sector track in the right rail. The bottom
+## console holds the module slot, weapons, Saturation Strike charges, Fire Control and Overclock.
 ## Reads GameState and the Player each frame; nothing in the game needs to know the HUD exists.
 
 ## Below this fraction of max Armor, the bar turns red and the warning shows.
@@ -14,6 +15,9 @@ const THREAT_COLORS: Array[Color] = [Color(0.55, 1.0, 0.6), Color(1.0, 0.85, 0.3
 const AMBER: Color = Color(1.0, 0.7, 0.2)
 const WARNING_RED: Color = Color(1.0, 0.25, 0.2)
 const OVERCLOCK_HOT: Color = Color(1.0, 0.45, 0.1)
+const STRIKE_RED: Color = Color(1.0, 0.4, 0.3)
+const PIP_EMPTY: Color = Color(1.0, 1.0, 1.0, 0.12)
+const DIM_TEXT: Color = Color(1.0, 1.0, 1.0, 0.35)
 
 ## Set by the Level.
 var player: Player
@@ -30,7 +34,9 @@ var _shown_class: int = -1
 var _shown_threat: int = -1
 var _shown_fire_control: Vector2i = Vector2i(-9, -9)
 var _shown_overclock_secs: int = -1
+var _shown_strike: Vector2i = Vector2i(-1, -1)
 
+@onready var _console: Control = $Root/Console
 @onready var _armor_bar: HudBar = $Root/TopLeft/ArmorBar
 @onready var _armor_value: Label = $Root/TopLeft/ArmorValue
 @onready var _plating_bar: HudBar = $Root/TopLeft/PlatingBar
@@ -43,10 +49,12 @@ var _shown_overclock_secs: int = -1
 @onready var _overclock_bar: HudBar = $Root/BottomRight/OverclockBar
 @onready var _overclock_state: Label = $Root/BottomRight/OverclockState
 @onready var _warning: Label = $Root/BottomCenter/Warning
-@onready var _fire_control: Control = $Root/FireControl
 @onready var _fire_control_state: Label = $Root/FireControl/State
 @onready var _fire_control_bar: HudBar = $Root/FireControl/Bar
 @onready var _sector_progress: SectorProgress = $Root/SectorProgress
+@onready var _strike_meter: StrikeMeter = $Root/StrikeMeter
+@onready var _strike_state: Label = $Root/Strike/State
+@onready var _strike_pips: Array[ColorRect] = [$Root/Strike/Pip1, $Root/Strike/Pip2, $Root/Strike/Pip3]
 @onready var _nose_icon: WeaponIcon = $Root/Weapons/NoseIcon
 @onready var _nose_name: Label = $Root/Weapons/NoseName
 @onready var _pylon_icon: WeaponIcon = $Root/Weapons/PylonIcon
@@ -70,6 +78,7 @@ func _process(delta: float) -> void:
 	_update_module()
 	_update_overclock(blink_on)
 	_update_fire_control(blink_on)
+	_update_strike(blink_on)
 	_update_weapon(_nose_icon, _nose_name, WeaponData.Hardpoint.NOSE)
 	_update_weapon(_pylon_icon, _pylon_name, WeaponData.Hardpoint.WING_PYLONS)
 
@@ -125,7 +134,7 @@ func _update_overclock(blink_on: bool) -> void:
 	_overclock_state.visible = full and blink_on
 
 
-## Shown only while there's something to say: a stored charge, or auto-fire running.
+## Always in the console; dimmed to "EMPTY" with nothing stored.
 func _update_fire_control(blink_on: bool) -> void:
 	# x: -1 always on (FC-1 or accessibility), 0 off, >0 seconds left. y: stored charges.
 	var seconds: int = 0
@@ -137,15 +146,18 @@ func _update_fire_control(blink_on: bool) -> void:
 		elif left > 0.0:
 			seconds = ceili(left)
 	var charges: int = GameState.fire_control_charges
-	_fire_control.visible = seconds != 0 or charges > 0
-	_fire_control_bar.value = left / player.fire_control_duration if seconds > 0 else 1.0
+	var empty: bool = seconds == 0 and charges == 0
+	_fire_control_bar.value = 0.0 if empty else (left / player.fire_control_duration if seconds > 0 else 1.0)
 	# While waiting to be used, the prompt blinks so it gets noticed.
-	_fire_control_state.visible = seconds != 0 or blink_on
+	_fire_control_state.visible = empty or seconds != 0 or blink_on
 	var state: Vector2i = Vector2i(seconds, charges)
 	if state == _shown_fire_control:
 		return
 	_shown_fire_control = state
-	if seconds == -1:
+	_fire_control_state.add_theme_color_override("font_color", DIM_TEXT if empty else Color.WHITE)
+	if empty:
+		_fire_control_state.text = tr("HUD_EMPTY")
+	elif seconds == -1:
 		_fire_control_state.text = tr("HUD_AUTOFIRE_ON")
 	elif seconds > 0:
 		_fire_control_state.text = tr("HUD_AUTOFIRE_TIMED") % seconds
@@ -153,6 +165,30 @@ func _update_fire_control(blink_on: bool) -> void:
 		_fire_control_state.text = tr("HUD_FIRE_CONTROL_READY_MULTI") % charges
 	else:
 		_fire_control_state.text = tr("HUD_FIRE_CONTROL_READY")
+
+
+## Left-rail meter fills with kills; pips show stored charges; the prompt blinks while one is ready.
+func _update_strike(blink_on: bool) -> void:
+	if player == null:
+		return
+	var charges: int = GameState.strike_charges
+	var full: bool = charges >= player.max_strike_charges
+	_strike_meter.value = player.strike_fill()
+	_strike_meter.flash = full and blink_on
+	for i: int in _strike_pips.size():
+		_strike_pips[i].visible = i < player.max_strike_charges
+		_strike_pips[i].color = STRIKE_RED if i < charges else PIP_EMPTY
+	_strike_state.visible = charges == 0 or blink_on
+	var state: Vector2i = Vector2i(charges, GameState.strike_progress)
+	if state == _shown_strike:
+		return
+	_shown_strike = state
+	if charges > 0:
+		_strike_state.text = tr("HUD_STRIKE_READY")
+		_strike_state.add_theme_color_override("font_color", Color.WHITE)
+	else:
+		_strike_state.text = tr("HUD_STRIKE_PROGRESS") % [GameState.strike_progress, player.kills_per_strike]
+		_strike_state.add_theme_color_override("font_color", DIM_TEXT)
 
 
 ## The icon remembers what it shows, so the name is only rebuilt when the weapon changes.
@@ -172,3 +208,8 @@ func _update_module() -> void:
 		return
 	_module_icon.weapon = module
 	_module_label.text = tr("HUD_MODULE") if module == null else tr(module.name_key)
+
+
+## Top edge of the bottom console: the play area ends here, so the HUD never covers the ship.
+func console_top() -> float:
+	return _console.position.y

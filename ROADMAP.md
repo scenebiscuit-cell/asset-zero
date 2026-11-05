@@ -150,6 +150,8 @@ How to hand a milestone to Claude Code (in VS Code, terminal at `C:\Projects\ass
 
 Write down decisions here as you make them (date — decision), so the AI tools know about them.
 
+- 2026-11-04 — Added Saturation Strike (developer request): kill meter in the left rail, 40 kills = 1 charge (max 3), R/U clears the screen. Bomb meters are an allowed genre idea (§15); name and numbers are ours. Console panels enlarged; Fire Control panel now always shown (EMPTY when nothing stored). DESIGN.md §5.5, §7.4, §13.
+- 2026-11-04 — Bottom HUD moved into a solid 100 px console strip; the player can't fly below it and enemies behind it count as off screen (no firing, no missile lock). Chosen over fading panels so nothing ever hides behind the HUD. DESIGN.md §13 HUD line.
 - 2026-11-04 — Repair kit (+20 Armor) drops after every 20 enemies destroyed; the count carries over between sectors, radar domes don't count. DESIGN.md §5 Armor row.
 - 2026-11-04 — Armory: first slot is always Field Repair, other slots roll from the refit catalog, each item sells once, prices = base price on the refit +40% per sector after the first. Shows fewer than 4 items if the catalog runs dry (only until Step 14 adds the rest). DESIGN.md §7.1.
 - 2026-11-04 — Field Refit reroll: one per screen, costs 15 salvage + 10 for each reroll already bought this run. Field Repair and Armor Kit field mods added early (Step 12) as filler so there are always 3 cards; the other field mods come in Step 14. DESIGN.md §7.1.

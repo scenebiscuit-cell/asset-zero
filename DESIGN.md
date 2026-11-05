@@ -114,6 +114,7 @@ The ship always looks like a hard-edged military aircraft. The liquid metal show
 | Combat Morph (Lance form) | Hold Shift or K | Hold right mouse button |
 | Overclock | E or L | Middle mouse button |
 | Fire Control | Q or I | Mouse side button | Starts a stored Fire Control pickup: auto-fire for ~10 s (§7.3) |
+| Saturation Strike | R or U | Mouse side button 2 | Spends a stored strike charge: clears the screen (§7.4) |
 | Auto-fire | — (no key) | Only from Fire Control (§7.3) or the accessibility setting |
 | Pause | Esc / P | — |
 | Fullscreen | F11 / Alt+Enter | — |
@@ -258,9 +259,18 @@ Spend Combat Data in **R&D** on the main menu to unlock systems so they can appe
 Auto-fire is not a standard control. It comes from two power-ups:
 
 - **FC-1 Fire Control Computer (one-run refit):** sometimes offered on the Mission Briefing screen before a run, bought with Combat Data. Gives auto-fire for that run only; it must be bought again before each run, and only when it's offered.
-- **Fire Control pickup (timed):** a rare drop from destroyed enemies. Collecting it **stores** a charge (up to 2, kept between sectors). Press the **Fire Control key (Q / I)** to spend one and turn on auto-fire for ~10 s (tunable). A HUD panel above the Overclock meter appears while you hold a charge ("FIRE CONTROL — READY - PRESS Q") and shows the countdown while it runs. Pooled like other pickups.
+- **Fire Control pickup (timed):** a rare drop from destroyed enemies. Collecting it **stores** a charge (up to 2, kept between sectors). Press the **Fire Control key (Q / I)** to spend one and turn on auto-fire for ~10 s (tunable). The Fire Control panel above the Overclock meter shows EMPTY, "READY - PRESS Q" while you hold a charge, and the countdown while it runs. Pooled like other pickups.
 
 Separately, **Settings → Accessibility → Auto-fire** (off by default) gives always-on auto-fire for players who can't hold a button for long.
+
+### 7.4 Saturation Strike (kill meter)
+
+A bomb meter, earned by fighting rather than found:
+
+- The **strike meter** in the left HUD rail fills from the bottom with every enemy destroyed (40 kills, tunable). Full = one **strike charge**, and the meter starts over. Up to 3 charges are stored and kept between sectors; with storage full the meter stays full until one is used. Radar domes don't count, and kills made by the strike itself don't refill it.
+- Press the **Strike key (R / U)** to spend a charge: a white flash, every enemy round on screen disappears, every enemy in the play area takes heavy damage (600, enough for anything but a boss), and a barrage of blasts ripples up the screen. Enemies still burrowed or behind the HUD console aren't hit.
+- The console's STRIKE panel shows the stored charges as pips, "PRESS R" while one is ready, or the kill count toward the next one.
+- Different from Overclock: Overclock is earned by flying close to danger and turns nearby rounds into salvage; the strike is earned by kills and wipes the whole screen but pays nothing extra for the rounds.
 
 ## 8. Enemies (sector 1, Halcyon Security Division)
 
@@ -480,7 +490,7 @@ Likely hand-painted art downscaled to sprites, possibly with a metallic sheen sh
 
 Title (Click to start) → Main menu (Deploy, R&D, Settings) → Mission briefing → Level 1 → Field Refit → Armory → Level 2 → … → Boss → Mission Complete / Mission Failed (shows Combat Data earned) → Main menu
 
-HUD: Armor bar, Plating bar, Overclock meter, salvage count, weight class, HSD Threat label, assimilated weapon icon, level number, Fire Control panel above the Overclock meter (stored charges / auto-fire countdown), sector progress track (thin bar in the right rail that fills as the sector goes on), weapons panel bottom-left (icon + designation for the Nose and Wing Pylon weapons).
+HUD: the bottom 100 px is a solid cockpit console (the play area ends at its top edge, so XF-0 never flies behind the HUD and enemies behind it don't fire) holding the module slot, weapons panel, Saturation Strike charges, Fire Control and Overclock. Strike meter in the left rail (§7.4). Armor bar, Plating bar, Overclock meter, salvage count, weight class, HSD Threat label, assimilated weapon icon, level number, Fire Control panel above the Overclock meter (stored charges / auto-fire countdown), sector progress track (thin bar in the right rail that fills as the sector goes on), weapons panel bottom-left (icon + designation for the Nose and Wing Pylon weapons).
 
 Settings: master/music/SFX volume, screen shake on/off, Accessibility: auto-fire on/off (off by default, §7.3).
 

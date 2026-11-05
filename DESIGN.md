@@ -78,7 +78,7 @@ The airframe grows as you refit. **Weight class** is based on the total number o
 | Heavy (gunship) | 6–8 | Wide, armored, extra pylons visible | +30 max Armor | −10% speed |
 | Assault | 9+ | Huge flying fortress | +50 max Armor | −15% speed |
 
-The **hitbox stays the same small size** in every class (genre standard), so a bigger ship isn't unfair. Moving up a class plays a bigger morph and a "CLASS UPGRADE: MEDIUM" callout. Weight class also sets the **Threat Level** (§9.1).
+The **hitbox stays the same size** in every class (body + wing roots, §5.4), so a bigger ship isn't unfair. Moving up a class plays a bigger morph and a "CLASS UPGRADE: MEDIUM" callout. Weight class also sets the **Threat Level** (§9.1).
 
 ### 5.3 Liquid-metal behavior (visual rules)
 
@@ -101,7 +101,7 @@ The ship always looks like a hard-edged military aircraft. The liquid metal show
 | Armor | 100 | Health. Run ends at 0. Repairable in the Armory |
 | Plating | 0 | Regenerating shield, absorbs damage first, recharges after 3 s without being hit |
 | Move speed | 300 px/s | Gunship form. Changed by Propulsion and weight class |
-| Hitbox | small circle, ~6 px radius | Much smaller than the ship visual |
+| Hitbox | capsule over the body + wing roots: ~24 px wide (Gunship), ~14 px wide (Lance) | Wing tips don't count. Shrinks as the wings fold in Lance form (§5.6). Stored per airframe shape |
 | Graze radius | ~28 px | Enemy rounds passing inside this (but not hitting) count as near misses for Overclock |
 | Invulnerability after hit | 1.0 s | Ship flashes |
 
@@ -115,6 +115,7 @@ The ship always looks like a hard-edged military aircraft. The liquid metal show
 | Overclock | E or L | Middle mouse button |
 | Auto-fire | — (no key) | Only from Fire Control power-ups (§7.3) or the accessibility setting |
 | Pause | Esc / P | — |
+| Fullscreen | F11 / Alt+Enter | — |
 
 Keyboard and mouse can both work in the same session. Whichever moved last takes control.
 
@@ -130,6 +131,7 @@ XF-0 has two combat forms. **Hold** the Morph button for Lance form, and release
 | Damage | 100% | 140% |
 | Ground targets | Normal | Normal |
 | Seeker Missiles | Seek any target | Seek only targets ahead of the ship |
+| Hitbox | ~24 px wide | ~14 px wide (wings folded) |
 | Graze radius | 28 px | 36 px (easier to charge Overclock while threading bullets) |
 
 How each weapon line converges in Lance form:
@@ -262,7 +264,7 @@ Air enemies fly over everything. Ground enemies scroll with the background. All 
 
 | Enemy | Layer | Behavior | HP | Salvage | Elite drops |
 |---|---|---|---|---|---|
-| RD-2 Recon Drone | Air | Flies straight down in lines/V formations | Low | 1 | — |
+| RD-2 Recon Drone | Air | Flies straight down in lines/V formations; about a third fire one weak, slow aimed round (8 dmg; others 12) | Low | 1 | — |
 | ID-4 Interceptor Drone | Air | Sine-wave path, fires a single slow round | Low | 2 | — |
 | AA Emplacement | Ground | Stationary, aims and fires at the player | Medium | 3 | Flak Burst |
 | Mining Platform | Ground | Tanky, no attack, big salvage reward | High | 8 | Drill Lance |
@@ -280,10 +282,11 @@ A giant armored strip-mining machine that fills the top third of the screen.
 
 ## 9. Levels
 
-- Each level is about **2–3 minutes** of vertical scrolling.
+- Each level is about **2–3 minutes** of vertical scrolling, except Sector 1, which is about **1.5 minutes** so the run gets going quickly.
 - A **wave director** spawns enemy waves from a pool, using a difficulty budget that grows over time and per level, multiplied by the Threat Level.
 - Waves are defined as data (which enemies, formation, entry side, path), so new waves can be added without new code.
 - Each level ends with a short "SECTOR CLEAR" moment, then the between-level screens.
+- **Breaches:** each enemy aircraft that gets away (off the bottom, or out its exit route) costs a little salvage (2, tunable), with no on-screen popup (it distracted from play). Ground units scrolling away don't count. If none get away all sector, SECTOR CLEAR pays a **Perimeter Held** bonus (25 salvage, tunable).
 - Level 1: drones and AA emplacements. Level 2: adds interceptors, mining platforms, transports. Level 3: adds gunships and denser waves. Then the boss.
 
 ### 9.1 Threat Level
@@ -481,7 +484,7 @@ Ships, vehicles and buildings are **3D models in Blender, rendered top-down into
 
 Title (Click to start) → Main menu (Deploy, R&D, Settings) → Mission briefing → Level 1 → Field Refit → Armory → Level 2 → … → Boss → Mission Complete / Mission Failed (shows Combat Data earned) → Main menu
 
-HUD: Armor bar, Plating bar, Overclock meter, salvage count, weight class, HSD Threat label, assimilated weapon icon, level number, auto-fire indicator.
+HUD: Armor bar, Plating bar, Overclock meter, salvage count, weight class, HSD Threat label, assimilated weapon icon, level number, auto-fire indicator, sector progress track (thin bar in the right rail that fills as the sector goes on).
 
 Settings: master/music/SFX volume, screen shake on/off, Accessibility: auto-fire on/off (off by default, §7.3).
 
@@ -489,7 +492,7 @@ Settings: master/music/SFX volume, screen shake on/off, Accessibility: auto-fire
 
 - **Engine:** Godot 4 (latest stable, 4.4 or newer), GDScript with static typing
 - **Renderer:** Compatibility (required for web export)
-- **Base resolution:** 540 × 960 (portrait), stretch mode `canvas_items`, aspect `keep`; the web page shows it centered with bars at the sides
+- **Base resolution:** 540 × 960 (portrait), stretch mode `canvas_items`, aspect `keep`: the 540 × 960 battlefield is centred and scaled to the full screen height, with dark bars at the sides (same game on every screen). The HUD and the metal rails stay inside the battlefield, on its edges, like Raptor
 - **Web export:** single-threaded (no SharedArrayBuffer needed, so itch.io works without special settings)
 - **Performance:** object pooling for rounds, missiles and pickups; target max ~400 projectiles on screen
 - **Data-driven:** weapon systems, refits, weapon modules, enemies and waves are Godot Resources (`.tres`) so balancing doesn't need code changes

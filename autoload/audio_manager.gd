@@ -14,6 +14,8 @@ var _next_voice: int = 0
 func _ready() -> void:
 	_streams["morph_to_lance"] = _make_metallic_sweep(380.0, 1000.0, 0.14)
 	_streams["morph_to_gunship"] = _make_metallic_sweep(1000.0, 380.0, 0.14)
+	_streams["graze_tick"] = _make_metallic_sweep(2400.0, 3000.0, 0.035)
+	_streams["overclock_on"] = _make_rising_roar(0.55)
 	for i: int in VOICES:
 		var player: AudioStreamPlayer = AudioStreamPlayer.new()
 		add_child(player)
@@ -29,6 +31,31 @@ func play(sound_name: String, volume_db: float = 0.0) -> void:
 	player.stream = _streams[sound_name]
 	player.volume_db = volume_db
 	player.play()
+
+
+## Noise plus a climbing tone: a heat surge for Overclock.
+func _make_rising_roar(duration: float) -> AudioStreamWAV:
+	var frames: int = int(SAMPLE_RATE * duration)
+	var data: PackedByteArray = PackedByteArray()
+	data.resize(frames * 2)
+	var rng: RandomNumberGenerator = RandomNumberGenerator.new()
+	rng.seed = 7
+	var phase: float = 0.0
+	var noise: float = 0.0
+	for i: int in frames:
+		var t: float = float(i) / frames
+		phase += TAU * lerpf(160.0, 900.0, t * t) / SAMPLE_RATE
+		# Smoothed noise sounds like rushing air rather than hiss.
+		noise = lerpf(noise, rng.randf_range(-1.0, 1.0), 0.25)
+		var envelope: float = minf(1.0, t * 12.0) * (1.0 - t)
+		var sample: float = (0.55 * sin(phase) + 0.25 * sin(phase * 1.5) + 0.5 * noise) * envelope * 0.5
+		data.encode_s16(i * 2, int(clampf(sample, -1.0, 1.0) * 32767.0))
+	var wav: AudioStreamWAV = AudioStreamWAV.new()
+	wav.format = AudioStreamWAV.FORMAT_16_BITS
+	wav.mix_rate = SAMPLE_RATE
+	wav.stereo = false
+	wav.data = data
+	return wav
 
 
 ## A short pitch sweep with a wobbling overtone and a fast decay: reads as "liquid metal" for now.

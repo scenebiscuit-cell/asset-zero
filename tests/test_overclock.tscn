@@ -1,0 +1,18 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/levels/level.tscn" id="1_level"]
+[ext_resource type="Script" path="res://tests/test_spiral_emitter.gd" id="2_spiral"]
+
+[node name="TestOverclock" type="Node2D"]
+
+[node name="Level" parent="." instance=ExtResource("1_level")]
+run_waves = false
+
+[node name="SpiralEmitter" type="Node2D" parent="." node_paths=PackedStringArray("round_pool")]
+position = Vector2(270, 300)
+script = ExtResource("2_spiral")
+round_pool = NodePath("../Level/EnemyRoundPool")
+
+[node name="Visual" type="Polygon2D" parent="SpiralEmitter"]
+color = Color(0.85, 0.42, 0.1, 1)
+polygon = PackedVector2Array(0, -12, 10, -6, 10, 6, 0, 12, -10, 6, -10, -6)

@@ -1,0 +1,302 @@
+[gd_scene load_steps=6 format=3]
+
+[ext_resource type="Script" path="res://scenes/ui/hud.gd" id="1_hud"]
+[ext_resource type="Script" path="res://scenes/ui/hud_bar.gd" id="2_bar"]
+[ext_resource type="Script" path="res://scenes/ui/sector_progress.gd" id="3_progress"]
+
+[sub_resource type="SystemFont" id="SystemFont_mono"]
+font_names = PackedStringArray("Consolas", "Lucida Console", "Courier New", "monospace")
+font_weight = 600
+multichannel_signed_distance_field = true
+
+[sub_resource type="Theme" id="Theme_hud"]
+default_font = SubResource("SystemFont_mono")
+default_font_size = 12
+Label/colors/font_color = Color(1, 0.7, 0.2, 1)
+Label/colors/font_outline_color = Color(0.05, 0.03, 0.02, 1)
+Label/constants/outline_size = 3
+
+[node name="Hud" type="CanvasLayer"]
+layer = 5
+script = ExtResource("1_hud")
+
+[node name="Root" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme = SubResource("Theme_hud")
+
+[node name="RailL" type="ColorRect" parent="Root"]
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 6.0
+offset_bottom = 960.0
+mouse_filter = 2
+color = Color(0.13, 0.14, 0.15, 0.95)
+
+[node name="RailLEdge" type="ColorRect" parent="Root"]
+offset_left = 6.0
+offset_top = 0.0
+offset_right = 7.0
+offset_bottom = 960.0
+mouse_filter = 2
+color = Color(0.42, 0.44, 0.47, 0.6)
+
+[node name="RailR" type="ColorRect" parent="Root"]
+offset_left = 534.0
+offset_top = 0.0
+offset_right = 540.0
+offset_bottom = 960.0
+mouse_filter = 2
+color = Color(0.13, 0.14, 0.15, 0.95)
+
+[node name="RailREdge" type="ColorRect" parent="Root"]
+offset_left = 533.0
+offset_top = 0.0
+offset_right = 534.0
+offset_bottom = 960.0
+mouse_filter = 2
+color = Color(0.42, 0.44, 0.47, 0.6)
+
+[node name="SectorProgress" type="Control" parent="Root"]
+offset_left = 524.0
+offset_top = 72.0
+offset_right = 540.0
+offset_bottom = 888.0
+mouse_filter = 2
+script = ExtResource("3_progress")
+
+[node name="TopLeft" type="Control" parent="Root"]
+offset_left = 12.0
+offset_top = 8.0
+offset_right = 212.0
+offset_bottom = 58.0
+mouse_filter = 2
+
+[node name="Back" type="ColorRect" parent="Root/TopLeft"]
+offset_right = 200.0
+offset_bottom = 50.0
+mouse_filter = 2
+color = Color(0, 0, 0, 0.45)
+
+[node name="ArmorLabel" type="Label" parent="Root/TopLeft"]
+offset_left = 6.0
+offset_top = 2.0
+offset_right = 150.0
+offset_bottom = 18.0
+theme_override_font_sizes/font_size = 12
+text = "HUD_ARMOR"
+
+[node name="ArmorBar" type="Control" parent="Root/TopLeft"]
+anchors_preset = 0
+offset_left = 6.0
+offset_top = 18.0
+offset_right = 156.0
+offset_bottom = 30.0
+mouse_filter = 2
+script = ExtResource("2_bar")
+fill_color = Color(0.55, 1, 0.6, 1)
+
+[node name="ArmorValue" type="Label" parent="Root/TopLeft"]
+offset_left = 158.0
+offset_top = 14.0
+offset_right = 196.0
+offset_bottom = 32.0
+theme_override_font_sizes/font_size = 15
+text = "100"
+horizontal_alignment = 2
+
+[node name="PlatingLabel" type="Label" parent="Root/TopLeft"]
+offset_left = 158.0
+offset_top = 32.0
+offset_right = 196.0
+offset_bottom = 48.0
+theme_override_colors/font_color = Color(0.35, 0.85, 1, 1)
+theme_override_font_sizes/font_size = 9
+text = "HUD_PLATING"
+horizontal_alignment = 2
+
+[node name="PlatingBar" type="Control" parent="Root/TopLeft"]
+anchors_preset = 0
+offset_left = 6.0
+offset_top = 35.0
+offset_right = 156.0
+offset_bottom = 43.0
+mouse_filter = 2
+script = ExtResource("2_bar")
+fill_color = Color(0.35, 0.85, 1, 1)
+
+[node name="TopCenter" type="Control" parent="Root"]
+offset_left = 190.0
+offset_top = 4.0
+offset_right = 350.0
+offset_bottom = 54.0
+mouse_filter = 2
+
+[node name="SalvageValue" type="Label" parent="Root/TopCenter"]
+offset_right = 160.0
+offset_bottom = 32.0
+theme_override_font_sizes/font_size = 24
+theme_override_constants/outline_size = 5
+text = "00000000"
+horizontal_alignment = 1
+
+[node name="SalvageLabel" type="Label" parent="Root/TopCenter"]
+offset_top = 28.0
+offset_right = 160.0
+offset_bottom = 44.0
+theme_override_colors/font_color = Color(1, 0.7, 0.2, 0.7)
+theme_override_font_sizes/font_size = 11
+text = "HUD_SALVAGE"
+horizontal_alignment = 1
+
+[node name="TopRight" type="Control" parent="Root"]
+offset_left = 356.0
+offset_top = 8.0
+offset_right = 528.0
+offset_bottom = 58.0
+mouse_filter = 2
+
+[node name="Back" type="ColorRect" parent="Root/TopRight"]
+offset_right = 172.0
+offset_bottom = 50.0
+mouse_filter = 2
+color = Color(0, 0, 0, 0.45)
+
+[node name="Sector" type="Label" parent="Root/TopRight"]
+offset_left = 4.0
+offset_top = 1.0
+offset_right = 166.0
+offset_bottom = 17.0
+theme_override_font_sizes/font_size = 13
+text = "SECTOR 1"
+horizontal_alignment = 2
+
+[node name="WeightClass" type="Label" parent="Root/TopRight"]
+offset_left = 4.0
+offset_top = 17.0
+offset_right = 166.0
+offset_bottom = 33.0
+theme_override_colors/font_color = Color(0.75, 0.78, 0.8, 1)
+theme_override_font_sizes/font_size = 12
+text = "CLASS_LIGHT"
+horizontal_alignment = 2
+
+[node name="Threat" type="Label" parent="Root/TopRight"]
+offset_left = 4.0
+offset_top = 32.0
+offset_right = 166.0
+offset_bottom = 48.0
+theme_override_font_sizes/font_size = 12
+text = "THREAT_LOW"
+horizontal_alignment = 2
+
+[node name="BottomLeft" type="Control" parent="Root"]
+offset_left = 12.0
+offset_top = 894.0
+offset_right = 92.0
+offset_bottom = 952.0
+mouse_filter = 2
+
+[node name="Back" type="ColorRect" parent="Root/BottomLeft"]
+offset_right = 80.0
+offset_bottom = 58.0
+mouse_filter = 2
+color = Color(0, 0, 0, 0.45)
+
+[node name="ModuleLabel" type="Label" parent="Root/BottomLeft"]
+offset_left = 4.0
+offset_top = 1.0
+offset_right = 76.0
+offset_bottom = 17.0
+theme_override_font_sizes/font_size = 11
+text = "HUD_MODULE"
+horizontal_alignment = 1
+
+[node name="ModuleSlot" type="ColorRect" parent="Root/BottomLeft"]
+offset_left = 22.0
+offset_top = 18.0
+offset_right = 58.0
+offset_bottom = 54.0
+mouse_filter = 2
+color = Color(0.08, 0.09, 0.1, 1)
+
+[node name="ModuleValue" type="Label" parent="Root/BottomLeft/ModuleSlot"]
+offset_right = 36.0
+offset_bottom = 36.0
+theme_override_colors/font_color = Color(1, 1, 1, 0.35)
+theme_override_font_sizes/font_size = 16
+text = "—"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="BottomRight" type="Control" parent="Root"]
+offset_left = 328.0
+offset_top = 902.0
+offset_right = 528.0
+offset_bottom = 952.0
+mouse_filter = 2
+
+[node name="Back" type="ColorRect" parent="Root/BottomRight"]
+offset_right = 200.0
+offset_bottom = 50.0
+mouse_filter = 2
+color = Color(0, 0, 0, 0.45)
+
+[node name="OverclockLabel" type="Label" parent="Root/BottomRight"]
+offset_left = 6.0
+offset_top = 2.0
+offset_right = 194.0
+offset_bottom = 18.0
+theme_override_font_sizes/font_size = 12
+text = "HUD_OVERCLOCK"
+
+[node name="OverclockBar" type="Control" parent="Root/BottomRight"]
+anchors_preset = 0
+offset_left = 6.0
+offset_top = 18.0
+offset_right = 194.0
+offset_bottom = 30.0
+mouse_filter = 2
+script = ExtResource("2_bar")
+fill_color = Color(1, 0.55, 0.15, 1)
+segments = 25
+
+[node name="OverclockState" type="Label" parent="Root/BottomRight"]
+offset_left = 6.0
+offset_top = 31.0
+offset_right = 194.0
+offset_bottom = 47.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 12
+text = "HUD_OVERCLOCK_READY"
+horizontal_alignment = 2
+
+[node name="BottomCenter" type="Control" parent="Root"]
+offset_left = 110.0
+offset_top = 846.0
+offset_right = 430.0
+offset_bottom = 896.0
+mouse_filter = 2
+
+[node name="Warning" type="Label" parent="Root/BottomCenter"]
+offset_right = 320.0
+offset_bottom = 22.0
+theme_override_colors/font_color = Color(1, 0.25, 0.2, 1)
+theme_override_font_sizes/font_size = 16
+theme_override_constants/outline_size = 5
+text = "WARN_ARMOR_CRITICAL"
+horizontal_alignment = 1
+
+[node name="AutoFire" type="Label" parent="Root/BottomCenter"]
+offset_top = 24.0
+offset_right = 320.0
+offset_bottom = 44.0
+theme_override_colors/font_color = Color(0.35, 0.85, 1, 1)
+theme_override_font_sizes/font_size = 12
+text = "HUD_AUTOFIRE_ON"
+horizontal_alignment = 1

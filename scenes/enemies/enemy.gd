@@ -19,6 +19,9 @@ const LAYER_ENEMIES_AIR: int = 1 << 2
 const LAYER_ENEMIES_GROUND: int = 1 << 3
 ## Ground units draw between the terrain (-10) and air-unit shadows (-8).
 const GROUND_Z_INDEX: int = -9
+## Burning (HEL-3T Thermal Lance): damage is dealt in small ticks, and the hull glows orange.
+const BURN_TICK: float = 0.2
+const BURN_TINT: Color = Color(1.6, 0.75, 0.35)
 
 ## Bottom of the play area (top of the HUD console), set by the Level. 0 = the screen bottom.
 static var play_area_bottom: float = 0.0
@@ -36,6 +39,9 @@ var hp: int = 0
 var elite_outline: EliteOutline
 var _flash_left: float = 0.0
 var _dead: bool = false
+var _burn_left: float = 0.0
+var _burn_dps: float = 0.0
+var _burn_tick_left: float = 0.0
 
 @onready var _visual: Node2D = $Visual
 
@@ -59,6 +65,28 @@ func _process(delta: float) -> void:
 		_flash_left -= delta
 		if _flash_left <= 0.0:
 			_visual.modulate = Color.WHITE
+	if _burn_left > 0.0:
+		_update_burn(delta)
+
+
+## Sets the enemy burning; a new burn refreshes the timer and keeps the stronger damage.
+func apply_burn(dps: float, duration: float) -> void:
+	if _dead or dps <= 0.0:
+		return
+	_burn_dps = maxf(_burn_dps, dps) if _burn_left > 0.0 else dps
+	_burn_left = maxf(_burn_left, duration)
+
+
+func _update_burn(delta: float) -> void:
+	_burn_left -= delta
+	_burn_tick_left -= delta
+	if _flash_left <= 0.0:
+		# Flickers so it reads as fire, not a colour change.
+		var flicker: float = 0.75 + 0.25 * sin(Time.get_ticks_msec() * 0.03)
+		_visual.modulate = Color.WHITE.lerp(BURN_TINT, flicker) if _burn_left > 0.0 else Color.WHITE
+	if _burn_tick_left <= 0.0:
+		_burn_tick_left = BURN_TICK
+		take_damage(maxi(roundi(_burn_dps * BURN_TICK), 1))
 
 
 func _physics_process(delta: float) -> void:

@@ -1,6 +1,8 @@
 class_name Autocannon
 extends Weapon
 ## Autocannon line (DESIGN.md §6): one or more barrels side by side at the nose, firing tracer rounds.
+## The data adds the level-3 behaviours: a fanned spread with fragmenting rounds (M40 Flak Battery)
+## or a single piercing slug that fires faster in Lance form (RG-9 Railgun).
 
 ## How long the muzzle flash stays lit after each shot (seconds).
 @export var flash_duration: float = 0.04
@@ -39,7 +41,7 @@ func _physics_process(delta: float) -> void:
 	if _cooldown <= 0.0:
 		for i: int in _gun.barrel_count:
 			_fire_barrel(i)
-		_cooldown += _gun.fire_interval
+		_cooldown += _gun.fire_interval * (_gun.lance_interval_scale if converged else 1.0)
 		_show_flash()
 
 
@@ -52,11 +54,24 @@ func _barrel_x(index: int) -> float:
 func _fire_barrel(index: int) -> void:
 	var x: float = _barrel_x(index)
 	var direction: Vector2 = Vector2.UP
+	# Spread guns fan their barrels out; Lance form closes the fan to a narrow cone.
+	var fan: float = _gun.lance_fan_degrees if converged else _gun.fan_degrees
+	var degrees: float = (index - (_gun.barrel_count - 1) * 0.5) * fan
 	if not converged:
 		# Outer barrels angle outward; every round gets a little random scatter.
-		var degrees: float = signf(x) * _gun.splay_degrees + randf_range(-_gun.spread_degrees, _gun.spread_degrees)
-		direction = direction.rotated(deg_to_rad(degrees))
-	round_pool.fire(global_position + Vector2(x, 0.0), direction * _gun.round_speed, scaled_damage(_gun.damage))
+		degrees += signf(x) * _gun.splay_degrees + randf_range(-_gun.spread_degrees, _gun.spread_degrees)
+	direction = direction.rotated(deg_to_rad(degrees))
+	var fired: PlayerRound = round_pool.fire(global_position + Vector2(x, 0.0), direction * _gun.round_speed,
+			scaled_damage(_gun.damage), _gun.round_tint) as PlayerRound
+	if fired == null:
+		return
+	fired.pierce = _gun.pierce
+	fired.set_length(_gun.round_length)
+	if _gun.fragments > 0:
+		fired.fragments = _gun.fragments
+		fired.fragment_damage = scaled_damage(_gun.fragment_damage)
+		fired.fragment_speed = _gun.fragment_speed
+		fired.fragment_range = _gun.fragment_range
 
 
 func _show_flash() -> void:

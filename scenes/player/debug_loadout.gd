@@ -1,9 +1,9 @@
 class_name DebugLoadout
 extends Node
 ## Debug builds only (ROADMAP Step 10): number keys swap weapons for testing.
-## 1, 2, 3...: the nose weapons in nose_options order. The key after those cycles the pylons:
-## empty, then each of pylon_options in order, then empty again. The key after that does the same
-## for the Salvage Mount with module_options (skipping the absorb animation).
+## 1: next nose weapon in nose_options. 2: cycles the pylons: empty, then each of pylon_options in
+## order, then empty again. 3: the same for the Salvage Mount with module_options (skipping the
+## absorb animation).
 ## Removes itself in release exports, so players never get these keys.
 
 @export var hardpoints: Hardpoints
@@ -22,12 +22,13 @@ func _unhandled_input(event: InputEvent) -> void:
 	if key == null or not key.pressed or key.echo:
 		return
 	var index: int = _number(key)
-	if index >= 0 and index < nose_options.size():
-		hardpoints.equip(nose_options[index])
-		print("Debug loadout: ", tr(nose_options[index].name_key))
-	elif index == nose_options.size():
+	if index == 0 and not nose_options.is_empty():
+		var next: int = (nose_options.find(hardpoints.equipped(WeaponData.Hardpoint.NOSE)) + 1) % nose_options.size()
+		hardpoints.equip(nose_options[next])
+		print("Debug loadout: ", tr(nose_options[next].name_key))
+	elif index == 1:
 		_cycle(WeaponData.Hardpoint.WING_PYLONS, pylon_options)
-	elif index == nose_options.size() + 1:
+	elif index == 2:
 		_cycle(WeaponData.Hardpoint.SALVAGE_MOUNT, module_options)
 	else:
 		return

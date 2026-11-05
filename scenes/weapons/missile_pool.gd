@@ -4,6 +4,8 @@ extends ObjectPool
 
 ## The Level's Enemies node.
 @export var targets: Node2D
+## Big blasts (GBU Bunker Buster) borrow the Level's explosions.
+@export var explosion_pool: ExplosionPool
 
 
 func launch(start: Vector2, direction: Vector2, missile_data: MissileData, damage: int, ahead_only: bool) -> void:
@@ -11,6 +13,11 @@ func launch(start: Vector2, direction: Vector2, missile_data: MissileData, damag
 	if missile == null:
 		return
 	missile.activate(start, direction, missile_data, damage, ahead_only, self)
+
+
+func blast_effect(at: Vector2) -> void:
+	if explosion_pool != null:
+		explosion_pool.spawn(at)
 
 
 ## Nearest living enemy on screen. With ahead_only, only those within cone_degrees of straight up.

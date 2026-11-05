@@ -1,4 +1,4 @@
-[gd_scene load_steps=31 format=3]
+[gd_scene load_steps=39 format=3]
 
 [ext_resource type="Script" path="res://scenes/player/player.gd" id="1_player"]
 [ext_resource type="Script" path="res://scenes/player/hardpoints.gd" id="2_hardpoints"]
@@ -22,6 +22,14 @@
 [ext_resource type="Resource" path="res://data/modules/flak_burst.tres" id="20_flak"]
 [ext_resource type="Resource" path="res://data/modules/drill_lance.tres" id="21_drill"]
 [ext_resource type="Resource" path="res://data/modules/drone_bay.tres" id="22_drones"]
+[ext_resource type="Resource" path="res://data/weapons/m40_flak_battery.tres" id="23_m40"]
+[ext_resource type="Resource" path="res://data/weapons/rg9_railgun.tres" id="24_rg9"]
+[ext_resource type="Resource" path="res://data/weapons/hel2_focused_beam.tres" id="25_hel2"]
+[ext_resource type="Resource" path="res://data/weapons/hel3t_thermal_lance.tres" id="26_hel3t"]
+[ext_resource type="Resource" path="res://data/weapons/hel3s_split_array.tres" id="27_hel3s"]
+[ext_resource type="Resource" path="res://data/weapons/mk2_seeker_pod.tres" id="28_mk2"]
+[ext_resource type="Resource" path="res://data/weapons/mk3_cluster_missile.tres" id="29_mk3"]
+[ext_resource type="Resource" path="res://data/weapons/gbu_bunker_buster.tres" id="30_gbu"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_hitbox"]
 resource_local_to_scene = true
@@ -214,6 +222,6 @@ position = Vector2(0, 10)
 [node name="DebugLoadout" type="Node" parent="." node_paths=PackedStringArray("hardpoints")]
 script = ExtResource("12_debug")
 hardpoints = NodePath("../Hardpoints")
-nose_options = Array[ExtResource("11_weapon_data")]([ExtResource("3_m20"), ExtResource("13_m20d"), ExtResource("14_hel1")])
-pylon_options = Array[ExtResource("11_weapon_data")]([ExtResource("16_r1"), ExtResource("15_mk1")])
+nose_options = Array[ExtResource("11_weapon_data")]([ExtResource("3_m20"), ExtResource("13_m20d"), ExtResource("23_m40"), ExtResource("24_rg9"), ExtResource("14_hel1"), ExtResource("25_hel2"), ExtResource("26_hel3t"), ExtResource("27_hel3s")])
+pylon_options = Array[ExtResource("11_weapon_data")]([ExtResource("16_r1"), ExtResource("15_mk1"), ExtResource("28_mk2"), ExtResource("29_mk3"), ExtResource("30_gbu")])
 module_options = Array[ExtResource("19_module_data")]([ExtResource("18_spread"), ExtResource("20_flak"), ExtResource("21_drill"), ExtResource("22_drones")])

@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="BeamData" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://resources/beam_data.gd" id="1_script"]
+[ext_resource type="PackedScene" path="res://scenes/weapons/split_array.tscn" id="2_scene"]
+
+[resource]
+script = ExtResource("1_script")
+scene = ExtResource("2_scene")
+name_key = "WEAPON_HEL3S"
+fire_interval = 0.05
+damage = 4
+reach = 700.0
+width = 6.0
+lance_width = 3.0
+beam_count = 3
+split_degrees = 14.0

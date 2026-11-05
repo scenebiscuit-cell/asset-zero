@@ -51,6 +51,8 @@ func _physics_process(delta: float) -> void:
 		_tick += _beam.fire_interval
 		if target != null:
 			target.take_damage(scaled_damage(_beam.damage))
+			if _beam.burn_dps > 0.0 and is_instance_valid(target):
+				target.apply_burn(_beam.burn_dps * damage_multiplier, _beam.burn_time)
 	_afterglow_left = _beam.afterglow_time
 	_draw_beam(target != null)
 

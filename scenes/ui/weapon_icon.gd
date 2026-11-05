@@ -32,7 +32,7 @@ func _draw() -> void:
 	elif weapon is GunData:
 		_draw_gun(weapon as GunData)
 	elif weapon is BeamData:
-		_draw_beam()
+		_draw_beam(weapon as BeamData)
 	elif weapon is MissileData:
 		_draw_missiles(weapon as MissileData)
 	elif field_mod != null:
@@ -42,6 +42,24 @@ func _draw() -> void:
 
 
 func _draw_gun(gun: GunData) -> void:
+	if gun.pierce:
+		# One long heavy slug line.
+		var x: float = size.x * 0.5
+		draw_line(Vector2(x, size.y - 4.0), Vector2(x, 2.0), Color(gun.round_tint, 0.5), 4.0)
+		draw_line(Vector2(x, size.y - 4.0), Vector2(x, 2.0), Color.WHITE, 1.5)
+		draw_rect(Rect2(x - 2.5, size.y - 7.0, 5.0, 5.0), MISSILE)
+		return
+	if gun.fan_degrees > 0.0:
+		# Fanned streams, each ending in a little burst.
+		var base: Vector2 = Vector2(size.x * 0.5, size.y - 4.0)
+		for i: int in gun.barrel_count:
+			var angle: float = deg_to_rad((i - (gun.barrel_count - 1) * 0.5) * 22.0)
+			var tip: Vector2 = base + Vector2.UP.rotated(angle) * (size.y - 12.0)
+			draw_line(base, tip, Color(gun.round_tint, 0.7), 1.0)
+			for k: int in 4:
+				draw_line(tip, tip + Vector2.from_angle(TAU * k / 4.0 + 0.4) * 3.0, gun.round_tint, 1.0)
+		draw_rect(Rect2(base.x - 3.0, base.y - 2.0, 6.0, 4.0), MISSILE)
+		return
 	var spacing: float = 6.0
 	for i: int in gun.barrel_count:
 		var x: float = size.x * 0.5 + (i - (gun.barrel_count - 1) * 0.5) * spacing
@@ -50,14 +68,44 @@ func _draw_gun(gun: GunData) -> void:
 		draw_rect(Rect2(x - 1.5, size.y - 6.0, 3.0, 4.0), MISSILE)
 
 
-func _draw_beam() -> void:
-	var x: float = size.x * 0.5
-	draw_line(Vector2(x, size.y - 4.0), Vector2(x, 2.0), BEAM_GLOW, 6.0)
-	draw_line(Vector2(x, size.y - 4.0), Vector2(x, 2.0), BEAM_CORE, 2.0)
-	draw_circle(Vector2(x, size.y - 4.0), 2.5, BEAM_CORE)
+func _draw_beam(beam: BeamData) -> void:
+	var base: Vector2 = Vector2(size.x * 0.5, size.y - 4.0)
+	var glow: Color = Color(beam.glow_color, 0.45)
+	var thick: float = clampf(beam.width * 0.6, 4.0, 8.0)
+	var count: int = maxi(beam.beam_count, 1)
+	for i: int in count:
+		var angle: float = deg_to_rad((i - (count - 1) * 0.5) * 18.0)
+		var tip: Vector2 = base + Vector2.UP.rotated(angle) * (size.y - 6.0)
+		draw_line(base, tip, glow, thick if count == 1 else 4.0)
+		draw_line(base, tip, beam.core_color, 2.0 if count == 1 else 1.0)
+	draw_circle(base, 2.5, beam.core_color)
 
 
 func _draw_missiles(missile: MissileData) -> void:
+	if missile.blast_radius > 0.0:
+		# A fat bomb over its blast ring.
+		var center: Vector2 = Vector2(size.x * 0.5, size.y * 0.42)
+		draw_arc(Vector2(size.x * 0.5, size.y * 0.62), size.x * 0.36, 0.0, TAU, 20, Color(EXHAUST, 0.5), 1.0)
+		draw_colored_polygon(PackedVector2Array([center + Vector2(0, -9), center + Vector2(4, -4), center + Vector2(4, 5),
+				center + Vector2(0, 8), center + Vector2(-4, 5), center + Vector2(-4, -4)]), MISSILE)
+		draw_line(center + Vector2(-4, 6), center + Vector2(4, 6), SMOKE, 2.0)
+		return
+	if missile.submunition != null:
+		# A carrier splitting into small seekers.
+		var split: Vector2 = Vector2(size.x * 0.5, size.y * 0.62)
+		draw_line(Vector2(size.x * 0.5, size.y - 2.0), split, SMOKE, 1.0)
+		for k: int in 3:
+			var tilt: float = (k - 1) * 0.55
+			draw_line(split, split + Vector2.UP.rotated(tilt) * 9.0, SMOKE, 1.0)
+			_draw_rocket(split + Vector2.UP.rotated(tilt) * 15.0, tilt)
+		return
+	if missile.homing and missile.missiles_per_volley >= 4:
+		# Two seekers curving in from both sides.
+		for sgn: float in [-1.0, 1.0]:
+			var c: Vector2 = Vector2(size.x * 0.5 + sgn * (size.x * 0.5 - 4.0), size.y - 2.0)
+			draw_arc(c, size.x * 0.4, PI if sgn > 0 else -PI * 0.45, PI * 1.45 if sgn > 0 else 0.0, 8, SMOKE, 1.0)
+			_draw_rocket(Vector2(size.x * 0.5 + sgn * 5.0, 7.0), -sgn * 0.4)
+		return
 	if missile.homing:
 		# One seeker curving in from the side, with its smoke trail.
 		var center: Vector2 = Vector2(size.x - 4.0, size.y - 2.0)

@@ -4,6 +4,8 @@ extends PooledObject
 ## Both leave a thin smoke trail and burst on hit.
 
 const OFFSCREEN_MARGIN: float = 48.0
+## Enemies, air and ground (CLAUDE.md collision layers 3 and 4).
+const ENEMY_MASK: int = (1 << 2) | (1 << 3)
 
 ## Seconds between trail points; the trail is a fixed number of points that shuffle along.
 @export var trail_interval: float = 0.025
@@ -23,6 +25,10 @@ var _retarget_left: float = 0.0
 var _trail_left: float = 0.0
 ## Above zero once it has burst: no longer flying, just letting the effects finish.
 var _burst_left: float = 0.0
+var _age: float = 0.0
+## Built once, reused for every blast.
+var _query: PhysicsShapeQueryParameters2D
+var _circle: CircleShape2D
 
 @onready var _hitbox: CollisionShape2D = $Hitbox
 @onready var _body: Node2D = $Visual/Body
@@ -32,6 +38,12 @@ var _burst_left: float = 0.0
 
 func _ready() -> void:
 	area_entered.connect(_on_area_entered)
+	_circle = CircleShape2D.new()
+	_query = PhysicsShapeQueryParameters2D.new()
+	_query.shape = _circle
+	_query.collision_mask = ENEMY_MASK
+	_query.collide_with_areas = true
+	_query.collide_with_bodies = false
 
 
 func activate(start: Vector2, direction: Vector2, missile_data: MissileData, missile_damage: int,
@@ -48,6 +60,8 @@ func activate(start: Vector2, direction: Vector2, missile_data: MissileData, mis
 	_retarget_left = 0.0
 	_trail_left = trail_interval
 	_burst_left = 0.0
+	_age = 0.0
+	_body.scale = Vector2.ONE * _data.visual_scale
 	_body.visible = true
 	_trail.modulate.a = 1.0
 	for i: int in _trail.get_point_count():
@@ -69,7 +83,10 @@ func _physics_process(delta: float) -> void:
 	rotation = _velocity.angle() + PI / 2.0
 	_update_trail(delta)
 	_life -= delta
-	if _life <= 0.0:
+	_age += delta
+	if _data.submunition != null and _age >= _data.split_delay:
+		_split()
+	elif _life <= 0.0:
 		_burst_now()
 	elif not get_viewport_rect().grow(OFFSCREEN_MARGIN).has_point(global_position):
 		deactivate()
@@ -105,11 +122,42 @@ func _on_area_entered(area: Area2D) -> void:
 	if not is_active() or _burst_left > 0.0:
 		return
 	if area is Enemy:
-		(area as Enemy).take_damage(damage)
+		if _data.blast_radius <= 0.0:
+			(area as Enemy).take_damage(damage)
 		_burst_now()
 
 
 func _burst_now() -> void:
+	_burst_left = burst_time
+	_body.visible = false
+	_hitbox.set_deferred("disabled", true)
+	_burst.restart()
+	if _data.blast_radius > 0.0:
+		_blast()
+
+
+## GBU Bunker Buster: damages everything in the radius, ground units extra.
+func _blast() -> void:
+	_pool.blast_effect(global_position)
+	_circle.radius = _data.blast_radius
+	_query.transform = Transform2D(0.0, global_position)
+	for hit: Dictionary in get_world_2d().direct_space_state.intersect_shape(_query, 24):
+		var enemy: Enemy = hit["collider"] as Enemy
+		if enemy == null:
+			continue
+		var ground: bool = enemy.data.layer == EnemyData.Layer.GROUND
+		enemy.take_damage(roundi(damage * (_data.ground_damage_multiplier if ground else 1.0)))
+
+
+## Mk3 Cluster Missile: the carrier pops and fans out its submunitions along its heading.
+func _split() -> void:
+	var sub: MissileData = _data.submunition
+	var count: int = maxi(_data.submunition_count, 1)
+	var sub_damage: int = roundi(float(damage) / maxf(_data.damage, 1.0) * sub.damage)
+	for i: int in count:
+		var t: float = 0.5 if count == 1 else float(i) / (count - 1)
+		var degrees: float = lerpf(-0.5, 0.5, t) * _data.split_fan_degrees
+		_pool.launch(global_position, _velocity.rotated(deg_to_rad(degrees)), sub, sub_damage, _ahead_only)
 	_burst_left = burst_time
 	_body.visible = false
 	_hitbox.set_deferred("disabled", true)

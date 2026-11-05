@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="RefitData" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://resources/refit_data.gd" id="1_refit"]
+[ext_resource type="Resource" path="res://data/weapons/hel3t_thermal_lance.tres" id="2_weapon"]
+
+[resource]
+script = ExtResource("1_refit")
+desc_key = "REFIT_DESC_HEL3T"
+line = 2
+level = 3
+variant = "A"
+hardpoint = 0
+weapon = ExtResource("2_weapon")
+offer_weight = 1.0
+price = 120

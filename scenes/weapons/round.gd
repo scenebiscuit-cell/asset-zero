@@ -6,6 +6,8 @@ extends PooledObject
 const OFFSCREEN_MARGIN: float = 32.0
 
 var damage: int = 0
+## Distance left before the round fades out on its own (fragments). INF for normal rounds.
+var range_left: float = INF
 var _velocity: Vector2 = Vector2.ZERO
 
 
@@ -14,10 +16,14 @@ func activate(start: Vector2, velocity: Vector2, round_damage: int) -> void:
 	rotation = velocity.angle() + PI / 2.0
 	_velocity = velocity
 	damage = round_damage
+	range_left = INF
 	_start()
 
 
 func _physics_process(delta: float) -> void:
 	position += _velocity * delta
-	if not get_viewport_rect().grow(OFFSCREEN_MARGIN).has_point(global_position):
+	range_left -= _velocity.length() * delta
+	if range_left <= 0.0:
+		deactivate()
+	elif not get_viewport_rect().grow(OFFSCREEN_MARGIN).has_point(global_position):
 		deactivate()

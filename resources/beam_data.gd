@@ -11,3 +11,10 @@ extends WeaponData
 @export var glow_color: Color = Color(0.25, 0.85, 0.82)
 ## Seconds the beam's afterglow takes to fade once Fire is released.
 @export var afterglow_time: float = 0.1
+## Split Array: number of beams and the angle between neighbours in Gunship form.
+## Lance form swings them together into one (§5.6). Uses split_array.tscn as the scene.
+@export var beam_count: int = 1
+@export var split_degrees: float = 0.0
+## Thermal Lance: targets keep burning after the beam leaves them (damage per second, seconds).
+@export var burn_dps: float = 0.0
+@export var burn_time: float = 0.0

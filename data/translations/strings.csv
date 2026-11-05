@@ -85,3 +85,19 @@ HUD_STRIKE,STRIKE
 HUD_STRIKE_READY,PRESS R
 HUD_STRIKE_PROGRESS,"%d/%d"
 HUD_EMPTY,EMPTY
+WEAPON_M40,M40 Flak Battery
+WEAPON_RG9,RG-9 Railgun
+WEAPON_HEL2,HEL-2 Focused Beam
+WEAPON_HEL3T,HEL-3T Thermal Lance
+WEAPON_HEL3S,HEL-3S Split Array
+WEAPON_MK2,Mk2 Seeker Pod
+WEAPON_MK3,Mk3 Cluster Missile
+WEAPON_GBU,GBU Bunker Buster
+REFIT_DESC_M40,3-way spread. Rounds burst into fragments on hit.
+REFIT_DESC_RG9,Heavy slug that pierces everything in its path. Fires faster in Lance form.
+REFIT_DESC_HEL2,Wider beam with longer reach.
+REFIT_DESC_HEL3T,Targets keep burning after the beam leaves them.
+REFIT_DESC_HEL3S,Splits into 3 angled beams. Lance form merges them into one.
+REFIT_DESC_MK2,4 faster homing missiles every 1.5 seconds.
+REFIT_DESC_MK3,Missiles split into 4 small homing submunitions.
+REFIT_DESC_GBU,Big slow bombs with a wide blast. Double damage to ground targets.

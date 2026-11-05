@@ -86,13 +86,14 @@ pool_size = 3
 [node name="PlayerRoundPool" type="Node2D" parent="."]
 script = ExtResource("7_round_pool")
 scene = ExtResource("8_round")
-pool_size = 96
+pool_size = 160
 
-[node name="PlayerMissilePool" type="Node2D" parent="." node_paths=PackedStringArray("targets")]
+[node name="PlayerMissilePool" type="Node2D" parent="." node_paths=PackedStringArray("targets", "explosion_pool")]
 script = ExtResource("25_missile_pool")
 targets = NodePath("../Enemies")
+explosion_pool = NodePath("../FX/ExplosionPool")
 scene = ExtResource("26_missile")
-pool_size = 24
+pool_size = 48
 
 [node name="Player" parent="." node_paths=PackedStringArray("round_pool", "missile_pool") instance=ExtResource("9_player")]
 position = Vector2(270, 820)

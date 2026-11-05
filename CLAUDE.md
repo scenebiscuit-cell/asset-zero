@@ -73,9 +73,11 @@ res://
   tests/           test scenes for trying single objects
   assets/
     sprites/       rendered PNGs from Blender: player/, enemies/, boss/, modules/, props/
+    backgrounds/   rendered terrain strips (WebP) per sector and zone, e.g. verdance/jungle_fringe_01.webp
 art-source/        source art (has a .gdignore file so Godot never imports the .blend files)
   blender/         .blend files: render_rig.blend and one file per model
-  render/          Python render scripts (render_sprites.py)
+  render/          Python render scripts (render_sprites.py, render_terrain.py)
+  textures/        CC0 textures downloaded by the developer + CREDITS.md (name and source link of each)
 ```
 
 ## Collision layers
@@ -95,6 +97,7 @@ art-source/        source art (has a .gdignore file so Godot never imports the .
 - The connection runs Python inside Blender with no guards: only open and save files inside `art-source/`, never touch files outside the project, and save the .blend before big changes.
 - All renders go through `art-source/render/render_sprites.py` so they are repeatable; don't hand-export one-off PNGs.
 - Keep models simple and chunky (they become small sprites). Light from the top-left, palette from DESIGN.md §11.
+- Terrain is rendered, never code-drawn, in final art: procedural height, CC0 textures from `art-source/textures/`, dense varied scatter, no outlines or flat fills (DESIGN.md §11 "Terrain backgrounds"). Only use textures listed in `art-source/textures/CREDITS.md`; never download or use images from other games or the reference screenshots.
 - Effects (explosions, smoke, tracers, lasers, glow) stay code-made in Godot, not rendered.
 - Sprites swap into each object's `Visual` node; hit flash, elite outline and drop shadow are applied in Godot, not baked into renders.
 

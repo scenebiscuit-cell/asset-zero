@@ -508,7 +508,7 @@ Simple vector / geometric shapes drawn in Godot (Polygon2D, Line2D or `_draw()`)
 - **Halcyon forces:** blocky, utilitarian industrial machines in grey/orange with hazard-yellow stripes. Elites get a yellow outline.
 - **Weapon modules:** glowing hexagons in the color of the enemy that dropped them, pulsing
 - **Enemy rounds:** hot pink/orange, round, with an outline, always the highest-contrast thing on screen
-- **Background:** top-down terrain using the Verdance palette from §11.8: dark jungle greens over oxblood/rust mining earth (`#5b2d2c` family), teal water (`#1b6259` family), concrete-grey HEG structures with hazard trim. Built from simple shapes for now, scrolling slowly in layers.
+- **Background:** top-down terrain using the Verdance palette from §11.8: dark jungle greens over oxblood/rust mining earth (`#5b2d2c` family), teal water (`#1b6259` family), concrete-grey HEG structures with hazard trim. Built from simple shapes for now, scrolling slowly in layers. **Placeholder only:** replaced by rendered terrain strips from ART-1b / ART-BG (see "Terrain backgrounds").
 - **Grain:** a light noise/grain overlay on the background (one cheap shader or a tiled noise texture) so nothing reads as a flat fill.
 - **Drop shadows:** every air unit (player and enemies) gets a dark, semi-transparent copy of its shape offset down-right on the ground layer. Ground units get no shadow. This is cheap and makes air vs. ground instantly readable.
 - **Explosions:** combine both references: a bright warm flash, clustered round fireballs from yellow `#e4cc24` through orange to dark red `#9c3c24` (Raptor), then sparks, embers and debris with dark smoke trails (Mech Havoc), a white shockwave ring on big kills, and a lingering scorch mark on the ground.
@@ -521,15 +521,38 @@ The look should say "military hardware" first. The liquid metal is the surprise 
 
 Ships, vehicles and buildings are **3D models in Blender, rendered top-down into shaded sprites**, the same way the Raptor reference got its look. Claude Code drives Blender through Blender Lab's official MCP connection; the developer art-directs and touches up by hand (Blender or Krita) where needed. Both tools are free.
 
-- **What Blender makes:** XF-0 (every weight class, Gunship and Lance forms), enemies, the MAWLER boss, weapon modules, buildings and terrain props.
+- **What Blender makes:** terrain backgrounds (see "Terrain backgrounds" below), XF-0 (every weight class, Gunship and Lance forms), enemies, the mini-bosses and MAWLER boss, weapon modules, buildings and terrain props.
 - **What stays code-made in Godot:** explosions, smoke, sparks, tracers, lasers, glows, grain and drop shadows (see the Effects reference above).
 - **Render rig** (`art-source/blender/render_rig.blend`): orthographic camera straight down, transparent background, top-left key light with a soft fill (matching the terrain lighting), shared metal materials in the §11 palette (XF-0 gunmetal with cyan accents; HEG grey/orange with hazard yellow).
 - **Repeatable renders:** a Python script (`art-source/render/render_sprites.py`) renders models to `assets/sprites/<category>/<name>.png` at 4× in-game size; Godot scales them down with filtering on. Re-running the script must give the same result.
 - **Morphing with sprites:** the Lance form is a **shape key** on the Gunship model (a stored second shape Blender can blend toward). The morph is rendered as a frame strip (~8 frames). The existing MorphSystem gets a frame-strip mode with the same API, so Combat Morph, refit morphs and weight-class changes keep working. Polygon mode remains for anything without sprites.
 - **Hit flash, elite outline, drop shadow** are done in Godot on top of the sprite (white flash shader, yellow outline shader, shadow from the sprite silhouette), so they never need extra renders.
 - **Visual node rule stays:** each object's art lives in its `Visual` child, so swapping placeholder → sprite never touches game logic.
-- Exact numbers (sprite sizes, render scale, light angle, frame count) get locked in ART-1d and written here.
-- Schedule: ART-1 and ART-2 when Milestone B is finished, then ART-3 to ART-5 alongside Milestones C–E (ROADMAP.md).
+- Exact numbers (sprite sizes, render scale, light angle, frame count, background strip size) get locked in ART-1e and written here.
+- Schedule: ART-1 (starting with a background test), ART-BG and ART-2 before Milestone D, then ART-3 to ART-5 alongside Milestones D–E (ROADMAP.md).
+
+#### Terrain backgrounds (decided 2026-11-05)
+
+The code-drawn terrain (round tree blobs, ring-shaped pits, a smooth road) reads as cartoon and is **placeholder only**. Final ground is **rendered, not drawn**:
+
+- **Procedural terrain in Blender:** real height (dug-out pits with terraces and slopes, river banks, road cuts with ruts), so the top-left light makes real shadows. No flat fills, no outlines, no concentric rings.
+- **Real surface detail from free CC0 textures** (Poly Haven, ambientCG: forest floor, mud, red soil, rock, gravel, concrete). CC0 means free for commercial use with no credit needed; each texture's source is still listed in `art-source/textures/CREDITS.md`.
+- **Density and scale like the reference:** thousands of small, varied trees, bushes and rocks scattered automatically, small next to the jet so the world feels big. Variation in size, rotation and color everywhere.
+- **Muted and darker than the action:** keep the §11 palette (dark jungle greens, oxblood/rust earth, teal water, concrete grey) at lower saturation than ships, effects and pickups, so the jet, enemy rounds and salvage always stand out.
+- **Format:** seamless vertical strips 540 px wide (rendered at 2× and scaled down), 2–3 screens tall, saved as WebP in `assets/backgrounds/<sector>/<zone>_NN.webp`. The top edge of each strip matches its bottom edge so strips can follow each other. Each strip is loaded only for the mission that uses it (web memory).
+- **Still added in Godot on top:** the grain overlay, drop shadows, scorch marks, ground targets and effects.
+
+#### Zones (Sector 1: Verdance)
+
+Each mission's level settings name a **zone**, so the Ops Map can pick scenery to match the stop.
+
+| Zone | Used for | Look |
+|---|---|---|
+| Jungle Fringe | Map rows 1–2 | Dense canopy, first haul roads and survey clearings cutting in, small creeks |
+| Strip Mine | Rows 3–4, Salvage Runs | Rust-red terraced pits, spoil heaps, conveyor lines, Mining Platforms |
+| Tailings River | Mixed rows | Toxic green-teal water, earth dams, bridges, pipelines |
+| HEG Compound | Strongpoints, rows 5–6 | Concrete pads, hazard stripes, bunkers, fuel tanks, lights |
+| MAWLER Pit | Boss | A huge excavation with the crawler's track scars and collapsed terraces |
 ## 12. Audio
 
 - SFX: generated with jsfxr (free) during development. Heavy, punchy military sounds (cannon thumps, missile whooshes, alarm beeps), plus a metallic liquid sound for morphs, refits, assimilating and salvage pickups.

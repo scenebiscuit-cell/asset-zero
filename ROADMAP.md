@@ -4,7 +4,7 @@ Build **one milestone at a time** (A → E). Inside a milestone, Claude Code bui
 
 Git: each milestone gets its own branch from `main` and ends with a pull request. Merge only when you say "merge".
 
-**Art steps (ART-1 to ART-5)** make the final ship and building art in Blender (DESIGN.md §11 "Final art pipeline"). Each one is its own Claude Code session and branch (e.g. `art-1-pipeline`), done at the point shown below, with the same rules: small checked steps, pull request, merge only on "merge". Explosions, smoke, tracers and lasers stay code-made in Godot; Blender is only for ships, vehicles and buildings.
+**Art steps (ART-1 to ART-5)** make the final ship and building art in Blender (DESIGN.md §11 "Final art pipeline"). Each one is its own Claude Code session and branch (e.g. `art-1-pipeline`), done at the point shown below, with the same rules: small checked steps, pull request, merge only on "merge". Explosions, smoke, tracers and lasers stay code-made in Godot; Blender makes the terrain backgrounds (procedural terrain + free CC0 textures), ships, vehicles and buildings. The first art test is a background, because the current code-drawn terrain looks the least like the Raptor reference.
 
 How to hand a milestone to Claude Code (in VS Code, terminal at `C:\Projects\asset-zero`, run `claude`):
 > "Read CLAUDE.md, DESIGN.md and ROADMAP.md. Do Milestone A on a new branch. Build one step at a time, tell me how to check each one worked, and wait for my OK before the next step. Open a pull request when the milestone is done."
@@ -89,24 +89,38 @@ How to hand a milestone to Claude Code (in VS Code, terminal at `C:\Projects\ass
   - Safety: the connection runs Claude's Python code inside Blender with no guards. Only open project files in Blender while it's connected, and save often.
   - **Done when:** with Blender open and the add-on running, `claude mcp list` shows `blender` as connected, and asking Claude Code to "add a cube in Blender" makes a cube appear.
 
-- [ ] **ART-1b: Render rig + RD-2 Recon Drone**
+- [ ] **ART-1b: Background test: one Jungle Fringe strip** (first art test)
+  - Download free **CC0 textures** (free for commercial use, no credit needed) by hand into `art-source/textures/`, 2K JPG with color, normal, roughness and displacement maps. From polyhaven.com/textures and ambientcg.com search for: forest ground / forest floor, mud or dirt, red or brown soil, rock, gravel, and a dirt road or tyre-track ground. Note each one's name and source link in `art-source/textures/CREDITS.md`.
+  - In Blender, build **procedural terrain** for the Jungle Fringe zone (DESIGN.md §11 "Zones"): real height (a dug-out mining pit with terraces, not flat rings), a haul road with ruts cut into the ground, a small creek, and **thousands of small varied trees and rocks** scattered automatically (Blender's geometry nodes or a scatter script). Trees and rocks are simple low-poly models with varied size, rotation and color.
+  - Render it from straight above with the top-left light into a seamless vertical strip: `assets/backgrounds/verdance/jungle_fringe_01.webp`, 540 px wide (render at 2× and scale down), 2–3 screens tall, top edge matching the bottom edge so strips can follow each other
+  - Swap it into the game as the scrolling ground, replacing the code-drawn trees, pits and road for this zone; keep grain, drop shadows and enemies on top
+  - **Done when:** side by side with the Raptor reference screenshots, the ground reads as real terrain seen from high above (dense detail, real height and shadow, no flat or outlined shapes), the jet and enemy rounds still stand out clearly, and the scroll has no visible seam
+
+- [ ] **ART-1c: Render rig + RD-2 Recon Drone**
   - Create `art-source/blender/render_rig.blend`: orthographic camera looking straight down, transparent background, top-left key light + soft fill, metal materials (gunmetal, HEG grey/orange, hazard yellow) matching DESIGN.md §11
   - A repeatable render script `art-source/render/render_sprites.py` that renders any model in the rig to `assets/sprites/<category>/<name>.png` at 4× the in-game size
   - Model the RD-2 Recon Drone (simple, chunky shapes), render it, and swap it into the game in place of the polygon placeholder (keep the `Visual` node rule; the drop shadow must still work)
   - **Done when:** the drone in-game looks like a shaded metal machine lit from the top-left, matches the Raptor reference feel, and still flashes white on hit and casts a shadow
 
-- [ ] **ART-1c: XF-0 Light class, both forms + morph frames**
+- [ ] **ART-1d: XF-0 Light class, both forms + morph frames**
   - Model the XF-0 Light-class airframe in Gunship form, then make the Lance form as a **shape key** (a stored second shape of the same model that Blender can blend toward)
   - Render the morph as a frame strip: Gunship → Lance in ~8 frames (`assets/sprites/player/xf0_light_morph.png`)
   - Extend the existing **MorphSystem** with a frame-strip mode (same `morph_to()` / `snap_to()` API, tween drives the frame instead of polygon points). Don't write a second morph system. Polygon mode stays for anything without sprites yet.
   - Drop shadow uses the current sprite frame's silhouette
   - **Done when:** holding morph flows the rendered jet from Gunship to Lance and back as smoothly as the placeholder did, at 0.15 s, with the shadow following
 
-- [ ] **ART-1d: Lock the art rules**
-  - Write the final numbers into DESIGN.md §11 "Final art pipeline" (sprite sizes, render scale, light angle, material colors, morph frame count) and add a line to the decisions log
+- [ ] **ART-1e: Lock the art rules**
+  - Write the final numbers into DESIGN.md §11 "Final art pipeline" (sprite sizes, render scale, light angle, material colors, morph frame count, background strip size and texture list) and add a line to the decisions log
   - **Done when:** DESIGN.md has the rules and you're happy with the look. If you're not, decide here whether to adjust the rig, paint over renders in Krita, or stay with placeholders for now.
 
-- [ ] **ART-2: Enemy renders** (right after ART-1)
+- [ ] **ART-BG: All Sector 1 terrain zones** (right after ART-1)
+  - Using the ART-1b method, build and render the other zones from DESIGN.md §11 "Zones": Strip Mine, Tailings River, HEG Compound and MAWLER Pit (Jungle Fringe already exists), 2–3 strips each so missions don't repeat visibly
+  - Ground targets that sit in the terrain (AA Emplacements, Mining Platforms) get matching ground pads and scorch decals
+  - Add a `zone` setting to each mission's level settings Resource so the game loads the right strips; until the Ops Map exists (Step 17b), pick the zone from the mission number
+  - Retire the code-drawn terrain (keep it only as a fallback if a strip fails to load)
+  - **Done when:** each zone looks distinct and real, matches the reference feel, and switching zones between missions works
+
+- [ ] **ART-2: Enemy renders** (right after ART-BG)
   - Model and render the remaining enemies with the ART-1 rig: ID-4 Interceptor Drone, AA Emplacement, Mining Platform, Armored Transport, HG-7 Gunship (plus destroyed/wreck versions for ground targets)
   - Elites reuse the same sprites with a yellow outline added in Godot (no extra renders)
   - **Done when:** every Milestone B enemy uses its rendered sprite in-game with hit flash and shadows working
@@ -195,7 +209,7 @@ How to hand a milestone to Claude Code (in VS Code, terminal at `C:\Projects\ass
 ## Milestone E — Polish and release
 
 - [ ] **ART-5: Final art pass** (start of Milestone E, before Step 18)
-  - Terrain props and HSD/HEG bases (buildings, tanks, pipes, landing pads) rendered with the same rig; ground textures painted in Krita or rendered from Blender
+  - Extra terrain props and HSD/HEG bases (buildings, tanks, pipes, landing pads) rendered with the same rig and placed into the zone strips; optional touch-ups painted in Krita
   - Consistency pass: same light angle, scale and palette everywhere
   - **Done when:** no polygon placeholders are left in normal play, and everything reads clearly at game speed
 
@@ -221,6 +235,7 @@ How to hand a milestone to Claude Code (in VS Code, terminal at `C:\Projects\ass
 
 Write down decisions here as you make them (date — decision), so the AI tools know about them.
 
+- 2026-11-05 — Backgrounds: the code-drawn terrain looks too cartoony. Final terrain will be Blender procedural terrain with free CC0 textures (Poly Haven, ambientCG), rendered top-down into seamless scrolling strips, one set per zone (Jungle Fringe, Strip Mine, Tailings River, HEG Compound, MAWLER Pit). The first art test (ART-1b) is now a Jungle Fringe background; ART-BG builds the other zones before ART-2. DESIGN.md §11.
 - 2026-11-05 — Ops Map added (DESIGN.md §9.2): a Slay the Spire-style branching sector map replaces the fixed 3-level run. Stops: Strike (salvage + free Field Refit), Salvage Run (more salvage, no refit), Strongpoint (mini-boss), Refit Depot (Repair or Overhaul), Armory (shop), Primary Target (boss). Two mini-bosses added: HG-9 Warden and SF-4 Sentinel Flak Battery. New Steps 16b, 17a, 17b; Step 17 became 17c. Replaces the old "contract board" Later idea.
 - 2026-11-03 — Fullscreen: stretch aspect stays `keep`, so the 540×960 battlefield is centred at full screen height with dark bars at the sides, and the HUD and rails stay inside it on its edges (like Raptor). Tried first and dropped: a battlefield widened to the whole monitor (changed balance between screens) and HUD panels moved out into cockpit side panels (felt disconnected). The BREACH popup was removed (distracting); the salvage penalty and Perimeter Held bonus stay. DESIGN.md §9, §14.
 - 2026-11-03 — Added a sector progress track to the HUD (right rail) and an F11 / Alt+Enter fullscreen toggle (in SaveManager until the Settings screen exists). DESIGN.md §5.5, §13.

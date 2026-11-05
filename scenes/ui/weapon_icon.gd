@@ -98,5 +98,12 @@ func _draw_module(module: ModuleData) -> void:
 		for i: int in 3:
 			var y: float = radius * (0.3 - i * 0.3)
 			draw_line(center + Vector2(-radius * 0.2, y), center + Vector2(radius * 0.2, y - 2.0), module.color, 1.0)
+	elif module is DroneBayData:
+		# Two little drones circling a dot.
+		draw_arc(center, radius * 0.45, 0.0, TAU, 16, Color(module.color, 0.6), 1.0)
+		for side: float in [-1.0, 1.0]:
+			var at: Vector2 = center + Vector2(radius * 0.45 * side, 0.0)
+			draw_colored_polygon(PackedVector2Array([at + Vector2(0.0, -3.5), at + Vector2(3.0, 2.5), at + Vector2(-3.0, 2.5)]), sign_color)
+		draw_circle(center, 1.5, sign_color)
 	else:
 		draw_circle(center, radius * 0.25, sign_color)

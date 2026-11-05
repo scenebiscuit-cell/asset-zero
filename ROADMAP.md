@@ -86,7 +86,7 @@ How to hand a milestone to Claude Code (in VS Code, terminal at `C:\Projects\ass
   - Debug keys (only in debug builds) to give yourself weapons for testing
   - **Done when:** you can switch between all of these with debug keys and each fires correctly in both forms
 
-- [ ] **Step 11: Assimilate**
+- [x] **Step 11: Assimilate**
   - Elites drop their weapon module (DESIGN.md §5.8): glowing hexagon that drifts for ~6 s
   - Fly into it → absorb animation → module mounts on the Salvage Mount and fires with your main weapon
   - All 4 modules (Spread Cannon, Flak Burst, Drill Lance, Drone Bay) with Gunship and Lance behaviors, as Resources (`data/modules/*.tres`)

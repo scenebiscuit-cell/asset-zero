@@ -1,4 +1,4 @@
-[gd_scene load_steps=30 format=3]
+[gd_scene load_steps=31 format=3]
 
 [ext_resource type="Script" path="res://scenes/player/player.gd" id="1_player"]
 [ext_resource type="Script" path="res://scenes/player/hardpoints.gd" id="2_hardpoints"]
@@ -21,6 +21,7 @@
 [ext_resource type="Script" path="res://resources/module_data.gd" id="19_module_data"]
 [ext_resource type="Resource" path="res://data/modules/flak_burst.tres" id="20_flak"]
 [ext_resource type="Resource" path="res://data/modules/drill_lance.tres" id="21_drill"]
+[ext_resource type="Resource" path="res://data/modules/drone_bay.tres" id="22_drones"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_hitbox"]
 resource_local_to_scene = true
@@ -215,4 +216,4 @@ script = ExtResource("12_debug")
 hardpoints = NodePath("../Hardpoints")
 nose_options = Array[ExtResource("11_weapon_data")]([ExtResource("3_m20"), ExtResource("13_m20d"), ExtResource("14_hel1")])
 pylon_options = Array[ExtResource("11_weapon_data")]([ExtResource("16_r1"), ExtResource("15_mk1")])
-module_options = Array[ExtResource("19_module_data")]([ExtResource("18_spread"), ExtResource("20_flak"), ExtResource("21_drill")])
+module_options = Array[ExtResource("19_module_data")]([ExtResource("18_spread"), ExtResource("20_flak"), ExtResource("21_drill"), ExtResource("22_drones")])

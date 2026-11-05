@@ -150,6 +150,8 @@ How to hand a milestone to Claude Code (in VS Code, terminal at `C:\Projects\ass
 
 Write down decisions here as you make them (date — decision), so the AI tools know about them.
 
+- 2026-11-05 — Top HUD moved into a solid 66 px console strip like the bottom one (play area starts below it; enemies under it don't fire or get locked on). CLASS UPGRADE callout is now a banner that slides down over the top of the screen. DESIGN.md §5.2, §13.
+- 2026-11-05 — Weight classes: the class bonus is the total over Light (+15/+30/+50 max Armor, Armor raised by the same step), callout shows CLASS UPGRADE + class name + bonus over any screen. Debug key 6 cycles the class. DESIGN.md §5.2 unchanged.
 - 2026-11-05 — Field mods: AP Rounds, Improved Feed, Salvage Magnet stack up to 3, Heat Capacitor up to 2, Retention Matrix one charge at a time. Prices 30–45, offered less often than system refits. DESIGN.md §6.
 - 2026-11-05 — Controls are now keyboard + gamepad; mouse flying is removed (the wheel and mouse-flick dashes were awkward). Gamepad moved out of the "Later" list. Vector Dash on gamepad is the right bumper. Cursor hidden during play, small green reticle in menus. DESIGN.md §2, §5.5, §6, Later list.
 - 2026-11-05 — After playtest: Razor Wing ignores ramming damage (was "you still take contact damage"); Vector Dash also on the mouse wheel; Plating shown as a hex-plate ring; Reactive shrapnel ring wider (16 rounds, 300 px); Nanite Repair shows repair drones while healing. DESIGN.md §5.5, §6.

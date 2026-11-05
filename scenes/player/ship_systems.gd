@@ -161,14 +161,21 @@ func _update_dash(delta: float) -> void:
 	if Input.is_action_just_pressed("dash") and _dash_cooldown_left <= 0.0:
 		var moving: Vector2 = Input.get_vector("move_left", "move_right", "move_up", "move_down")
 		_start_dash(moving.normalized() if moving.length() > 0.3 else Vector2.UP)
+
+
+## Keyboard double-tap. Only real key presses count: a gamepad stick crosses its deadzone over and
+## over while steering, and would dash by accident (gamepad players have the dash button).
+func _input(event: InputEvent) -> void:
+	var key: InputEventKey = event as InputEventKey
+	if key == null or not key.pressed or key.echo or not GameState.has_perk(SystemRefitData.Perk.VECTOR_DASH):
 		return
 	for action: String in DIRECTIONS:
-		if not Input.is_action_just_pressed(action):
+		if not key.is_action_pressed(action):
 			continue
 		var now: int = Time.get_ticks_msec()
 		var last: int = _last_tap.get(action, -100000)
 		_last_tap[action] = now
-		if now - last <= dash_window * 1000.0 and _dash_cooldown_left <= 0.0:
+		if now - last <= dash_window * 1000.0 and _dash_cooldown_left <= 0.0 and not get_tree().paused:
 			_start_dash(DIRECTIONS[action])
 			_last_tap[action] = -100000
 

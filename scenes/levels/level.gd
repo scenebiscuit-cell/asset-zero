@@ -83,6 +83,8 @@ func _ready() -> void:
 	_hud.player = _player
 	_player.play_area_bottom = _hud.console_top()
 	Enemy.play_area_bottom = _hud.console_top()
+	_player.play_area_top = _hud.top_console_bottom()
+	Enemy.play_area_top = _hud.top_console_bottom()
 	_ground_layer.dome_entering.connect(_on_dome_entering)
 	if not run_waves or sectors.is_empty():
 		return
@@ -227,7 +229,7 @@ func _strike_barrage() -> void:
 	var area: Vector2 = Vector2(get_viewport_rect().size.x, _hud.console_top())
 	for i: int in strike_blasts:
 		var row: float = 1.0 - (float(i) + randf()) / strike_blasts
-		_explosion_pool.spawn(Vector2(randf_range(40.0, area.x - 40.0), lerpf(60.0, area.y - 30.0, row)))
+		_explosion_pool.spawn(Vector2(randf_range(40.0, area.x - 40.0), lerpf(_hud.top_console_bottom() + 30.0, area.y - 30.0, row)))
 		await get_tree().create_timer(strike_blast_gap).timeout
 
 

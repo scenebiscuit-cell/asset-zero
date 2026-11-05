@@ -14,6 +14,13 @@ const AMBER: Color = Color(1.0, 0.7, 0.2)
 const CYAN: Color = Color(0.35, 0.85, 1.0)
 const PALE: Color = Color(0.85, 0.85, 0.8)
 const SWAP_RED: Color = Color(1.0, 0.45, 0.35)
+## Menu navigation: which focus neighbour each move action goes to.
+const MENU_SIDES: Dictionary[String, int] = {
+	"move_up": SIDE_TOP, "move_down": SIDE_BOTTOM, "move_left": SIDE_LEFT, "move_right": SIDE_RIGHT,
+}
+
+## Gamepad stick / trigger directions currently past their deadzone (action -> held).
+static var _stick_held: Dictionary[String, bool] = {}
 
 var refit: RefitData
 
@@ -95,22 +102,32 @@ static func handle_menu_input(event: InputEvent, viewport: Viewport) -> bool:
 	if focused == null:
 		return false
 	var side: int = -1
-	if event.is_action_pressed("move_up"):
-		side = SIDE_TOP
-	elif event.is_action_pressed("move_down"):
-		side = SIDE_BOTTOM
-	elif event.is_action_pressed("move_left"):
-		side = SIDE_LEFT
-	elif event.is_action_pressed("move_right"):
-		side = SIDE_RIGHT
+	for action: String in MENU_SIDES:
+		# Every action is checked (no early exit) so the stick's held state stays up to date.
+		if _menu_pressed(event, action) and side == -1:
+			side = MENU_SIDES[action]
 	if side != -1:
 		var next: Control = focused.find_valid_focus_neighbor(side)
 		if next != null:
 			next.grab_focus()
 		viewport.set_input_as_handled()
 		return true
-	if event.is_action_pressed("fire") and focused is Button:
+	if _menu_pressed(event, "fire") and focused is Button:
 		(focused as Button).pressed.emit()
 		viewport.set_input_as_handled()
 		return true
 	return false
+
+
+## A key or button press, or the moment a stick / trigger is pushed past its deadzone. A held stick
+## sends a stream of motion events, and each would otherwise count as a new press and skip cards.
+static func _menu_pressed(event: InputEvent, action: String) -> bool:
+	if not event is InputEventJoypadMotion:
+		return event.is_action_pressed(action)
+	if not event.is_action(action) and not _stick_held.has(action):
+		return false
+	var now: bool = Input.is_action_pressed(action)
+	# Unknown counts as held: a stick or trigger still held from the fight must be let go first.
+	var was: bool = _stick_held.get(action, true)
+	_stick_held[action] = now
+	return now and not was

@@ -25,6 +25,8 @@ const BURN_TINT: Color = Color(1.6, 0.75, 0.35)
 
 ## Bottom of the play area (top of the HUD console), set by the Level. 0 = the screen bottom.
 static var play_area_bottom: float = 0.0
+## Top of the play area (under the top HUD console). Enemies above it are hidden and hold fire.
+static var play_area_top: float = 0.0
 
 @export var data: EnemyData
 
@@ -140,6 +142,8 @@ func is_on_screen() -> bool:
 	var area: Rect2 = get_viewport_rect()
 	if play_area_bottom > 0.0:
 		area.end.y = minf(area.end.y, play_area_bottom)
+	if play_area_top > 0.0:
+		area = Rect2(area.position.x, play_area_top, area.size.x, area.end.y - play_area_top)
 	return area.has_point(global_position)
 
 

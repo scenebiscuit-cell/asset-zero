@@ -127,3 +127,9 @@ REFIT_DESC_IMPROVED_FEED,+10% fire rate on every weapon.
 REFIT_DESC_SALVAGE_MAGNET,+15% pickup range.
 REFIT_DESC_HEAT_CAPACITOR,Overclock lasts 1.5 s longer.
 REFIT_DESC_RETENTION_MATRIX,Keep your assimilated weapon module through one extra sector.
+CLASS_UPGRADE,CLASS UPGRADE
+CLASS_NAME_LIGHT,LIGHT
+CLASS_NAME_MEDIUM,MEDIUM
+CLASS_NAME_HEAVY,HEAVY
+CLASS_NAME_ASSAULT,ASSAULT
+CLASS_BONUS,+%d max Armor  ·  -%d%% speed

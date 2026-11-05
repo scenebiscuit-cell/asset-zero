@@ -13,6 +13,8 @@ signal strike_called
 @export var screen_margin: Vector2 = Vector2(26.0, 36.0)
 ## Lowest y the play area reaches (the top of the HUD console). 0 = the bottom of the screen.
 var play_area_bottom: float = 0.0
+## Highest y the play area reaches (the bottom of the top HUD console). 0 = the top of the screen.
+var play_area_top: float = 0.0
 ## Set by whatever scene the player is placed in; rounds live there, not on the ship.
 @export var round_pool: RoundPool
 @export var missile_pool: MissilePool
@@ -89,7 +91,8 @@ func _notification(what: int) -> void:
 func _physics_process(delta: float) -> void:
 	# Analog on a gamepad stick: a half push flies at half speed.
 	var direction: Vector2 = Input.get_vector("move_left", "move_right", "move_up", "move_down")
-	var speed: float = move_speed * _systems.speed_multiplier() * _combat_morph.speed_multiplier()
+	var speed: float = move_speed * _systems.speed_multiplier() * _combat_morph.speed_multiplier() \
+			* GameState.class_speed_multiplier()
 	position += direction * speed * delta
 	position += _systems.dash_offset(delta)
 
@@ -167,8 +170,9 @@ func overclock_time_left() -> float:
 	return _overclock.time_left()
 
 
+## The cap one activation can reach; Heat Capacitors raise it, so the HUD bar never overflows.
 func overclock_max_time() -> float:
-	return _overclock.max_duration
+	return _overclock.max_duration + GameState.overclock_bonus_time
 
 
 ## Absorbs an enemy weapon module onto the Salvage Mount (DESIGN.md §5.8). Only one at a time:
@@ -347,4 +351,4 @@ func _clamp_to_screen() -> void:
 	var screen: Vector2 = get_viewport_rect().size
 	if play_area_bottom > 0.0:
 		screen.y = minf(screen.y, play_area_bottom)
-	position = position.clamp(screen_margin, screen - screen_margin)
+	position = position.clamp(screen_margin + Vector2(0.0, play_area_top), screen - screen_margin)

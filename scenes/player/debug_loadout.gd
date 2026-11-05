@@ -4,6 +4,7 @@ extends Node
 ## 1: next nose weapon in nose_options. 2: cycles the pylons: empty, then each of pylon_options in
 ## order, then empty again. 3: the same for the Salvage Mount with module_options (skipping the
 ## absorb animation). 4 and 5: cycle the Propulsion and Armor lines (stock, then each level).
+## 6: next weight class (sets the refit count to the next class's minimum, back to Light after Assault).
 ## Removes itself in release exports, so players never get these keys.
 
 @export var hardpoints: Hardpoints
@@ -36,6 +37,10 @@ func _unhandled_input(event: InputEvent) -> void:
 		_cycle_system(RefitData.Line.PROPULSION, propulsion_options)
 	elif index == 4:
 		_cycle_system(RefitData.Line.ARMOR, armor_options)
+	elif index == 5:
+		var next: int = (GameState.weight_class + 1) % GameState.CLASS_MIN_REFITS.size()
+		GameState.set_refit_count(GameState.CLASS_MIN_REFITS[next])
+		print("Debug loadout: ", GameState.WeightClass.keys()[next], " (", GameState.refit_count, " refits)")
 	else:
 		return
 	get_viewport().set_input_as_handled()

@@ -9,6 +9,10 @@ const OVERCLOCK_PER_GRAZE: float = 1.0
 const OVERCLOCK_PER_ELITE: float = 10.0
 
 enum WeightClass { LIGHT, MEDIUM, HEAVY, ASSAULT }
+## Weight class (DESIGN.md §5.2), by WeightClass: refits needed, max Armor bonus, speed.
+const CLASS_MIN_REFITS: Array[int] = [0, 3, 6, 9]
+const CLASS_ARMOR_BONUS: Array[int] = [0, 15, 30, 50]
+const CLASS_SPEED: Array[float] = [1.0, 0.95, 0.9, 0.85]
 
 var salvage: int = 0
 var max_armor: int = START_MAX_ARMOR
@@ -103,7 +107,29 @@ func has_perk(perk: SystemRefitData.Perk) -> bool:
 func install_refit(refit: RefitData) -> void:
 	refit.apply()
 	if refit.counts_toward_weight():
-		refit_count += 1
+		set_refit_count(refit_count + 1)
+
+
+## Also used by the debug keys. Moving up a class raises max Armor (and Armor) by the difference.
+func set_refit_count(count: int) -> void:
+	refit_count = count
+	var new_class: int = WeightClass.LIGHT
+	for i: int in CLASS_MIN_REFITS.size():
+		if count >= CLASS_MIN_REFITS[i]:
+			new_class = i
+	if new_class == weight_class:
+		return
+	var gain: int = CLASS_ARMOR_BONUS[new_class] - CLASS_ARMOR_BONUS[weight_class]
+	var upgraded: bool = new_class > weight_class
+	weight_class = new_class as WeightClass
+	max_armor += gain
+	armor = clampi(armor + gain, 1, max_armor)
+	if upgraded:
+		Events.weight_class_changed.emit(weight_class)
+
+
+func class_speed_multiplier() -> float:
+	return CLASS_SPEED[weight_class]
 
 
 ## Called on death: the next level load starts a fresh run.
@@ -114,8 +140,7 @@ func end_run() -> void:
 ## Called on SECTOR CLEAR: Armor, salvage and Overclock carry over.
 func advance_sector() -> void:
 	sector_index += 1
-	# The assimilated module dissolves at the end of the sector (§5.8).
-	weapons.erase(WeaponData.Hardpoint.SALVAGE_MOUNT)
+	# The module is dissolved by the Player at SECTOR CLEAR (or kept by a Retention Matrix), not here.
 
 
 ## The weapon module on the Salvage Mount (§5.8), or null.

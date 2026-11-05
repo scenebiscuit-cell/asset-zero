@@ -78,7 +78,7 @@ The airframe grows as you refit. **Weight class** is based on the total number o
 | Heavy (gunship) | 6–8 | Wide, armored, extra pylons visible | +30 max Armor | −10% speed |
 | Assault | 9+ | Huge flying fortress | +50 max Armor | −15% speed |
 
-The **hitbox stays the same size** in every class (body + wing roots, §5.4), so a bigger ship isn't unfair. Moving up a class plays a bigger morph and a "CLASS UPGRADE: MEDIUM" callout. Weight class also sets the **Threat Level** (§9.1).
+The **hitbox stays the same size** in every class (body + wing roots, §5.4), so a bigger ship isn't unfair. Moving up a class plays a bigger morph and a "CLASS UPGRADE: MEDIUM" banner that slides down over the top of the screen. Weight class also sets the **Threat Level** (§9.1).
 
 ### 5.3 Liquid-metal behavior (visual rules)
 
@@ -491,7 +491,7 @@ Likely hand-painted art downscaled to sprites, possibly with a metallic sheen sh
 
 Title (Click to start) → Main menu (Deploy, R&D, Settings) → Mission briefing → Level 1 → Field Refit → Armory → Level 2 → … → Boss → Mission Complete / Mission Failed (shows Combat Data earned) → Main menu
 
-HUD: the bottom 100 px is a solid cockpit console (the play area ends at its top edge, so XF-0 never flies behind the HUD and enemies behind it don't fire) holding the module slot, weapons panel, Saturation Strike charges, Fire Control and Overclock. Strike meter in the left rail (§7.4). Armor bar, Plating bar, Overclock meter, salvage count, weight class, HSD Threat label, assimilated weapon icon, level number, Fire Control panel above the Overclock meter (stored charges / auto-fire countdown), sector progress track (thin bar in the right rail that fills as the sector goes on), weapons panel bottom-left (icon + designation for the Nose and Wing Pylon weapons).
+HUD: the top 66 px is a solid console strip holding the Armor/Plating bars, salvage count, sector, weight class and HSD Threat; the bottom 100 px is a solid cockpit console. The play area sits between them, so XF-0 never flies behind the HUD and enemies behind either strip don't fire or get locked on. The bottom console holds the module slot, weapons panel, Saturation Strike charges, Fire Control and Overclock. Strike meter in the left rail (§7.4). Armor bar, Plating bar, Overclock meter, salvage count, weight class, HSD Threat label, assimilated weapon icon, level number, Fire Control panel above the Overclock meter (stored charges / auto-fire countdown), sector progress track (thin bar in the right rail that fills as the sector goes on), weapons panel bottom-left (icon + designation for the Nose and Wing Pylon weapons).
 
 Settings: master/music/SFX volume, screen shake on/off, Accessibility: auto-fire on/off (off by default, §7.3).
 

@@ -6,6 +6,8 @@ extends Node
 signal salvage_collected
 ## An enemy round passed through XF-0's graze radius without hitting.
 signal grazed(at: Vector2)
+## XF-0 moved up a weight class (GameState.WeightClass).
+signal weight_class_changed(weight_class: int)
 ## Overclock started / ended.
 signal overclock_started
 signal overclock_ended

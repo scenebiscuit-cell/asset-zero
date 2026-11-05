@@ -37,6 +37,7 @@ var _shown_overclock_secs: int = -1
 var _shown_strike: Vector2i = Vector2i(-1, -1)
 
 @onready var _console: Control = $Root/Console
+@onready var _top_console: Control = $Root/TopConsole
 @onready var _armor_bar: HudBar = $Root/TopLeft/ArmorBar
 @onready var _armor_value: Label = $Root/TopLeft/ArmorValue
 @onready var _plating_bar: HudBar = $Root/TopLeft/PlatingBar
@@ -213,3 +214,8 @@ func _update_module() -> void:
 ## Top edge of the bottom console: the play area ends here, so the HUD never covers the ship.
 func console_top() -> float:
 	return _console.position.y
+
+
+## Bottom edge of the top console: the play area starts here.
+func top_console_bottom() -> float:
+	return _top_console.position.y + _top_console.size.y

@@ -22,6 +22,8 @@ var threat_level: int = 1
 ## What's mounted on each hardpoint (WeaponData.Hardpoint -> WeaponData). Empty = stock loadout.
 var weapons: Dictionary[int, WeaponData] = {}
 var overclock: float = 0.0
+## Fire Control pickups collected but not yet activated (DESIGN.md §7.3).
+var fire_control_charges: int = 0
 ## Which sector of the run we're on (0 = Sector 1).
 var sector_index: int = 0
 ## False until a level starts a run; the Level resets everything when it finds no run in progress.
@@ -38,6 +40,7 @@ func reset_run() -> void:
 	threat_level = 1
 	weapons.clear()
 	overclock = 0.0
+	fire_control_charges = 0
 	sector_index = 0
 	run_active = true
 

@@ -113,7 +113,8 @@ The ship always looks like a hard-edged military aircraft. The liquid metal show
 | Fire | Hold Space or J | Hold left mouse button |
 | Combat Morph (Lance form) | Hold Shift or K | Hold right mouse button |
 | Overclock | E or L | Middle mouse button |
-| Auto-fire | — (no key) | Only from Fire Control power-ups (§7.3) or the accessibility setting |
+| Fire Control | Q or I | Mouse side button | Starts a stored Fire Control pickup: auto-fire for ~10 s (§7.3) |
+| Auto-fire | — (no key) | Only from Fire Control (§7.3) or the accessibility setting |
 | Pause | Esc / P | — |
 | Fullscreen | F11 / Alt+Enter | — |
 
@@ -257,7 +258,7 @@ Spend Combat Data in **R&D** on the main menu to unlock systems so they can appe
 Auto-fire is not a standard control. It comes from two power-ups:
 
 - **FC-1 Fire Control Computer (one-run refit):** sometimes offered on the Mission Briefing screen before a run, bought with Combat Data. Gives auto-fire for that run only; it must be bought again before each run, and only when it's offered.
-- **Fire Control pickup (timed):** a rare drop from destroyed enemies. Turns on auto-fire for ~10 s (tunable). Pooled like other pickups.
+- **Fire Control pickup (timed):** a rare drop from destroyed enemies. Collecting it **stores** a charge (up to 2, kept between sectors). Press the **Fire Control key (Q / I)** to spend one and turn on auto-fire for ~10 s (tunable). A HUD panel above the Overclock meter appears while you hold a charge ("FIRE CONTROL — READY - PRESS Q") and shows the countdown while it runs. Pooled like other pickups.
 
 Separately, **Settings → Accessibility → Auto-fire** (off by default) gives always-on auto-fire for players who can't hold a button for long.
 
@@ -479,7 +480,7 @@ Likely hand-painted art downscaled to sprites, possibly with a metallic sheen sh
 
 Title (Click to start) → Main menu (Deploy, R&D, Settings) → Mission briefing → Level 1 → Field Refit → Armory → Level 2 → … → Boss → Mission Complete / Mission Failed (shows Combat Data earned) → Main menu
 
-HUD: Armor bar, Plating bar, Overclock meter, salvage count, weight class, HSD Threat label, assimilated weapon icon, level number, auto-fire indicator, sector progress track (thin bar in the right rail that fills as the sector goes on), weapons panel bottom-left (icon + designation for the Nose and Wing Pylon weapons).
+HUD: Armor bar, Plating bar, Overclock meter, salvage count, weight class, HSD Threat label, assimilated weapon icon, level number, Fire Control panel above the Overclock meter (stored charges / auto-fire countdown), sector progress track (thin bar in the right rail that fills as the sector goes on), weapons panel bottom-left (icon + designation for the Nose and Wing Pylon weapons).
 
 Settings: master/music/SFX volume, screen shake on/off, Accessibility: auto-fire on/off (off by default, §7.3).
 

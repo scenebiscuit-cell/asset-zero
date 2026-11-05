@@ -150,6 +150,7 @@ How to hand a milestone to Claude Code (in VS Code, terminal at `C:\Projects\ass
 
 Write down decisions here as you make them (date — decision), so the AI tools know about them.
 
+- 2026-11-04 — Fire Control pickups are now stored (up to 2, kept between sectors) and started with a new Fire Control key (Q / I / mouse side button). Its HUD panel moved above the Overclock meter and spells out READY - PRESS Q, then counts down AUTO-FIRE. DESIGN.md §5.5, §7.3, §13.
 - 2026-11-04 — Mining Platform now looks like a drill tank (treads, turret, drill as the barrel); burrowing digs into a dirt mound, and a mound churns up where it will resurface. Background bases are now barracks compounds and SAM sites; their radar domes are destructible ground targets worth 1 salvage that don't count toward waves or SECTOR CLEAR. DESIGN.md §8, §11.
 - 2026-11-04 — Mining Platform now attacks: a large drill that tracks XF-0, winds up (glows red) and thrusts out, 20 Armor on touch. It burrows and resurfaces somewhere else on screen up to 3 times, then scrolls away. DESIGN.md §8 enemy table.
 - 2026-11-04 — Enemies made tougher (~30% more HP): RD-2 25, ID-4 20, AA 80, HG-7 120, Transport 210, Mining Platform 290. The M20 now needs 3 rounds for an RD-2 (2 in Lance form).

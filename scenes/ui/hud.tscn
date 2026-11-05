@@ -340,11 +340,45 @@ theme_override_constants/outline_size = 5
 text = "WARN_ARMOR_CRITICAL"
 horizontal_alignment = 1
 
-[node name="AutoFire" type="Label" parent="Root/BottomCenter"]
-offset_top = 24.0
-offset_right = 320.0
-offset_bottom = 44.0
+[node name="FireControl" type="Control" parent="Root"]
+offset_left = 328.0
+offset_top = 864.0
+offset_right = 528.0
+offset_bottom = 898.0
+mouse_filter = 2
+
+[node name="Back" type="ColorRect" parent="Root/FireControl"]
+offset_right = 200.0
+offset_bottom = 34.0
+mouse_filter = 2
+color = Color(0, 0, 0, 0.45)
+
+[node name="Title" type="Label" parent="Root/FireControl"]
+offset_left = 6.0
+offset_top = 2.0
+offset_right = 194.0
+offset_bottom = 18.0
 theme_override_colors/font_color = Color(0.35, 0.85, 1, 1)
 theme_override_font_sizes/font_size = 12
-text = "HUD_AUTOFIRE_ON"
-horizontal_alignment = 1
+text = "HUD_FIRE_CONTROL"
+
+[node name="State" type="Label" parent="Root/FireControl"]
+offset_left = 6.0
+offset_top = 2.0
+offset_right = 194.0
+offset_bottom = 18.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 12
+text = "HUD_FIRE_CONTROL_READY"
+horizontal_alignment = 2
+
+[node name="Bar" type="Control" parent="Root/FireControl"]
+anchors_preset = 0
+offset_left = 6.0
+offset_top = 19.0
+offset_right = 194.0
+offset_bottom = 29.0
+mouse_filter = 2
+script = ExtResource("2_bar")
+fill_color = Color(0.35, 0.85, 1, 1)
+segments = 20

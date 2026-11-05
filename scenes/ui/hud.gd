@@ -28,7 +28,7 @@ var _shown_armor: int = -1
 var _shown_sector: int = -1
 var _shown_class: int = -1
 var _shown_threat: int = -1
-var _shown_autofire: int = -2
+var _shown_fire_control: Vector2i = Vector2i(-9, -9)
 var _shown_overclock_secs: int = -1
 
 @onready var _armor_bar: HudBar = $Root/TopLeft/ArmorBar
@@ -43,7 +43,9 @@ var _shown_overclock_secs: int = -1
 @onready var _overclock_bar: HudBar = $Root/BottomRight/OverclockBar
 @onready var _overclock_state: Label = $Root/BottomRight/OverclockState
 @onready var _warning: Label = $Root/BottomCenter/Warning
-@onready var _autofire: Label = $Root/BottomCenter/AutoFire
+@onready var _fire_control: Control = $Root/FireControl
+@onready var _fire_control_state: Label = $Root/FireControl/State
+@onready var _fire_control_bar: HudBar = $Root/FireControl/Bar
 @onready var _sector_progress: SectorProgress = $Root/SectorProgress
 @onready var _nose_icon: WeaponIcon = $Root/Weapons/NoseIcon
 @onready var _nose_name: Label = $Root/Weapons/NoseName
@@ -67,7 +69,7 @@ func _process(delta: float) -> void:
 	_update_status()
 	_update_module()
 	_update_overclock(blink_on)
-	_update_autofire()
+	_update_fire_control(blink_on)
 	_update_weapon(_nose_icon, _nose_name, WeaponData.Hardpoint.NOSE)
 	_update_weapon(_pylon_icon, _pylon_name, WeaponData.Hardpoint.WING_PYLONS)
 
@@ -123,19 +125,34 @@ func _update_overclock(blink_on: bool) -> void:
 	_overclock_state.visible = full and blink_on
 
 
-func _update_autofire() -> void:
-	# -1 = always on (FC-1 or accessibility), 0 = off, >0 = seconds left on a pickup.
-	var state: int = 0
+## Shown only while there's something to say: a stored charge, or auto-fire running.
+func _update_fire_control(blink_on: bool) -> void:
+	# x: -1 always on (FC-1 or accessibility), 0 off, >0 seconds left. y: stored charges.
+	var seconds: int = 0
+	var left: float = 0.0
 	if player != null:
+		left = player.autofire_time_left()
 		if player.autofire:
-			state = -1
-		elif player.autofire_time_left() > 0.0:
-			state = ceili(player.autofire_time_left())
-	if state == _shown_autofire:
+			seconds = -1
+		elif left > 0.0:
+			seconds = ceili(left)
+	var charges: int = GameState.fire_control_charges
+	_fire_control.visible = seconds != 0 or charges > 0
+	_fire_control_bar.value = left / player.fire_control_duration if seconds > 0 else 1.0
+	# While waiting to be used, the prompt blinks so it gets noticed.
+	_fire_control_state.visible = seconds != 0 or blink_on
+	var state: Vector2i = Vector2i(seconds, charges)
+	if state == _shown_fire_control:
 		return
-	_shown_autofire = state
-	_autofire.visible = state != 0
-	_autofire.text = tr("HUD_AUTOFIRE_ON") if state == -1 else tr("HUD_AUTOFIRE_TIMED") % state
+	_shown_fire_control = state
+	if seconds == -1:
+		_fire_control_state.text = tr("HUD_AUTOFIRE_ON")
+	elif seconds > 0:
+		_fire_control_state.text = tr("HUD_AUTOFIRE_TIMED") % seconds
+	elif charges > 1:
+		_fire_control_state.text = tr("HUD_FIRE_CONTROL_READY_MULTI") % charges
+	else:
+		_fire_control_state.text = tr("HUD_FIRE_CONTROL_READY")
 
 
 ## The icon remembers what it shows, so the name is only rebuilt when the weapon changes.

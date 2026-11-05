@@ -19,6 +19,9 @@ enum InputMode { KEYBOARD, MOUSE }
 @export var collapse_time: float = 0.6
 ## Hull colour at the peak of the white-hot Overclock pulse (values above 1 brighten).
 @export var overclock_glow: Color = Color(1.9, 1.5, 1.15)
+## Fire Control: seconds of auto-fire per activation, and how many pickups can be stored.
+@export var fire_control_duration: float = 10.0
+@export var max_fire_control_charges: int = 2
 
 ## Always-on auto-fire: the FC-1 refit or the accessibility setting (DESIGN.md §7.3), never a key.
 var autofire: bool = false
@@ -74,6 +77,7 @@ func _physics_process(delta: float) -> void:
 		position = position.move_toward(get_global_mouse_position(), speed * delta)
 
 	_clamp_to_screen()
+	_try_activate_fire_control()
 	_update_timed_autofire(delta)
 	_hardpoints.set_firing(autofire or _autofire_left > 0.0 or Input.is_action_pressed("fire"))
 	_update_invulnerability(delta)
@@ -81,6 +85,25 @@ func _physics_process(delta: float) -> void:
 
 
 ## Timed auto-fire from a Fire Control pickup. A second pickup tops the timer back up, it doesn't stack.
+## A Fire Control pickup is stored, not used; the player starts it with the Fire Control key.
+## Returns false when storage is full, so the pickup isn't wasted.
+func store_fire_control() -> bool:
+	if GameState.fire_control_charges >= max_fire_control_charges:
+		return false
+	GameState.fire_control_charges += 1
+	return true
+
+
+func _try_activate_fire_control() -> void:
+	if not Input.is_action_just_pressed("fire_control"):
+		return
+	if GameState.fire_control_charges <= 0 or _autofire_left > 0.0 or autofire:
+		return
+	GameState.fire_control_charges -= 1
+	grant_autofire(fire_control_duration)
+	AudioManager.play("overclock_on", -8.0)
+
+
 func grant_autofire(seconds: float) -> void:
 	if _dead:
 		return

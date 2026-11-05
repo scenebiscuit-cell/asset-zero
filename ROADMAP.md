@@ -127,15 +127,13 @@ How to hand a milestone to Claude Code (in VS Code, terminal at `C:\Projects\ass
   - **Done when:** killing each elite type drops its module, and each module works in both forms
 
 - [ ] **Step 12: Field Refit (loadout) screen**
-  - After a mission: pick 1 of 3 random refits on a ship schematic (both forms side by side) that highlights the hardpoint; one reroll that costs salvage (rising price)
+  - After a level: pick 1 of 3 random refits on a ship schematic (both forms side by side) that highlights the hardpoint; one reroll that costs salvage (rising price)
   - Refits as Resources (`data/refits/*.tres`); handles level-ups and the level-3 Variant A/B choice
   - Nose swap rule (Autocannon line OR Beam Laser line)
-  - Build it as a standalone screen that returns to whatever opened it (the Ops Map from Step 17a; until then, the next mission)
-  - **Done when:** finishing a mission shows the offer and the chosen refit actually changes the ship
+  - **Done when:** finishing a level shows the offer and the chosen refit actually changes the ship
 
 - [ ] **Step 13: Armory shop**
-  - 4 items for salvage, always at least one repair, prices scale with progress (map row from Step 17a)
-  - Standalone screen that returns to whatever opened it (it becomes an Ops Map stop in Step 17b)
+  - 4 items for salvage, always at least one repair, prices scale per level
   - **Done when:** you can buy, can't buy what you can't afford, and can leave
 
 - [ ] **Step 14: All systems, weight classes + refit morph**
@@ -179,6 +177,7 @@ How to hand a milestone to Claude Code (in VS Code, terminal at `C:\Projects\ass
   - **Refit Depot** → choose Repair (40% Armor) or Overhaul (one installed system +1 level) → map
   - **Armory** → the Step 13 shop, prices by row → map
   - **Primary Target** → MAWLER (Step 16) → Mission Complete
+  - Rework the existing Field Refit (Step 12) and Armory (Step 13) screens so they're opened by the map and return to it, instead of running in a fixed order after each level; Armory prices scale with map row
   - Wave director takes its difficulty from the map row instead of a level number
   - **Done when:** every stop type can be entered from the map, gives the right reward, and returns to the map with the run state (Armor, salvage, refits, module, Threat) intact
 

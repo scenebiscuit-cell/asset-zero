@@ -84,7 +84,7 @@ Each milestone goes to Claude Code (VS Code terminal in `C:\Projects\asset-zero`
 Each milestone gets its own branch and pull request; I merge only when I say "merge". Then `/clear` and start the next milestone.
 
 ## Current status
-Milestones A and B are done and merged. Milestone C is in progress (Step 10 done, Step 11 next). ART-1 and ART-2 (Blender) come before Milestone D. Milestone D now includes the mini-bosses and the Ops Map (Steps 16b, 17a, 17b, 17c).
+Milestones A and B are done and merged. Milestone C is in progress (Steps 10–13 built, Step 14 in progress). ART-1 and ART-2 (Blender) come before Milestone D. Milestone D now includes the mini-bosses and the Ops Map (Steps 16b, 17a, 17b, 17c).
 
 ## Preference
 When referring back to earlier instructions or steps, paste them in full rather than saying "from earlier."

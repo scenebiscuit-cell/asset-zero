@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="SystemRefitData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://resources/system_refit_data.gd" id="1_system"]
+
+[resource]
+script = ExtResource("1_system")
+name_key = "REFIT_REACTIVE"
+desc_key = "REFIT_DESC_REACTIVE"
+line = 5
+level = 3
+variant = "A"
+hardpoint = 3
+price = 120
+max_plating = 50
+plating_recharge_delay = 2.5
+plating_recharge_rate = 20.0
+perk = 3

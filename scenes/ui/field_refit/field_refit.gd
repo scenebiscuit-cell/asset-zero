@@ -180,8 +180,12 @@ func _refresh_loadout() -> void:
 	for hardpoint: int in _loadout_rows:
 		var fitted: Label = _loadout_rows[hardpoint][1]
 		var weapon: WeaponData = GameState.weapons.get(hardpoint)
+		var system: SystemRefitData = GameState.system_refit(
+				RefitData.Line.PROPULSION if hardpoint == WeaponData.Hardpoint.ENGINE else RefitData.Line.ARMOR)
 		if weapon != null:
 			fitted.text = tr(weapon.name_key)
+		elif system != null and hardpoint in [WeaponData.Hardpoint.ENGINE, WeaponData.Hardpoint.HULL]:
+			fitted.text = tr(system.display_name())
 		elif hardpoint == WeaponData.Hardpoint.ENGINE:
 			fitted.text = tr("LOADOUT_STOCK_ENGINE")
 		elif hardpoint == WeaponData.Hardpoint.HULL:

@@ -37,6 +37,7 @@ func _init(card_refit: RefitData, height: float = 98.0, in_variant_group: bool =
 	icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	icon.weapon = refit.weapon
 	icon.field_mod = refit as FieldModData
+	icon.system = refit as SystemRefitData
 	_row.add_child(icon)
 	var lines: VBoxContainer = VBoxContainer.new()
 	lines.size_flags_horizontal = Control.SIZE_EXPAND_FILL

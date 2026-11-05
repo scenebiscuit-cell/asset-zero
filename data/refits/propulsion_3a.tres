@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="SystemRefitData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://resources/system_refit_data.gd" id="1_system"]
+
+[resource]
+script = ExtResource("1_system")
+name_key = "REFIT_RAZOR_WING"
+desc_key = "REFIT_DESC_RAZOR_WING"
+line = 4
+level = 3
+variant = "A"
+hardpoint = 2
+price = 120
+speed_bonus = 0.3
+lance_speed_multiplier = 0.7
+perk = 1

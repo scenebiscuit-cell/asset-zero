@@ -1,4 +1,4 @@
-[gd_scene load_steps=39 format=3]
+[gd_scene load_steps=52 format=3]
 
 [ext_resource type="Script" path="res://scenes/player/player.gd" id="1_player"]
 [ext_resource type="Script" path="res://scenes/player/hardpoints.gd" id="2_hardpoints"]
@@ -30,6 +30,18 @@
 [ext_resource type="Resource" path="res://data/weapons/mk2_seeker_pod.tres" id="28_mk2"]
 [ext_resource type="Resource" path="res://data/weapons/mk3_cluster_missile.tres" id="29_mk3"]
 [ext_resource type="Resource" path="res://data/weapons/gbu_bunker_buster.tres" id="30_gbu"]
+[ext_resource type="Script" path="res://scenes/player/ship_systems.gd" id="31_systems"]
+[ext_resource type="Resource" path="res://data/refits/propulsion_1.tres" id="32_propulsion_1"]
+[ext_resource type="Resource" path="res://data/refits/propulsion_2.tres" id="33_propulsion_2"]
+[ext_resource type="Resource" path="res://data/refits/propulsion_3a.tres" id="34_propulsion_3a"]
+[ext_resource type="Resource" path="res://data/refits/propulsion_3b.tres" id="35_propulsion_3b"]
+[ext_resource type="Resource" path="res://data/refits/armor_1.tres" id="36_armor_1"]
+[ext_resource type="Resource" path="res://data/refits/armor_2.tres" id="37_armor_2"]
+[ext_resource type="Resource" path="res://data/refits/armor_3a.tres" id="38_armor_3a"]
+[ext_resource type="Resource" path="res://data/refits/armor_3b.tres" id="39_armor_3b"]
+[ext_resource type="Script" path="res://resources/system_refit_data.gd" id="40_system_data"]
+[ext_resource type="Script" path="res://scenes/player/plating_shield.gd" id="41_shield"]
+[ext_resource type="Script" path="res://scenes/player/nanite_drones.gd" id="42_nanites"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_hitbox"]
 resource_local_to_scene = true
@@ -57,6 +69,9 @@ colors = PackedColorArray(0.85, 0.9, 0.95, 1, 0.45, 0.5, 0.55, 1, 0.3, 0.33, 0.3
 [sub_resource type="Gradient" id="Gradient_death"]
 offsets = PackedFloat32Array(0, 0.15, 0.6, 1)
 colors = PackedColorArray(1, 1, 1, 1, 0.6, 0.95, 1, 1, 0.45, 0.5, 0.55, 1, 0.3, 0.33, 0.36, 0)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_razor"]
+size = Vector2(60, 16)
 
 [node name="Player" type="Area2D"]
 collision_mask = 20
@@ -219,9 +234,32 @@ position = Vector2(14, 6)
 [node name="SalvageMount" type="Node2D" parent="Hardpoints"]
 position = Vector2(0, 10)
 
+[node name="ShipSystems" type="Node2D" parent="."]
+script = ExtResource("31_systems")
+
+[node name="RazorArea" type="Area2D" parent="ShipSystems"]
+collision_layer = 0
+collision_mask = 4
+monitoring = false
+monitorable = false
+
+[node name="Shape" type="CollisionShape2D" parent="ShipSystems/RazorArea"]
+position = Vector2(0, 4)
+shape = SubResource("RectangleShape2D_razor")
+
+[node name="Visual" type="Node2D" parent="ShipSystems"]
+
+[node name="PlatingShield" type="Node2D" parent="ShipSystems/Visual"]
+script = ExtResource("41_shield")
+
+[node name="NaniteDrones" type="Node2D" parent="ShipSystems/Visual"]
+script = ExtResource("42_nanites")
+
 [node name="DebugLoadout" type="Node" parent="." node_paths=PackedStringArray("hardpoints")]
 script = ExtResource("12_debug")
 hardpoints = NodePath("../Hardpoints")
 nose_options = Array[ExtResource("11_weapon_data")]([ExtResource("3_m20"), ExtResource("13_m20d"), ExtResource("23_m40"), ExtResource("24_rg9"), ExtResource("14_hel1"), ExtResource("25_hel2"), ExtResource("26_hel3t"), ExtResource("27_hel3s")])
 pylon_options = Array[ExtResource("11_weapon_data")]([ExtResource("16_r1"), ExtResource("15_mk1"), ExtResource("28_mk2"), ExtResource("29_mk3"), ExtResource("30_gbu")])
 module_options = Array[ExtResource("19_module_data")]([ExtResource("18_spread"), ExtResource("20_flak"), ExtResource("21_drill"), ExtResource("22_drones")])
+propulsion_options = Array[ExtResource("40_system_data")]([ExtResource("32_propulsion_1"), ExtResource("33_propulsion_2"), ExtResource("34_propulsion_3a"), ExtResource("35_propulsion_3b")])
+armor_options = Array[ExtResource("40_system_data")]([ExtResource("36_armor_1"), ExtResource("37_armor_2"), ExtResource("38_armor_3a"), ExtResource("39_armor_3b")])

@@ -150,6 +150,9 @@ How to hand a milestone to Claude Code (in VS Code, terminal at `C:\Projects\ass
 
 Write down decisions here as you make them (date — decision), so the AI tools know about them.
 
+- 2026-11-05 — Controls are now keyboard + gamepad; mouse flying is removed (the wheel and mouse-flick dashes were awkward). Gamepad moved out of the "Later" list. Vector Dash on gamepad is the right bumper. Cursor hidden during play, small green reticle in menus. DESIGN.md §2, §5.5, §6, Later list.
+- 2026-11-05 — After playtest: Razor Wing ignores ramming damage (was "you still take contact damage"); Vector Dash also on the mouse wheel; Plating shown as a hex-plate ring; Reactive shrapnel ring wider (16 rounds, 300 px); Nanite Repair shows repair drones while healing. DESIGN.md §5.5, §6.
+- 2026-11-04 — Propulsion/Armor numbers set (Razor Wing ~120 dps on air units only, Vector Dash keyboard-only with 0.7 s cooldown, Plating recharge rates, Nanite ~0.7 Armor/s). Plating refills at the start of each sector. Debug keys 4/5 cycle Propulsion/Armor. DESIGN.md §6.
 - 2026-11-04 — Shorter sectors (Sector 1 60 s, others 105 s, was 90/150) and a slower strike meter (80 kills, was 40), after playtesting. Enemy salvage ×1.5 to compensate (same number of pickups, each worth more, so Overclock charge is unchanged). DESIGN.md §9, §7.4.
 - 2026-11-04 — Debug loadout keys (debug builds only) now cycle: 1 = next nose weapon, 2 = pylons, 3 = Salvage Mount module, since there are now more weapons than number keys.
 - 2026-11-04 — Added Saturation Strike (developer request): kill meter in the left rail, 40 kills = 1 charge (max 3), R/U clears the screen. Bomb meters are an allowed genre idea (§15); name and numbers are ours. Console panels enlarged; Fire Control panel now always shown (EMPTY when nothing stored). DESIGN.md §5.5, §7.4, §13.

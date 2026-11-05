@@ -8,8 +8,6 @@ signal meltdown_pulse(center: Vector2, radius: float)
 ## The player called in a Saturation Strike (DESIGN.md §7.4); the Level clears the screen.
 signal strike_called
 
-enum InputMode { KEYBOARD, MOUSE }
-
 @export var move_speed: float = 300.0
 ## Keeps the airframe visual fully on screen, not just its centre.
 @export var screen_margin: Vector2 = Vector2(26.0, 36.0)
@@ -32,12 +30,12 @@ var play_area_bottom: float = 0.0
 
 ## Always-on auto-fire: the FC-1 refit or the accessibility setting (DESIGN.md §7.3), never a key.
 var autofire: bool = false
-var _input_mode: InputMode = InputMode.KEYBOARD
 ## Seconds left on a timed Fire Control pickup.
 var _autofire_left: float = 0.0
 var _invulnerable_left: float = 0.0
 var _dead: bool = false
 var _glow_time: float = 0.0
+var _default_lance_speed: float = 0.55
 
 @onready var _hardpoints: Hardpoints = $Hardpoints
 @onready var _hitbox: CollisionShape2D = $Hitbox
@@ -51,9 +49,11 @@ var _glow_time: float = 0.0
 @onready var _graze_area: GrazeArea = $GrazeArea
 @onready var _overclock: Overclock = $Overclock
 @onready var _assimilate_fx: AssimilateFx = $Visual/AssimilateFx
+@onready var _systems: ShipSystems = $ShipSystems
 
 
 func _ready() -> void:
+	_default_lance_speed = _combat_morph.lance_speed_multiplier
 	_hardpoints.setup(round_pool, missile_pool)
 	_hardpoints.apply_shape(_combat_morph.current_shape(), 0.0)
 	area_entered.connect(_try_hit)
@@ -64,24 +64,32 @@ func _ready() -> void:
 	_overclock.started.connect(_refresh_damage)
 	_overclock.finished.connect(_on_overclock_finished)
 	_set_hitbox(_combat_morph.current_shape(), 0.0)
+	refresh_systems()
 
 
-func _unhandled_input(event: InputEvent) -> void:
-	if event is InputEventMouseMotion:
-		_input_mode = InputMode.MOUSE
+## Propulsion sets the speeds (Swept-Wing raises Lance form speed). Re-run after a refit.
+func refresh_systems() -> void:
+	_systems.refresh()
+	var lance: float = _systems.lance_speed_multiplier()
+	_combat_morph.lance_speed_multiplier = lance if lance > 0.0 else _default_lance_speed
+
+
+## Flying is keyboard or gamepad only, so the cursor hides during play and shows in menus
+## (every menu pauses the game).
+func _notification(what: int) -> void:
+	match what:
+		NOTIFICATION_READY, NOTIFICATION_UNPAUSED:
+			Input.mouse_mode = Input.MOUSE_MODE_HIDDEN
+		NOTIFICATION_PAUSED, NOTIFICATION_EXIT_TREE:
+			Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 
 
 func _physics_process(delta: float) -> void:
+	# Analog on a gamepad stick: a half push flies at half speed.
 	var direction: Vector2 = Input.get_vector("move_left", "move_right", "move_up", "move_down")
-	if direction != Vector2.ZERO:
-		_input_mode = InputMode.KEYBOARD
-
-	var speed: float = move_speed * _combat_morph.speed_multiplier()
-	if _input_mode == InputMode.KEYBOARD:
-		position += direction * speed * delta
-	else:
-		# Capped at speed so mouse play isn't faster than keyboard.
-		position = position.move_toward(get_global_mouse_position(), speed * delta)
+	var speed: float = move_speed * _systems.speed_multiplier() * _combat_morph.speed_multiplier()
+	position += direction * speed * delta
+	position += _systems.dash_offset(delta)
 
 	_clamp_to_screen()
 	_try_activate_fire_control()
@@ -233,9 +241,11 @@ func take_damage(amount: int) -> void:
 	if _dead:
 		return
 	_hit_splash.restart()
+	var on_plating: bool = GameState.plating > 0
 	if GameState.damage_armor(amount):
 		_die()
 		return
+	_systems.on_hit(on_plating)
 	_invulnerable_left = invulnerable_time
 
 
@@ -262,7 +272,7 @@ func _set_hitbox(shape: AirframeShape, duration: float) -> void:
 
 
 func _try_hit(area: Area2D) -> void:
-	if _dead or _invulnerable_left > 0.0:
+	if _dead or _invulnerable_left > 0.0 or _systems.is_phased():
 		return
 	if area is EnemyRound:
 		var enemy_round: EnemyRound = area as EnemyRound
@@ -272,7 +282,7 @@ func _try_hit(area: Area2D) -> void:
 		enemy_round.deactivate()
 	elif area is EnemyHazard:
 		take_damage((area as EnemyHazard).damage)
-	elif area is Enemy:
+	elif area is Enemy and not _systems.ignores_contact():
 		take_damage((area as Enemy).data.contact_damage)
 
 
@@ -310,6 +320,20 @@ func _die() -> void:
 	# No airframe, no shadow on the ground.
 	tween.parallel().tween_property(_shadow, "modulate:a", 0.0, collapse_time * 0.8)
 	destroyed.emit()
+
+
+## Vector Dash: the hull goes liquid, stretched along the dash and see-through.
+func set_liquid(on: bool, direction: Vector2 = Vector2.ZERO) -> void:
+	if _dead:
+		return
+	if not on:
+		_airframe.scale = Vector2.ONE
+		_airframe.modulate.a = 1.0
+		return
+	var stretch: Vector2 = Vector2(1.0 + absf(direction.x) * 0.6 - absf(direction.y) * 0.25,
+			1.0 + absf(direction.y) * 0.6 - absf(direction.x) * 0.25)
+	_airframe.scale = stretch
+	_airframe.modulate.a = 0.55
 
 
 func _clamp_to_screen() -> void:

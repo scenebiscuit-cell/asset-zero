@@ -101,3 +101,19 @@ REFIT_DESC_HEL3S,Splits into 3 angled beams. Lance form merges them into one.
 REFIT_DESC_MK2,4 faster homing missiles every 1.5 seconds.
 REFIT_DESC_MK3,Missiles split into 4 small homing submunitions.
 REFIT_DESC_GBU,Big slow bombs with a wide blast. Double damage to ground targets.
+REFIT_AFTERBURNER,Afterburner Mk1
+REFIT_SWEPT_WING,Swept-Wing Refit
+REFIT_RAZOR_WING,Razor Wing
+REFIT_VECTOR_DASH,Vector Dash
+REFIT_ABLATIVE,Ablative Plating
+REFIT_COMPOSITE,Composite Plating
+REFIT_REACTIVE,Reactive Armor
+REFIT_NANITE,Nanite Repair
+REFIT_DESC_AFTERBURNER,+15% speed.
+REFIT_DESC_SWEPT_WING,"+30% speed. Lance form moves at 70% speed, not 55%."
+REFIT_DESC_RAZOR_WING,Blade-edged wings cut any aircraft you touch. You still take contact damage.
+REFIT_DESC_VECTOR_DASH,Double-tap a direction to dash. You can't be hit mid-dash.
+REFIT_DESC_ABLATIVE,25 Plating: a shield that soaks hits and recharges after 3 seconds.
+REFIT_DESC_COMPOSITE,"50 Plating, recharges sooner and faster."
+REFIT_DESC_REACTIVE,Every hit you take blasts a ring of shrapnel outward.
+REFIT_DESC_NANITE,Slowly restores Armor while it's below half.

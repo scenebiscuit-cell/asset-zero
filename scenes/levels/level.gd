@@ -67,7 +67,13 @@ func _enter_tree() -> void:
 		GameState.reset_run()
 
 
+# Drop the cursor texture so it isn't left behind when the level closes.
+func _exit_tree() -> void:
+	Input.set_custom_mouse_cursor(null)
+
+
 func _ready() -> void:
+	ReticleCursor.apply()
 	_player.destroyed.connect(_on_player_destroyed)
 	_player.meltdown_pulse.connect(_on_meltdown_pulse)
 	_player.strike_called.connect(_on_strike_called)

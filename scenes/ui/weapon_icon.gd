@@ -23,6 +23,11 @@ var field_mod: FieldModData:
 	set(new_mod):
 		field_mod = new_mod
 		queue_redraw()
+## Propulsion and Armor refits have no weapon either.
+var system: SystemRefitData:
+	set(new_system):
+		system = new_system
+		queue_redraw()
 
 
 func _draw() -> void:
@@ -37,6 +42,8 @@ func _draw() -> void:
 		_draw_missiles(weapon as MissileData)
 	elif field_mod != null:
 		_draw_field_mod(field_mod)
+	elif system != null:
+		_draw_system(system)
 	else:
 		draw_rect(Rect2(Vector2(3.0, 3.0), size - Vector2(6.0, 6.0)), EMPTY, false, 1.0)
 
@@ -162,6 +169,55 @@ func _draw_module(module: ModuleData) -> void:
 		draw_circle(center, 1.5, sign_color)
 	else:
 		draw_circle(center, radius * 0.25, sign_color)
+
+
+## Propulsion: an engine nozzle whose flame grows with the level, or the perk's sign.
+## Armor: a cyan plate with one layer per level, or the perk's sign.
+func _draw_system(refit: SystemRefitData) -> void:
+	var c: Vector2 = size * 0.5
+	var r: float = minf(size.x, size.y) * 0.36
+	var cyan: Color = Color(0.35, 0.85, 1.0)
+	match refit.perk:
+		SystemRefitData.Perk.RAZOR_WING:
+			for sgn: float in [-1.0, 1.0]:
+				draw_colored_polygon(PackedVector2Array([c + Vector2(sgn * r * 0.15, -r * 0.2),
+						c + Vector2(sgn * r * 1.1, r * 0.7), c + Vector2(sgn * r * 0.15, r * 0.35)]), MISSILE)
+				draw_line(c + Vector2(sgn * r * 0.15, -r * 0.2), c + Vector2(sgn * r * 1.1, r * 0.7), Color.WHITE, 1.5)
+			return
+		SystemRefitData.Perk.VECTOR_DASH:
+			draw_colored_polygon(PackedVector2Array([c + Vector2(r, 0.0), c + Vector2(r * 0.2, -r * 0.6),
+					c + Vector2(r * 0.2, r * 0.6)]), cyan)
+			for k: int in 3:
+				var y: float = (k - 1) * r * 0.4
+				draw_line(c + Vector2(-r, y), c + Vector2(r * 0.05, y), Color(cyan, 0.4 + 0.2 * k), 1.5)
+			return
+		SystemRefitData.Perk.REACTIVE_ARMOR:
+			draw_circle(c, r * 0.35, cyan)
+			for k: int in 8:
+				var ray: Vector2 = Vector2.from_angle(k * PI / 4.0)
+				draw_line(c + ray * r * 0.5, c + ray * r * 1.0, EXHAUST, 1.5)
+			return
+		SystemRefitData.Perk.NANITE_REPAIR:
+			var green: Color = Color(0.45, 1.0, 0.55)
+			draw_rect(Rect2(c - Vector2(r * 0.18, r * 0.6), Vector2(r * 0.36, r * 1.2)), green)
+			draw_rect(Rect2(c - Vector2(r * 0.6, r * 0.18), Vector2(r * 1.2, r * 0.36)), green)
+			for k: int in 6:
+				draw_circle(c + Vector2.from_angle(k * TAU / 6.0 + 0.5) * r * 1.0, 1.2, Color(green, 0.7))
+			return
+	if refit.line == RefitData.Line.PROPULSION:
+		var top: float = c.y - r * 0.8
+		draw_colored_polygon(PackedVector2Array([c + Vector2(-r * 0.4, -r * 0.8), c + Vector2(r * 0.4, -r * 0.8),
+				c + Vector2(r * 0.6, -r * 0.1), c + Vector2(-r * 0.6, -r * 0.1)]), MISSILE)
+		var flame: float = r * (0.6 + 0.4 * refit.level)
+		draw_colored_polygon(PackedVector2Array([c + Vector2(-r * 0.5, -r * 0.1), c + Vector2(r * 0.5, -r * 0.1),
+				c + Vector2(0.0, -r * 0.1 + flame)]), EXHAUST)
+		draw_line(Vector2(c.x - r * 0.4, top), Vector2(c.x + r * 0.4, top), Color.WHITE, 1.0)
+		return
+	for k: int in maxi(refit.level, 1):
+		var inset: float = k * 3.0
+		var plate: Rect2 = Rect2(c - Vector2(r, r) + Vector2(inset, inset), Vector2(r, r) * 2.0 - Vector2(inset, inset) * 2.0)
+		draw_rect(plate, Color(cyan, 0.25 + 0.2 * k))
+		draw_rect(plate, cyan, false, 1.0)
 
 
 ## Repair: a green cross. Armor Kit: an amber shield.

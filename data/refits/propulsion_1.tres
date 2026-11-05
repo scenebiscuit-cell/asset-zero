@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="SystemRefitData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://resources/system_refit_data.gd" id="1_system"]
+
+[resource]
+script = ExtResource("1_system")
+name_key = "REFIT_AFTERBURNER"
+desc_key = "REFIT_DESC_AFTERBURNER"
+line = 4
+level = 1
+hardpoint = 2
+price = 80
+speed_bonus = 0.15

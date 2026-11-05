@@ -26,6 +26,8 @@ var overclock: float = 0.0
 var fire_control_charges: int = 0
 ## Level reached in each system line (RefitData.Line -> level). The run starts with Autocannon 1.
 var system_levels: Dictionary[int, int] = {}
+## The Propulsion and Armor refit installed on each line (RefitData.Line -> SystemRefitData).
+var installed_systems: Dictionary[int, SystemRefitData] = {}
 ## Refits installed this run that count toward weight class (field mods don't).
 var refit_count: int = 0
 ## Field Refit rerolls bought this run; each one makes the next cost more.
@@ -53,6 +55,7 @@ func reset_run() -> void:
 	overclock = 0.0
 	fire_control_charges = 0
 	system_levels = {RefitData.Line.AUTOCANNON: 1}
+	installed_systems.clear()
 	refit_count = 0
 	rerolls_bought = 0
 	kills_toward_repair = 0
@@ -64,6 +67,18 @@ func reset_run() -> void:
 
 func system_level(line: RefitData.Line) -> int:
 	return system_levels.get(line, 0)
+
+
+## The Propulsion or Armor refit on a line, or null for stock thrusters / bare frame.
+func system_refit(line: RefitData.Line) -> SystemRefitData:
+	return installed_systems.get(line, null) as SystemRefitData
+
+
+func has_perk(perk: SystemRefitData.Perk) -> bool:
+	for refit: SystemRefitData in installed_systems.values():
+		if refit.perk == perk:
+			return true
+	return false
 
 
 func install_refit(refit: RefitData) -> void:
@@ -128,6 +143,9 @@ func repair_armor(amount: int) -> void:
 
 
 ## Returns true when Armor has run out.
+## Plating soaks the hit first (§5.4); the rest comes off Armor. Returns true if Armor hit 0.
 func damage_armor(amount: int) -> bool:
-	armor = maxi(armor - amount, 0)
+	var absorbed: int = mini(plating, amount)
+	plating -= absorbed
+	armor = maxi(armor - (amount - absorbed), 0)
 	return armor == 0

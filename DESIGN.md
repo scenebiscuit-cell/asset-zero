@@ -39,9 +39,9 @@ Megacorporations are fighting over the resources of distant planets and strippin
 - **Pick-1-of-3 Field Refit after each level + Armory shop**
 - **Small meta progression** (persistent currency that unlocks new systems)
 - **Platform:** Web browser (itch.io), Godot 4 HTML5 export
-- **Controls:** Keyboard and mouse
+- **Controls:** Keyboard or gamepad (the mouse only clicks menus)
 
-**Out of scope for the demo** (write ideas into the "Later" list at the bottom, don't build them): more sectors, multiple starting airframes, heat management, contract board, laser-designated strikes, gamepad, touch, story cutscenes, online leaderboards, co-op, Steam features.
+**Out of scope for the demo** (write ideas into the "Later" list at the bottom, don't build them): more sectors, multiple starting airframes, heat management, contract board, laser-designated strikes, touch, story cutscenes, online leaderboards, co-op, Steam features.
 
 ## 4. Setting (sector 1)
 
@@ -107,19 +107,20 @@ The ship always looks like a hard-edged military aircraft. The liquid metal show
 
 ### 5.5 Controls
 
-| Action | Keyboard | Mouse |
+| Action | Keyboard | Gamepad |
 |---|---|---|
-| Move | WASD / Arrow keys | Ship moves toward cursor (capped at move speed) |
-| Fire | Hold Space or J | Hold left mouse button |
-| Combat Morph (Lance form) | Hold Shift or K | Hold right mouse button |
-| Overclock | E or L | Middle mouse button |
-| Fire Control | Q or I | Mouse side button | Starts a stored Fire Control pickup: auto-fire for ~10 s (§7.3) |
-| Saturation Strike | R or U | Mouse side button 2 | Spends a stored strike charge: clears the screen (§7.4) |
-| Auto-fire | — (no key) | Only from Fire Control (§7.3) or the accessibility setting |
-| Pause | Esc / P | — |
+| Move | WASD / Arrow keys | Left stick (analog: a half push flies at half speed) or D-pad |
+| Fire | Hold Space or J | Hold A or right trigger |
+| Combat Morph (Lance form) | Hold Shift or K | Hold left trigger or left bumper |
+| Overclock | E or L | Y |
+| Fire Control | Q or I | X | Starts a stored Fire Control pickup: auto-fire for ~10 s (§7.3) |
+| Vector Dash | Double-tap a direction | Right bumper (dashes the way you're moving, or forward) | Only with the Vector Dash refit (§6) |
+| Saturation Strike | R or U | B | Spends a stored strike charge: clears the screen (§7.4) |
+| Auto-fire | — (no key) | — | Only from Fire Control (§7.3) or the accessibility setting |
+| Pause | Esc / P | Start |
 | Fullscreen | F11 / Alt+Enter | — |
 
-Keyboard and mouse can both work in the same session. Whichever moved last takes control.
+Keyboard and gamepad both work at once. The mouse doesn't fly the ship: the cursor is hidden during play and shows as a small green reticle in menus, which can be clicked or driven with the keyboard / D-pad.
 
 ### 5.6 Combat Morph
 
@@ -223,17 +224,17 @@ Starts with unguided rockets; homing is a later refit, because Seekers are very 
 |---|---|---|---|
 | 1 | Afterburner Mk1 | +15% speed | Bigger engine glow |
 | 2 | Swept-Wing Refit | +30% speed, Lance form moves at 70% instead of 55% | Wings sweep back |
-| 3A | Razor Wing | Reinforced blade-edged wings damage enemies you touch (you still take contact damage) | Sharp leading edges |
-| 3B | Vector Dash | Double-tap a direction for a short thrust-vectored dash with brief invulnerability (the ship goes liquid for a moment) | Side thruster nozzles |
+| 3A | Razor Wing | Reinforced blade-edged wings damage aircraft you touch (~120 damage/s), and ramming aircraft no longer hurts you (enemy rounds and hazards still do) | Sharp leading edges |
+| 3B | Vector Dash | Double-tap a direction key, or press the right bumper on a gamepad: a short thrust-vectored dash (~120 px) with brief invulnerability (the ship goes liquid for a moment). 0.7 s cooldown | Side thruster nozzles |
 
 ### Armor line (hull)
 
 | Level | Designation | Effect |
 |---|---|---|
-| 1 | Ablative Plating | 25 Plating |
-| 2 | Composite Plating | 50 Plating, faster recharge |
-| 3A | Reactive Armor | Taking a hit blasts a ring of shrapnel outward |
-| 3B | Nanite Repair | Slowly restores Armor (cap: 50%) |
+| 1 | Ablative Plating | 25 Plating (recharges 10/s after 3 s without a hit). Shown as a ring of cyan hex plates around the ship that thins as Plating drops and flashes when it soaks a hit |
+| 2 | Composite Plating | 50 Plating, faster recharge (20/s after 2.5 s) |
+| 3A | Reactive Armor | Taking a hit blasts a wide ring of 16 shrapnel rounds outward (~300 px) |
+| 3B | Nanite Repair | Slowly restores Armor (~0.7/s, only while below 50%). Small liquid-metal repair drones fly out beside the ship while it heals, then fly back in |
 
 ### Field mods (filler offers)
 
@@ -525,7 +526,7 @@ Inspired by the *formula* of 90s shooters and by mech-combat loadout games, usin
 - More sectors and corporations (each with its own planet, enemies and boss)
 - More weapon modules, and a refit that lets you hold two at once
 - Several starting airframes (XF-1, XF-2…) with different hardpoint layouts
-- Gamepad, Steam Deck and touch support
+- Steam Deck and touch support, button prompts that match the gamepad
 - Steam release (achievements, cloud saves)
 - Daily seeded run
 - Hand-painted final art with a metallic shader

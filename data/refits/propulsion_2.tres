@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="SystemRefitData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://resources/system_refit_data.gd" id="1_system"]
+
+[resource]
+script = ExtResource("1_system")
+name_key = "REFIT_SWEPT_WING"
+desc_key = "REFIT_DESC_SWEPT_WING"
+line = 4
+level = 2
+hardpoint = 2
+price = 100
+speed_bonus = 0.3
+lance_speed_multiplier = 0.7

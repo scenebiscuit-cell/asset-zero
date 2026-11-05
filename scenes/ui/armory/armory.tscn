@@ -1,0 +1,119 @@
+[gd_scene load_steps=6 format=3]
+
+[ext_resource type="Script" path="res://scenes/ui/armory/armory.gd" id="1_armory"]
+[ext_resource type="Resource" path="res://data/refits/catalog.tres" id="2_catalog"]
+[ext_resource type="Resource" path="res://data/refits/field_repair.tres" id="3_repair"]
+[ext_resource type="Theme" path="res://scenes/ui/terminal_theme.tres" id="4_theme"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_screen"]
+bg_color = Color(0.02, 0.05, 0.05, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.35, 0.85, 1, 0.25)
+
+[node name="Armory" type="CanvasLayer"]
+process_mode = 3
+layer = 15
+script = ExtResource("1_armory")
+catalog = ExtResource("2_catalog")
+repair = ExtResource("3_repair")
+
+[node name="Root" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 540.0
+offset_bottom = 960.0
+theme = ExtResource("4_theme")
+
+[node name="Frame" type="Panel" parent="Root"]
+layout_mode = 0
+offset_left = 8.0
+offset_top = 8.0
+offset_right = 532.0
+offset_bottom = 952.0
+mouse_filter = 2
+
+[node name="Title" type="Label" parent="Root"]
+layout_mode = 0
+offset_top = 22.0
+offset_right = 540.0
+offset_bottom = 54.0
+theme_override_font_sizes/font_size = 28
+text = "ARMORY"
+horizontal_alignment = 1
+
+[node name="Subtitle" type="Label" parent="Root"]
+layout_mode = 0
+offset_top = 56.0
+offset_right = 540.0
+offset_bottom = 74.0
+theme_override_colors/font_color = Color(0.55, 1, 0.6, 1)
+theme_override_font_sizes/font_size = 13
+text = "ARMORY_SUBTITLE"
+horizontal_alignment = 1
+
+[node name="ScreenBack" type="Panel" parent="Root"]
+layout_mode = 0
+offset_left = 24.0
+offset_top = 86.0
+offset_right = 516.0
+offset_bottom = 152.0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_screen")
+
+[node name="Blurb" type="Label" parent="Root"]
+layout_mode = 0
+offset_left = 36.0
+offset_top = 94.0
+offset_right = 504.0
+offset_bottom = 114.0
+theme_override_colors/font_color = Color(0.55, 1, 0.6, 1)
+theme_override_font_sizes/font_size = 13
+text = "ARMORY_BLURB"
+
+[node name="Armor" type="Label" parent="Root"]
+layout_mode = 0
+offset_left = 36.0
+offset_top = 122.0
+offset_right = 270.0
+offset_bottom = 144.0
+theme_override_colors/font_color = Color(0.35, 0.85, 1, 1)
+theme_override_font_sizes/font_size = 14
+text = "ARMORY_ARMOR"
+
+[node name="Salvage" type="Label" parent="Root"]
+layout_mode = 0
+offset_left = 270.0
+offset_top = 122.0
+offset_right = 504.0
+offset_bottom = 144.0
+theme_override_font_sizes/font_size = 14
+text = "REFIT_SALVAGE"
+horizontal_alignment = 2
+
+[node name="Items" type="VBoxContainer" parent="Root"]
+layout_mode = 0
+offset_left = 24.0
+offset_top = 170.0
+offset_right = 516.0
+offset_bottom = 800.0
+theme_override_constants/separation = 12
+
+[node name="Message" type="Label" parent="Root"]
+layout_mode = 0
+offset_top = 812.0
+offset_right = 540.0
+offset_bottom = 838.0
+theme_override_font_sizes/font_size = 15
+horizontal_alignment = 1
+
+[node name="Leave" type="Button" parent="Root"]
+layout_mode = 0
+offset_left = 150.0
+offset_top = 860.0
+offset_right = 390.0
+offset_bottom = 906.0
+theme_override_font_sizes/font_size = 18
+text = "ARMORY_LEAVE"

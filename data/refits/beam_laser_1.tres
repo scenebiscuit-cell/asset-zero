@@ -11,3 +11,4 @@ level = 1
 hardpoint = 0
 weapon = ExtResource("2_weapon")
 offer_weight = 0.7
+price = 90

@@ -18,6 +18,8 @@ enum Line { NONE, AUTOCANNON, BEAM, MISSILE, PROPULSION, ARMOR }
 @export var weapon: WeaponData
 ## Higher = offered more often.
 @export var offer_weight: float = 1.0
+## Armory price in salvage before the per-sector markup (DESIGN.md §7.1).
+@export var price: int = 80
 
 
 func display_name() -> String:

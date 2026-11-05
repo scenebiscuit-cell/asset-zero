@@ -10,3 +10,4 @@ name_key = "REFIT_ARMOR_KIT"
 desc_key = "REFIT_DESC_ARMOR_KIT"
 hardpoint = 3
 offer_weight = 0.5
+price = 45

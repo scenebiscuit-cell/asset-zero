@@ -98,7 +98,7 @@ The ship always looks like a hard-edged military aircraft. The liquid metal show
 
 | Stat | Start value | Notes |
 |---|---|---|
-| Armor | 100 | Health. Run ends at 0. Repairable in the Armory |
+| Armor | 100 | Health. Run ends at 0. Repairable in the Armory, and every 20 enemies destroyed drop a repair kit (+20 Armor) |
 | Plating | 0 | Regenerating shield, absorbs damage first, recharges after 3 s without being hit |
 | Move speed | 300 px/s | Gunship form. Changed by Propulsion and weight class |
 | Hitbox | capsule over the body + wing roots: ~24 px wide (Gunship), ~14 px wide (Lance) | Wing tips don't count. Shrinks as the wings fold in Lance form (§5.6). Stored per airframe shape |
@@ -246,7 +246,7 @@ Small simple upgrades: AP Rounds (+10% damage), Improved Feed (+10% fire rate), 
 ### 7.1 Between levels (in order)
 
 1. **Field Refit (free):** pick 1 of 3 random refits. Shown on a **loadout screen**: a top-down schematic of the ship (both forms side by side) with its hardpoints, where the offered refit highlights the hardpoint it goes into. Each card shows the designation, level and hardpoint; a Beam Laser offered while you carry the Autocannon line says what it replaces (nose rule). When a line reaches its last level, its Variant A and Variant B share one card and you pick one. One reroll per screen for salvage: 15, plus 10 for every reroll already bought this run. If there aren't enough system refits to fill 3 cards, field mods fill the gaps.
-2. **Armory (shop):** a black-market arms dealer selling 4 items for salvage. Always includes at least one repair. Prices scale with level. Can leave without buying.
+2. **Armory (shop):** a black-market arms dealer selling 4 items for salvage. The first is always a repair (Field Repair, greyed out as ARMOR FULL when Armor is full); the rest are rolled from the same refits and field mods as the Field Refit. Each item can be bought once. Prices: each item has a base price (field mods ~30–45, systems ~80–100), +40% per sector after the first, rounded to 5. Can leave without buying.
 3. Next level.
 
 ### 7.2 Meta unlocks (demo)

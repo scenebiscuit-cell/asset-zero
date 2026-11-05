@@ -15,6 +15,12 @@ extends Node2D
 @export var escape_penalty: int = 2
 ## Salvage awarded at SECTOR CLEAR if no aircraft got away all sector.
 @export var perimeter_bonus: int = 25
+## Every this many enemies destroyed drops a repair kit (counts carry over between sectors).
+@export var kills_per_repair: int = 20
+## Armor restored by that kill-count repair kit.
+@export var kill_repair_amount: int = 20
+## Armor restored by repair kits that enemies drop by chance (Armored Transport).
+@export var enemy_repair_amount: int = 25
 ## Destructible radar dome placed on the background's barracks and SAM sites.
 @export var dome_scene: PackedScene
 
@@ -28,6 +34,7 @@ var _breaches: int = 0
 @onready var _wave_director: WaveDirector = $WaveDirector
 @onready var _sector_clear: SectorClearScreen = $SectorClear
 @onready var _field_refit: FieldRefitScreen = $FieldRefit
+@onready var _armory: ArmoryScreen = $Armory
 @onready var _sector_banner: SectorBanner = $SectorBanner
 @onready var _hud: Hud = $Hud
 @onready var _pause_menu: PauseMenu = $PauseMenu
@@ -53,6 +60,7 @@ func _ready() -> void:
 	_player.meltdown_pulse.connect(_on_meltdown_pulse)
 	_sector_clear.continue_pressed.connect(_on_continue_pressed)
 	_field_refit.finished.connect(_on_field_refit_finished)
+	_armory.finished.connect(_on_armory_finished)
 	_hud.player = _player
 	_ground_layer.dome_entering.connect(_on_dome_entering)
 	if not run_waves or sectors.is_empty():
@@ -81,7 +89,7 @@ func _on_sector_cleared() -> void:
 	_sector_clear.show_screen(_level_data.sector_number, _breaches, bonus)
 
 
-## Between sectors (DESIGN.md §7.1): Field Refit, then (Step 13) the Armory, then the next sector.
+## Between sectors (DESIGN.md §7.1): Field Refit, then the Armory, then the next sector.
 func _on_continue_pressed() -> void:
 	# Advance first, so the dissolved module is already gone from the loadout the refit screen shows.
 	GameState.advance_sector()
@@ -90,6 +98,10 @@ func _on_continue_pressed() -> void:
 
 
 func _on_field_refit_finished() -> void:
+	_armory.open(_level_data.sector_number)
+
+
+func _on_armory_finished() -> void:
 	# Same scene, next sector's data. Nothing on screen carries over; the run does.
 	get_tree().reload_current_scene()
 
@@ -132,7 +144,11 @@ func _on_enemy_destroyed(enemy: Enemy) -> void:
 		if enemy.data.module != null:
 			drop_module(enemy.data.module, enemy.global_position)
 	if randf() < enemy.data.repair_drop_chance:
-		drop_pickup(_repair_pool, enemy.global_position)
+		drop_repair(enemy.global_position, enemy_repair_amount)
+	GameState.kills_toward_repair += 1
+	if GameState.kills_toward_repair >= kills_per_repair:
+		GameState.kills_toward_repair = 0
+		drop_repair(enemy.global_position + Vector2(12.0, 0.0), kill_repair_amount)
 	if randf() < fire_control_drop_chance:
 		drop_pickup(_fire_control_pool, enemy.global_position + Vector2(0.0, -12.0))
 
@@ -154,8 +170,13 @@ func _on_meltdown_pulse(center: Vector2, radius: float) -> void:
 			_salvage_pool.spawn_burst(at, 1)
 
 
-func drop_repair(at: Vector2) -> void:
-	drop_pickup(_repair_pool, at)
+func drop_repair(at: Vector2, amount: int = 25) -> void:
+	var pickup: RepairPickup = _repair_pool.acquire() as RepairPickup
+	if pickup == null:
+		return
+	# Pooled kits are shared by both drop kinds, so the amount is set on every drop.
+	pickup.repair_amount = amount
+	pickup.activate(at, _player)
 
 
 func drop_fire_control(at: Vector2) -> void:

@@ -30,6 +30,8 @@ var system_levels: Dictionary[int, int] = {}
 var refit_count: int = 0
 ## Field Refit rerolls bought this run; each one makes the next cost more.
 var rerolls_bought: int = 0
+## Enemies destroyed since the last kill-count repair kit dropped.
+var kills_toward_repair: int = 0
 ## Which sector of the run we're on (0 = Sector 1).
 var sector_index: int = 0
 ## False until a level starts a run; the Level resets everything when it finds no run in progress.
@@ -50,6 +52,7 @@ func reset_run() -> void:
 	system_levels = {RefitData.Line.AUTOCANNON: 1}
 	refit_count = 0
 	rerolls_bought = 0
+	kills_toward_repair = 0
 	sector_index = 0
 	run_active = true
 

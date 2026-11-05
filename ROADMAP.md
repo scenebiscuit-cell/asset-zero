@@ -99,7 +99,7 @@ How to hand a milestone to Claude Code (in VS Code, terminal at `C:\Projects\ass
   - Nose swap rule (Autocannon line OR Beam Laser line)
   - **Done when:** finishing a level shows the offer and the chosen refit actually changes the ship
 
-- [ ] **Step 13: Armory shop**
+- [x] **Step 13: Armory shop**
   - 4 items for salvage, always at least one repair, prices scale per level
   - **Done when:** you can buy, can't buy what you can't afford, and can leave
 
@@ -150,6 +150,8 @@ How to hand a milestone to Claude Code (in VS Code, terminal at `C:\Projects\ass
 
 Write down decisions here as you make them (date — decision), so the AI tools know about them.
 
+- 2026-11-04 — Repair kit (+20 Armor) drops after every 20 enemies destroyed; the count carries over between sectors, radar domes don't count. DESIGN.md §5 Armor row.
+- 2026-11-04 — Armory: first slot is always Field Repair, other slots roll from the refit catalog, each item sells once, prices = base price on the refit +40% per sector after the first. Shows fewer than 4 items if the catalog runs dry (only until Step 14 adds the rest). DESIGN.md §7.1.
 - 2026-11-04 — Field Refit reroll: one per screen, costs 15 salvage + 10 for each reroll already bought this run. Field Repair and Armor Kit field mods added early (Step 12) as filler so there are always 3 cards; the other field mods come in Step 14. DESIGN.md §7.1.
 - 2026-11-04 — Fire Control pickups are now stored (up to 2, kept between sectors) and started with a new Fire Control key (Q / I / mouse side button). Its HUD panel moved above the Overclock meter and spells out READY - PRESS Q, then counts down AUTO-FIRE. DESIGN.md §5.5, §7.3, §13.
 - 2026-11-04 — Mining Platform now looks like a drill tank (treads, turret, drill as the barrel); burrowing digs into a dirt mound, and a mound churns up where it will resurface. Background bases are now barracks compounds and SAM sites; their radar domes are destructible ground targets worth 1 salvage that don't count toward waves or SECTOR CLEAR. DESIGN.md §8, §11.

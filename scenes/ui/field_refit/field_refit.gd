@@ -7,18 +7,11 @@ extends CanvasLayer
 
 signal finished
 
-const HARDPOINT_KEYS: Dictionary[int, String] = {
-	WeaponData.Hardpoint.NOSE: "HARDPOINT_NOSE",
-	WeaponData.Hardpoint.WING_PYLONS: "HARDPOINT_WING_PYLONS",
-	WeaponData.Hardpoint.ENGINE: "HARDPOINT_ENGINE",
-	WeaponData.Hardpoint.HULL: "HARDPOINT_HULL",
-	WeaponData.Hardpoint.SALVAGE_MOUNT: "HARDPOINT_SALVAGE_MOUNT",
-}
-const AMBER: Color = Color(1.0, 0.7, 0.2)
+const HARDPOINT_KEYS: Dictionary[int, String] = RefitCard.HARDPOINT_KEYS
+const AMBER: Color = RefitCard.AMBER
 const AMBER_DIM: Color = Color(1.0, 0.7, 0.2, 0.45)
-const CYAN: Color = Color(0.35, 0.85, 1.0)
-const PALE: Color = Color(0.85, 0.85, 0.8)
-const SWAP_RED: Color = Color(1.0, 0.45, 0.35)
+const CYAN: Color = RefitCard.CYAN
+const PALE: Color = RefitCard.PALE
 
 @export var catalog: RefitCatalog
 @export var offer_count: int = 3
@@ -74,29 +67,8 @@ func open(sector_number: int) -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
-	if not visible or not _accepting:
-		return
-	# WASD and J work here too, not just the arrow keys and Enter/Space.
-	var focused: Control = get_viewport().gui_get_focus_owner()
-	if focused == null:
-		return
-	var side: int = -1
-	if event.is_action_pressed("move_up"):
-		side = SIDE_TOP
-	elif event.is_action_pressed("move_down"):
-		side = SIDE_BOTTOM
-	elif event.is_action_pressed("move_left"):
-		side = SIDE_LEFT
-	elif event.is_action_pressed("move_right"):
-		side = SIDE_RIGHT
-	if side != -1:
-		var next: Control = focused.find_valid_focus_neighbor(side)
-		if next != null:
-			next.grab_focus()
-		get_viewport().set_input_as_handled()
-	elif event.is_action_pressed("fire") and focused is Button:
-		(focused as Button).pressed.emit()
-		get_viewport().set_input_as_handled()
+	if visible and _accepting:
+		RefitCard.handle_menu_input(event, get_viewport())
 
 
 func _roll() -> void:
@@ -116,7 +88,7 @@ func _roll() -> void:
 ## Adds one card, or a header plus an A/B pair for a variant choice. Returns the first button.
 func _add_offer(offer: Array) -> Button:
 	if offer.size() == 1:
-		var card: Button = _make_card(offer[0] as RefitData)
+		var card: Button = _make_card(offer[0] as RefitData, false)
 		_cards.add_child(card)
 		return card
 	var group: VBoxContainer = VBoxContainer.new()
@@ -128,7 +100,7 @@ func _add_offer(offer: Array) -> Button:
 	_cards.add_child(group)
 	var first: Button = null
 	for refit: RefitData in offer:
-		var card: Button = _make_card(refit)
+		var card: Button = _make_card(refit, true)
 		card.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		pair.add_child(card)
 		if first == null:
@@ -136,57 +108,15 @@ func _add_offer(offer: Array) -> Button:
 	return first
 
 
-func _make_card(refit: RefitData) -> Button:
-	var card: Button = Button.new()
-	card.custom_minimum_size = Vector2(0.0, 98.0)
+func _make_card(refit: RefitData, in_variant_group: bool) -> Button:
+	var card: RefitCard = RefitCard.new(refit, 98.0, in_variant_group)
 	card.focus_entered.connect(_highlight.bind(refit.hardpoint))
-	card.mouse_entered.connect(card.grab_focus)
 	card.pressed.connect(_choose.bind(refit))
-	var row: HBoxContainer = HBoxContainer.new()
-	row.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT, Control.PRESET_MODE_MINSIZE, 10)
-	row.add_theme_constant_override("separation", 12)
-	row.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	card.add_child(row)
-	var icon: WeaponIcon = WeaponIcon.new()
-	icon.custom_minimum_size = Vector2(44.0, 44.0)
-	icon.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-	icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	icon.weapon = refit.weapon
-	icon.field_mod = refit as FieldModData
-	row.add_child(icon)
-	var lines: VBoxContainer = VBoxContainer.new()
-	lines.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	lines.add_theme_constant_override("separation", 1)
-	lines.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	row.add_child(lines)
-	lines.add_child(_label(tr(refit.display_name()), 16, AMBER))
-	lines.add_child(_label(_info_text(refit), 12, CYAN))
-	var desc: Label = _label(tr(refit.desc_key), 12, PALE)
-	desc.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	lines.add_child(desc)
-	var swapped: WeaponData = refit.swaps_out()
-	if swapped != null:
-		lines.add_child(_label(tr("REFIT_SWAP") % tr(swapped.name_key), 12, SWAP_RED))
 	return card
 
 
-func _info_text(refit: RefitData) -> String:
-	if refit is FieldModData:
-		return tr("REFIT_FIELD_MOD")
-	var level: String = tr("REFIT_LEVEL") % refit.level
-	if refit.variant != "":
-		# The group header already says the level, so the half-width card only names the variant.
-		level = tr("REFIT_VARIANT") % refit.variant
-	return "%s  ·  %s" % [level, tr(HARDPOINT_KEYS[refit.hardpoint])]
-
-
 func _label(text: String, font_size: int, color: Color) -> Label:
-	var label: Label = Label.new()
-	label.text = text
-	label.add_theme_font_size_override("font_size", font_size)
-	label.add_theme_color_override("font_color", color)
-	label.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	return label
+	return RefitCard.make_label(text, font_size, color)
 
 
 func _choose(refit: RefitData) -> void:

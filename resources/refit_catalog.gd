@@ -6,13 +6,13 @@ extends Resource
 
 
 ## Up to `count` offers. Each offer is one refit, or both variants of a line's last level
-## (Variant A / Variant B), which the player picks between on one card.
-func roll_offers(count: int) -> Array[Array]:
+## (Variant A / Variant B), which the player picks between on one card. Refits in `exclude` are skipped.
+func roll_offers(count: int, exclude: Array[RefitData] = []) -> Array[Array]:
 	var groups: Array[Array] = []
 	var weights: PackedFloat32Array = PackedFloat32Array()
 	var by_key: Dictionary[String, int] = {}
 	for refit: RefitData in refits:
-		if not refit.is_available():
+		if not refit.is_available() or exclude.has(refit):
 			continue
 		# Variants of the same line and level share one card.
 		var key: String = "%d:%d" % [refit.line, refit.level] if refit.variant != "" else str(refit.get_instance_id())

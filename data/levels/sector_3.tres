@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="LevelData" load_steps=13 format=3]
+[gd_resource type="Resource" script_class="LevelData" load_steps=18 format=3]
 
 [ext_resource type="Script" path="res://resources/level_data.gd" id="1_level"]
 [ext_resource type="Script" path="res://resources/wave_data.gd" id="1_wave_script"]
@@ -12,13 +12,18 @@
 [ext_resource type="Resource" path="res://data/waves/at_side.tres" id="9_at_side"]
 [ext_resource type="Resource" path="res://data/waves/hg7_single.tres" id="10_hg7_single"]
 [ext_resource type="Resource" path="res://data/waves/hg7_pair.tres" id="11_hg7_pair"]
+[ext_resource type="Resource" path="res://data/waves/sd6_row3.tres" id="12_sd6_row3"]
+[ext_resource type="Resource" path="res://data/waves/sd6_scatter4.tres" id="13_sd6_scatter4"]
+[ext_resource type="Resource" path="res://data/waves/mb5_pair.tres" id="14_mb5_pair"]
+[ext_resource type="Resource" path="res://data/waves/rd2h_v5.tres" id="15_rd2h_v5"]
+[ext_resource type="Resource" path="res://data/waves/aas_single.tres" id="16_aas_single"]
 
 [resource]
 script = ExtResource("1_level")
 sector_number = 3
 duration = 105.0
-wave_pool = Array[ExtResource("1_wave_script")]([ExtResource("2_rd2_column5"), ExtResource("3_rd2_v5"), ExtResource("4_rd2_scatter6"), ExtResource("5_aa_pair"), ExtResource("6_id4_v3"), ExtResource("7_id4_column4"), ExtResource("8_mp_single"), ExtResource("9_at_side"), ExtResource("10_hg7_single"), ExtResource("11_hg7_pair")])
-budget_rate = 1.8
-budget_growth = 0.012
-min_wave_gap = 1
-max_enemies_alive = 28
+wave_pool = Array[ExtResource("1_wave_script")]([ExtResource("2_rd2_column5"), ExtResource("3_rd2_v5"), ExtResource("4_rd2_scatter6"), ExtResource("5_aa_pair"), ExtResource("6_id4_v3"), ExtResource("7_id4_column4"), ExtResource("8_mp_single"), ExtResource("9_at_side"), ExtResource("10_hg7_single"), ExtResource("11_hg7_pair"), ExtResource("12_sd6_row3"), ExtResource("13_sd6_scatter4"), ExtResource("14_mb5_pair"), ExtResource("15_rd2h_v5"), ExtResource("16_aas_single")])
+budget_rate = 2.3
+budget_growth = 0.017
+min_wave_gap = 0.8
+max_enemies_alive = 34

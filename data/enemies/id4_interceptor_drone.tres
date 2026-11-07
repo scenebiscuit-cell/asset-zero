@@ -9,5 +9,6 @@ max_hp = 20
 speed = 150.0
 salvage = 2
 contact_damage = 15
-round_speed = 200.0
+round_speed = 220.0
 round_damage = 12
+fire_interval = 1.3

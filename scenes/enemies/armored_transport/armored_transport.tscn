@@ -68,3 +68,18 @@ polygon = PackedVector2Array(28, -6, 36, -4, 36, 4, 28, 6)
 [node name="Hazard" type="Polygon2D" parent="Visual"]
 color = Color(0.95, 0.78, 0.1, 1)
 polygon = PackedVector2Array(-38, -18, -34, -18, -34, 18, -38, 18)
+
+[node name="Gun" type="Node2D" parent="Visual"]
+position = Vector2(-6, 0)
+
+[node name="GunMount" type="Polygon2D" parent="Visual/Gun"]
+color = Color(0.22, 0.22, 0.21, 1)
+polygon = PackedVector2Array(-7, -7, 7, -7, 7, 7, -7, 7)
+
+[node name="GunBarrels" type="Polygon2D" parent="Visual/Gun"]
+color = Color(0.17, 0.19, 0.21, 1)
+polygon = PackedVector2Array(-4, -3, 4, -3, 4, 3, -4, 3)
+
+[node name="GunLamp" type="Polygon2D" parent="Visual/Gun"]
+color = Color(1, 0.15, 0.1, 1)
+polygon = PackedVector2Array(-1.5, -1.5, 1.5, -1.5, 1.5, 1.5, -1.5, 1.5)

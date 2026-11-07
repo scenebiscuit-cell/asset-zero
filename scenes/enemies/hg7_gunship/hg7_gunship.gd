@@ -1,20 +1,24 @@
 class_name HG7Gunship
 extends Enemy
-## HG-7 Gunship: flies in, hovers and fires spread patterns aimed at XF-0, then leaves after ~6 s.
+## HG-7 Gunship: flies in, hovers and fires at XF-0, alternating wide fans with tight fast bursts, then leaves after ~7 s.
 
 enum Phase { ENTERING, HOVERING, LEAVING }
 
 ## Where it stops to hover, as a fraction of screen height (randomised between these).
 @export var hover_y_min: float = 0.16
 @export var hover_y_max: float = 0.3
-@export var hover_time: float = 6.0
+@export var hover_time: float = 7.0
 ## Starts slowing down this far above its hover point.
 @export var entry_brake_distance: float = 80.0
 @export var bob_amount: float = 6.0
-## Rounds per volley; volleys alternate through this list.
-@export var volley_sizes: PackedInt32Array = PackedInt32Array([5, 7])
+## Rounds per volley; volleys cycle through this list.
+@export var volley_sizes: PackedInt32Array = PackedInt32Array([7, 3, 9, 3])
 ## Total width of each fan, in degrees.
-@export var spread_degrees: float = 50.0
+@export var spread_degrees: float = 70.0
+## Volleys this small are tight, fast aimed bursts instead of fans.
+@export var tight_max_count: int = 3
+@export var tight_spread_degrees: float = 9.0
+@export var tight_speed_scale: float = 1.4
 
 var _phase: Phase = Phase.ENTERING
 var _hover_y: float = 0.0
@@ -62,7 +66,7 @@ func _fire_volley() -> void:
 	var count: int = volley_sizes[_volley % volley_sizes.size()]
 	_volley += 1
 	var aim: Vector2 = direction_to_target()
-	var step: float = deg_to_rad(spread_degrees) / maxf(count - 1, 1)
-	var first: float = -deg_to_rad(spread_degrees) * 0.5
-	for i: int in count:
-		fire(_muzzle.global_position, aim.rotated(first + step * i))
+	if count <= tight_max_count:
+		fire_fan(_muzzle.global_position, aim, count, tight_spread_degrees, tight_speed_scale)
+	else:
+		fire_fan(_muzzle.global_position, aim, count, spread_degrees)

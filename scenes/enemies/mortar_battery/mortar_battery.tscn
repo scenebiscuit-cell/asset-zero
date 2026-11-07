@@ -1,0 +1,82 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://scenes/enemies/mortar_battery/mortar_battery.gd" id="1_mortar"]
+[ext_resource type="Resource" path="res://data/enemies/mb5_mortar_battery.tres" id="2_data"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_mortar"]
+radius = 18.0
+
+[node name="MortarBattery" type="Area2D"]
+collision_layer = 8
+collision_mask = 0
+monitoring = false
+script = ExtResource("1_mortar")
+data = ExtResource("2_data")
+
+[node name="Hitbox" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_mortar")
+
+[node name="Visual" type="Node2D" parent="."]
+
+[node name="PitShadow" type="Polygon2D" parent="Visual"]
+color = Color(0.035, 0.047, 0.031, 0.55)
+polygon = PackedVector2Array(-18, -16, 28, -16, 28, 30, -18, 30)
+
+[node name="Sandbags" type="Polygon2D" parent="Visual"]
+color = Color(0.5, 0.44, 0.3, 1)
+polygon = PackedVector2Array(0, -24, 17, -17, 24, 0, 17, 17, 0, 24, -17, 17, -24, 0, -17, -17)
+
+[node name="SandbagsLight" type="Polygon2D" parent="Visual"]
+color = Color(0.62, 0.55, 0.38, 1)
+polygon = PackedVector2Array(0, -24, 17, -17, 14, -14, 0, -20, -14, -14, -20, 0, -24, 0, -17, -17)
+
+[node name="Pit" type="Polygon2D" parent="Visual"]
+color = Color(0.16, 0.15, 0.14, 1)
+polygon = PackedVector2Array(0, -16, 11, -11, 16, 0, 11, 11, 0, 16, -11, 11, -16, 0, -11, -11)
+
+[node name="Stripe" type="Polygon2D" parent="Visual"]
+color = Color(0.79, 0.64, 0.15, 1)
+polygon = PackedVector2Array(-14, 18, -8, 18, -11, 22, -17, 22, -4, 18, 2, 18, -1, 22, -7, 22, 6, 18, 12, 18, 9, 22, 3, 22)
+
+[node name="Tube" type="Node2D" parent="Visual"]
+
+[node name="TubeBase" type="Polygon2D" parent="Visual/Tube"]
+color = Color(0.3, 0.3, 0.3, 1)
+polygon = PackedVector2Array(0, -11, 8, -8, 11, 0, 8, 8, 0, 11, -8, 8, -11, 0, -8, -8)
+
+[node name="TubeMouth" type="Polygon2D" parent="Visual/Tube"]
+color = Color(0.08, 0.08, 0.08, 1)
+polygon = PackedVector2Array(0, -6, 4.2, -4.2, 6, 0, 4.2, 4.2, 0, 6, -4.2, 4.2, -6, 0, -4.2, -4.2)
+
+[node name="TubeLight" type="Polygon2D" parent="Visual/Tube"]
+color = Color(0.5, 0.5, 0.48, 1)
+polygon = PackedVector2Array(-6, -8, -2, -9, -4, -5, -7, -4)
+
+[node name="Lamp" type="Polygon2D" parent="Visual"]
+color = Color(1, 0.15, 0.1, 1)
+polygon = PackedVector2Array(12, -14, 16, -14, 16, -10, 12, -10)
+
+[node name="Shell" type="Node2D" parent="."]
+z_index = 2
+
+[node name="ShellBody" type="Polygon2D" parent="Shell"]
+color = Color(0.2, 0.2, 0.19, 1)
+polygon = PackedVector2Array(0, -6, 4, -4, 6, 0, 4, 4, 0, 6, -4, 4, -6, 0, -4, -4)
+
+[node name="ShellGlint" type="Polygon2D" parent="Shell"]
+color = Color(1, 0.5, 0.15, 1)
+polygon = PackedVector2Array(-3, -3, 0, -4, 1, -1, -2, 0)
+
+[node name="Reticle" type="Node2D" parent="."]
+z_index = -7
+
+[node name="Ring" type="Line2D" parent="Reticle"]
+width = 2.0
+
+[node name="CrossH" type="Line2D" parent="Reticle"]
+points = PackedVector2Array(-20, 0, -8, 0, 8, 0, 20, 0)
+width = 2.0
+
+[node name="CrossV" type="Line2D" parent="Reticle"]
+points = PackedVector2Array(0, -20, 0, -8, 0, 8, 0, 20)
+width = 2.0

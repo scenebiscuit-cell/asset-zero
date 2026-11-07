@@ -9,6 +9,10 @@ const SPAWNS: Dictionary[int, String] = {
 	KEY_4: "res://scenes/enemies/mining_platform/mining_platform.tscn",
 	KEY_5: "res://scenes/enemies/armored_transport/armored_transport.tscn",
 	KEY_6: "res://scenes/enemies/hg7_gunship/hg7_gunship.tscn",
+	KEY_9: "res://scenes/enemies/mortar_battery/mortar_battery.tscn",
+	KEY_0: "res://scenes/enemies/strike_drone/strike_drone.tscn",
+	KEY_MINUS: "res://scenes/enemies/recon_drone/recon_drone_hunter.tscn",
+	KEY_EQUAL: "res://scenes/enemies/aa_emplacement/aa_sweeper.tscn",
 }
 ## The transport enters from a side edge, not the top.
 const SIDE_ENTRY: Array[int] = [KEY_5]
@@ -17,7 +21,7 @@ const SIDE_ENTRY: Array[int] = [KEY_5]
 
 
 func _ready() -> void:
-	print("Enemy test: 1 RD-2  2 ID-4  3 AA Emplacement  4 Mining Platform  5 Armored Transport  6 HG-7 Gunship  (hold Shift for elite)  7 Fire Control pickup  8 repair pickup")
+	print("Enemy test: 1 RD-2  2 ID-4  3 AA Emplacement  4 Mining Platform  5 Armored Transport  6 HG-7 Gunship  9 Mortar Battery  0 Strike Drone  - Hunter Drone  = AA Sweeper  (hold Shift for elite)  7 Fire Control pickup  8 repair pickup")
 
 
 func _unhandled_key_input(event: InputEvent) -> void:

@@ -124,11 +124,28 @@ func salvage_value() -> int:
 	return data.salvage * (ELITE_SALVAGE_MULTIPLIER if elite else 1)
 
 
-## Fires one enemy round from `start` (global) along `direction`.
-func fire(start: Vector2, direction: Vector2) -> void:
+## Fires one enemy round from `start` (global) along `direction`. `speed_scale` is for faster/slower variants of a pattern.
+func fire(start: Vector2, direction: Vector2, speed_scale: float = 1.0) -> void:
 	if round_pool == null:
 		return
-	round_pool.fire(start, direction.normalized() * data.round_speed, data.round_damage)
+	round_pool.fire(start, direction.normalized() * data.round_speed * speed_scale, data.round_damage)
+
+
+## Fires `count` rounds spread evenly across `spread_degrees`, centred on `direction`.
+func fire_fan(start: Vector2, direction: Vector2, count: int, spread_degrees: float, speed_scale: float = 1.0) -> void:
+	if count <= 1:
+		fire(start, direction, speed_scale)
+		return
+	var step: float = deg_to_rad(spread_degrees) / (count - 1)
+	var first: float = -deg_to_rad(spread_degrees) * 0.5
+	for i: int in count:
+		fire(start, direction.rotated(first + step * i), speed_scale)
+
+
+## Fires `count` rounds in a full ring, starting from `phase_degrees`.
+func fire_ring(start: Vector2, count: int, phase_degrees: float = 0.0, speed_scale: float = 1.0) -> void:
+	for i: int in count:
+		fire(start, Vector2.from_angle(deg_to_rad(phase_degrees) + TAU * i / count), speed_scale)
 
 
 func direction_to_target() -> Vector2:

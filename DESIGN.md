@@ -290,12 +290,16 @@ Air enemies fly over everything. Ground enemies scroll with the background. All 
 
 | Enemy | Layer | Behavior | HP | Salvage | Elite drops |
 |---|---|---|---|---|---|
-| RD-2 Recon Drone | Air | Flies straight down in lines/V formations; about a third fire one weak, slow aimed round (8 dmg; others 12) | Low | 1 | — |
-| ID-4 Interceptor Drone | Air | Sine-wave path, fires a single slow round | Low | 2 | — |
-| AA Emplacement | Ground | Stationary, aims and fires at the player | Medium | 3 | Flak Burst |
-| Mining Platform | Ground | A drill tank on treads: tanky, big salvage reward. Its turret turns a large drill toward XF-0, winds up (glows red) and thrusts it out; burrows and resurfaces elsewhere on screen every few seconds | High | 8 | Drill Lance |
-| Armored Transport | Air | Slow, crosses sideways, sometimes drops a repair pickup | High | 6 | Drone Bay |
-| HG-7 Gunship | Air | Enters, hovers, fires spread patterns, leaves after ~6 s | Medium | 5 | Spread Cannon |
+| RD-2 Recon Drone | Air | Flies straight down in lines/V formations; most fire a pair of weak, slow aimed rounds (8 dmg) | Low | 1 | — |
+| RD-2H Hunter Drone | Air | Red-podded RD-2 that slides sideways to get above XF-0 before its pair; always fires | Low | 2 | — |
+| ID-4 Interceptor Drone | Air | Sine-wave path, fires short aimed bursts the whole way down | Low | 2 | — |
+| SD-6 Strike Drone | Air | Drops in, locks on (red flash, shiver), then dives in a straight line at where XF-0 was. No gun: a sidestep clears it | Low | 2 | — |
+| AA Emplacement | Ground | Stationary, tracks XF-0, fires aimed 3-round bursts with a wide 5-round fan every other shot | Medium | 3 | Flak Burst |
+| AA Sweeper | Ground | Twin-barrel AA that rakes a 12-round stream across a 70° arc, so you pick a gap and go through it | Medium | 4 | Spread Cannon |
+| MB-5 Mortar Battery | Ground | Lobs a shell at XF-0's position; a reticle marks the spot for ~1 s, then it bursts into a ring of 10 slow rounds (elites 14) | Medium | 4 | Flak Burst |
+| Mining Platform | Ground | A drill tank on treads: tanky, big salvage reward. Its turret turns a large drill toward XF-0, winds up (glows red, shows an aim line) and thrusts a spike the whole length of the screen, sweeping it after XF-0 for a second before pulling back; burrows and resurfaces elsewhere on screen every few seconds | High | 8 | Drill Lance |
+| Armored Transport | Air | Slow, crosses sideways, belly gun fires slow aimed pairs, sometimes drops a repair pickup | High | 6 | Drone Bay |
+| HG-7 Gunship | Air | Enters, hovers, alternates wide fans with tight fast aimed bursts, leaves after ~7 s | Medium | 5 | Spread Cannon |
 | Radar Dome | Ground | Background target on barracks and SAM sites; no attack. Doesn't count toward waves or SECTOR CLEAR | Very low | 1 | — |
 
 ### Boss: HEG-X9 "MAWLER" Mining Crawler
@@ -315,7 +319,8 @@ A giant armored strip-mining machine that fills the top third of the screen. It 
 - Waves are defined as data (which enemies, formation, entry side, path), so new waves can be added without new code.
 - Each level ends with a short "SECTOR CLEAR" moment, then the between-level screens.
 - **Breaches:** each enemy aircraft that gets away (off the bottom, or out its exit route) costs a little salvage (2, tunable), with no on-screen popup (it distracted from play). Ground units scrolling away don't count. If none get away all sector, SECTOR CLEAR pays a **Perimeter Held** bonus (25 salvage, tunable).
-- Level 1: drones and AA emplacements. Level 2: adds interceptors, mining platforms, transports. Level 3: adds gunships and denser waves. Then the boss.
+- Level 1: drones, AA emplacements, then strike drones, mortars and hunters. Level 2: adds interceptors, mining platforms, transports, sweepers. Level 3: adds gunships and denser waves. Then the boss.
+- Enemies are meant to be aggressive: nearly everything shoots, and most things shoot more than once. The player's answers are the graze ring, Plating and the Thresher dash, so pressure should stay high and readable rather than sparse.
 
 ### 9.1 Threat Level
 

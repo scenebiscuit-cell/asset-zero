@@ -11,5 +11,5 @@ speed = 0.0
 salvage = 8
 contact_damage = 0
 module = ExtResource("2_module")
-fire_interval = 1.6
+fire_interval = 1.3
 round_damage = 20

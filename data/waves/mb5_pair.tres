@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="WaveData" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://resources/wave_data.gd" id="1_wave"]
+[ext_resource type="PackedScene" path="res://scenes/enemies/mortar_battery/mortar_battery.tscn" id="2_enemy"]
+
+[resource]
+script = ExtResource("1_wave")
+enemy_scene = ExtResource("2_enemy")
+count = 2
+formation = 2
+entry = 0
+spacing = 220.0
+cost = 7.5
+min_time = 50.0
+weight = 1

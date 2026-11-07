@@ -12,4 +12,4 @@ entry = 0
 spacing = 48.0
 cost = 3
 min_time = 0.0
-weight = 3
+weight = 2

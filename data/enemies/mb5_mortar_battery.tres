@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="EnemyData" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://resources/enemy_data.gd" id="1_enemy"]
+[ext_resource type="Resource" path="res://data/modules/flak_burst.tres" id="2_module"]
+
+[resource]
+script = ExtResource("1_enemy")
+layer = 1
+max_hp = 140
+speed = 0.0
+salvage = 4
+contact_damage = 0
+module = ExtResource("2_module")
+fire_interval = 2.6
+round_speed = 150.0
+round_damage = 10

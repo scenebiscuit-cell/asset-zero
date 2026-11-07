@@ -110,7 +110,7 @@ missile_pool = NodePath("../PlayerMissilePool")
 [node name="EnemyRoundPool" type="Node2D" parent="."]
 script = ExtResource("7_round_pool")
 scene = ExtResource("12_enemy_round")
-pool_size = 200
+pool_size = 300
 
 [node name="WaveDirector" type="Node" parent="."]
 script = ExtResource("20_wave_director")

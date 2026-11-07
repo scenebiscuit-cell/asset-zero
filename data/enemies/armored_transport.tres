@@ -12,3 +12,6 @@ salvage = 6
 contact_damage = 30
 repair_drop_chance = 0.35
 module = ExtResource("2_module")
+fire_interval = 1.6
+round_speed = 175.0
+round_damage = 10

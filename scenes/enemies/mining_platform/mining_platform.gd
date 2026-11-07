@@ -1,30 +1,35 @@
 class_name MiningPlatform
 extends Enemy
-## Mining Platform: a drill tank on treads. Tanky; its turret turns a large drill toward XF-0, winds up, then thrusts
-## out and hurts XF-0 on touch. Every few seconds it burrows and resurfaces somewhere else on screen.
+## Mining Platform: a drill tank on treads. Tanky; its turret turns a large drill toward XF-0, winds up (an aim
+## line shows where it will go), then thrusts a spike the whole length of the screen and sweeps it after XF-0
+## before pulling it back. Every few seconds it burrows and resurfaces somewhere else on screen.
 ## data.fire_interval is the pause between thrusts; data.round_damage is the drill's damage.
 
 enum State { SURFACED, BURROWING, HIDDEN, RISING }
 
 @export_group("Drill")
 ## How fast the drill turns to follow XF-0, in radians per second.
-@export var turn_speed: float = 1.6
-## Drill length at rest, and at full thrust, in pixels from the hub.
+@export var turn_speed: float = 2.0
+## Drill length at rest, in pixels from the hub.
 @export var rest_length: float = 74.0
-@export var thrust_length: float = 240.0
+## The thrust reaches the screen edge plus this margin, never more than max_reach.
+@export var reach_margin: float = 60.0
+@export var max_reach: float = 1300.0
 @export var drill_width: float = 34.0
-## Warning before a thrust: the drill stops turning, glows and pulls back.
-@export var windup_time: float = 0.7
-@export var thrust_time: float = 0.14
-@export var hold_time: float = 0.35
-@export var retract_time: float = 0.45
+## Warning before a thrust: the drill stops turning, glows, pulls back and shows its aim line.
+@export var windup_time: float = 0.8
+@export var thrust_time: float = 0.16
+## At full reach it keeps turning after XF-0 at this speed (radians per second) for hold_time.
+@export var hold_time: float = 1.0
+@export var track_speed: float = 0.45
+@export var retract_time: float = 0.4
 ## Spinning-thread look: how fast the threads scroll toward the tip (in drill-art units per second).
 @export var spin_speed: float = 140.0
 @export var windup_color: Color = Color(1.0, 0.45, 0.3)
 
 @export_group("Burrow")
 ## Seconds above ground before burrowing again.
-@export var surfaced_time: float = 4.0
+@export var surfaced_time: float = 5.5
 @export var burrow_time: float = 0.6
 ## Time underground. A dirt mound churns up at the new spot during this, as a warning.
 @export var hidden_time: float = 0.9
@@ -50,6 +55,9 @@ var _phase: int = 0
 var _phase_left: float = 0.0
 var _length: float = 0.0
 var _spin: float = 0.0
+## Reach of the current thrust, in px: how far it is to the screen edge the way the drill points.
+var _reach: float = 0.0
+var _aim_line: Line2D
 
 @onready var _hitbox: CollisionShape2D = $Hitbox
 @onready var _drill: Node2D = $Visual/Drill
@@ -70,6 +78,13 @@ func _ready() -> void:
 	_set_length(rest_length)
 	_set_armed(false)
 	_mound.scale = Vector2.ZERO
+	# Placeholder telegraph: a thin line along the drill, shown while it winds up.
+	_aim_line = Line2D.new()
+	_aim_line.width = 2.0
+	_aim_line.default_color = windup_color
+	_aim_line.points = PackedVector2Array([Vector2.ZERO, Vector2.UP * rest_length])
+	_aim_line.visible = false
+	_drill.add_child(_aim_line)
 
 
 func is_targetable() -> bool:
@@ -109,31 +124,61 @@ func _update_drill(delta: float) -> void:
 			_cooldown -= delta
 			if _cooldown <= 0.0 and absf(angle_difference(_drill.rotation, wanted)) < deg_to_rad(10.0):
 				_start_phase(1, windup_time)
-		1: # Wind-up: locked aim, glows and pulls back so XF-0 can dodge.
+				_aim_line.visible = true
+		1: # Wind-up: locked aim, glows and pulls back so XF-0 can dodge; the aim line shows the whole reach.
 			var t: float = 1.0 - _phase_left / windup_time
 			_set_length(rest_length * (1.0 - 0.25 * t))
 			_drill.modulate = Color.WHITE.lerp(windup_color, t)
 			_bit.position.x = sin(t * 60.0) * 1.5 * t # Shudders harder as it charges.
+			_reach = _reach_along_drill()
+			_aim_line.set_point_position(1, Vector2.UP * _reach)
+			_aim_line.modulate.a = 0.15 + 0.45 * t
 			_advance_phase(delta, 2, thrust_time)
 			if _phase == 2:
 				_bit.position.x = 0.0
+				_aim_line.visible = false
 				_set_armed(true)
-		2: # Thrust out.
+		2: # Thrust out to the screen edge.
 			var t: float = 1.0 - _phase_left / thrust_time
-			_set_length(lerpf(rest_length * 0.75, thrust_length, t))
+			_track(wanted, delta)
+			_set_length(lerpf(rest_length * 0.75, _reach, t))
 			_advance_phase(delta, 3, hold_time)
-		3: # Hold at full reach.
-			_set_length(thrust_length)
+		3: # Hold at full reach, sweeping after XF-0.
+			_track(wanted, delta)
+			_set_length(_reach)
 			_advance_phase(delta, 4, retract_time)
 		4: # Pull back in.
 			var t: float = 1.0 - _phase_left / retract_time
-			_set_length(lerpf(thrust_length, rest_length, t))
+			_set_length(lerpf(_reach, rest_length, t))
 			_drill.modulate = windup_color.lerp(Color.WHITE, t)
 			if _length < rest_length * 2.0:
 				_set_armed(false)
 			_advance_phase(delta, 0, 0.0)
 			if _phase == 0:
 				_cooldown = data.fire_interval
+
+
+## Turns the extended drill after XF-0, and keeps the reach matched to the new direction.
+func _track(wanted: float, delta: float) -> void:
+	_drill.rotation = rotate_toward(_drill.rotation, wanted, track_speed * delta)
+	_reach = _reach_along_drill()
+
+
+## Distance from the hub to where the drill's line leaves the screen, plus the margin.
+func _reach_along_drill() -> float:
+	var direction: Vector2 = Vector2.from_angle(_drill.rotation - PI / 2.0)
+	var size: Vector2 = get_viewport_rect().size
+	var from: Vector2 = global_position
+	var reach: float = max_reach
+	if direction.x > 0.001:
+		reach = minf(reach, (size.x - from.x) / direction.x)
+	elif direction.x < -0.001:
+		reach = minf(reach, -from.x / direction.x)
+	if direction.y > 0.001:
+		reach = minf(reach, (size.y - from.y) / direction.y)
+	elif direction.y < -0.001:
+		reach = minf(reach, -from.y / direction.y)
+	return clampf(reach + reach_margin, rest_length * 2.0, max_reach)
 
 
 func _start_phase(phase: int, duration: float) -> void:
@@ -234,6 +279,7 @@ func _reset_drill() -> void:
 	_set_length(rest_length)
 	_drill.modulate = Color.WHITE
 	_bit.position.x = 0.0
+	_aim_line.visible = false
 
 
 ## A random spot in the upper part of the screen, kept away from XF-0 so it never pops up on top of it.

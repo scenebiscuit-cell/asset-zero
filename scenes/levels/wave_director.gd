@@ -7,9 +7,7 @@ signal spawn_requested(scene: PackedScene, at: Vector2, elite: bool)
 ## Time is up and the screen is clear.
 signal sector_cleared
 
-## Threat Level hooks (§9.1). Fixed at Threat 1 until Step 15 feeds them.
-@export var threat_multiplier: float = 1.0
-@export_range(0.0, 1.0) var elite_chance: float = 0.05
+## Threat Level (§9.1) scales the budget and the elite chance; the tables are in GameState.
 ## Keeps formations away from the screen edges.
 @export var edge_margin: float = 60.0
 ## After time is up, call the sector clear anyway if stragglers take longer than this.
@@ -56,7 +54,7 @@ func _update_spawning(delta: float) -> void:
 		_finished_spawning = true
 		return
 	var rate: float = level_data.budget_rate + level_data.budget_growth * _elapsed
-	_budget += rate * threat_multiplier * delta
+	_budget += rate * GameState.threat_budget_multiplier() * delta
 	_gap_left -= delta
 	if _next_wave == null:
 		_next_wave = _pick_wave()
@@ -98,7 +96,7 @@ func _send(wave: WaveData) -> void:
 		var x: float = lerpf(edge_margin, size.x - edge_margin, lane)
 		for i: int in wave.count:
 			var at: Vector2 = _top_slot(wave, i, x, size.x)
-			spawn_requested.emit(wave.enemy_scene, at, randf() < elite_chance)
+			spawn_requested.emit(wave.enemy_scene, at, _roll_elite())
 	else:
 		# Side entries come in one after another along the same lane.
 		var lane: float = wave.lane if wave.lane >= 0.0 else randf()
@@ -106,7 +104,11 @@ func _send(wave: WaveData) -> void:
 		var x: float = -50.0 if entry == WaveData.Entry.LEFT else size.x + 50.0
 		var delay_step: float = wave.spacing / 60.0
 		for i: int in wave.count:
-			_queue.append([i * delay_step, wave.enemy_scene, Vector2(x, y), randf() < elite_chance])
+			_queue.append([i * delay_step, wave.enemy_scene, Vector2(x, y), _roll_elite()])
+
+
+func _roll_elite() -> bool:
+	return randf() < GameState.threat_elite_chance()
 
 
 ## Where member `i` of a top-entry formation starts (just above the screen).

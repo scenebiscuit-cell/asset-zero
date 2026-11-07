@@ -1,0 +1,60 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://scenes/pickups/module_pickup.gd" id="1_module"]
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_add"]
+blend_mode = 1
+
+[sub_resource type="Gradient" id="Gradient_shards"]
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0)
+
+[node name="ModulePickup" type="Area2D"]
+collision_layer = 32
+collision_mask = 0
+monitoring = false
+monitorable = false
+script = ExtResource("1_module")
+collect_radius = 24.0
+magnet_radius = 50.0
+drift_speed = 40.0
+pulse_speed = 6.0
+
+[node name="Visual" type="Node2D" parent="."]
+
+[node name="Hex" type="Node2D" parent="Visual"]
+
+[node name="Glow" type="Polygon2D" parent="Visual/Hex"]
+material = SubResource("CanvasItemMaterial_add")
+color = Color(1, 0.55, 0.15, 0.4)
+polygon = PackedVector2Array(0, -20, 17.3, -10, 17.3, 10, 0, 20, -17.3, 10, -17.3, -10)
+
+[node name="Ring" type="Polygon2D" parent="Visual/Hex"]
+color = Color(1, 0.7, 0.4, 1)
+polygon = PackedVector2Array(0, -12, 10.4, -6, 10.4, 6, 0, 12, -10.4, 6, -10.4, -6)
+
+[node name="Inner" type="Polygon2D" parent="Visual/Hex"]
+color = Color(0.12, 0.1, 0.09, 1)
+polygon = PackedVector2Array(0, -8.5, 7.4, -4.25, 7.4, 4.25, 0, 8.5, -7.4, 4.25, -7.4, -4.25)
+
+[node name="Core" type="Polygon2D" parent="Visual/Hex"]
+material = SubResource("CanvasItemMaterial_add")
+color = Color(1, 0.95, 0.85, 0.9)
+polygon = PackedVector2Array(0, -3.5, 3, -1.75, 3, 1.75, 0, 3.5, -3, 1.75, -3, -1.75)
+
+[node name="Shards" type="CPUParticles2D" parent="Visual"]
+material = SubResource("CanvasItemMaterial_add")
+emitting = false
+amount = 12
+lifetime = 0.4
+one_shot = true
+explosiveness = 1.0
+local_coords = false
+spread = 180.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 50.0
+initial_velocity_max = 120.0
+damping_min = 120.0
+damping_max = 200.0
+scale_amount_min = 2.0
+scale_amount_max = 3.5
+color_ramp = SubResource("Gradient_shards")

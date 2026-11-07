@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="AirframeShape" format=3]
+
+[ext_resource type="Script" path="res://resources/airframe_shape.gd" id="1_shape"]
+
+[resource]
+script = ExtResource("1_shape")
+parts = Dictionary[String, PackedVector2Array]({
+"Barrel": PackedVector2Array(),
+"Lens": PackedVector2Array(2.944, -28.3, 0, -26.6, -2.944, -28.3, -2.944, -31.7, 0, -33.4, 2.944, -31.7)
+})

@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="AirframeShape" format=3]
+
+[ext_resource type="Script" path="res://resources/airframe_shape.gd" id="1_shape"]
+
+[resource]
+script = ExtResource("1_shape")
+parts = Dictionary[String, PackedVector2Array]({
+"EngineGlow": PackedVector2Array(-3.84, 23.76, 3.84, 23.76, 1.92, 47.52, 0, 51.84, -1.92, 47.52)
+})

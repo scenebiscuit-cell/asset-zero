@@ -21,7 +21,7 @@ func show_screen() -> void:
 func _unhandled_input(event: InputEvent) -> void:
 	if not _accepting_input:
 		return
-	if (event is InputEventKey or event is InputEventMouseButton) and event.is_pressed() and not event.is_echo():
+	if (event is InputEventKey or event is InputEventMouseButton or event is InputEventJoypadButton) and event.is_pressed() and not event.is_echo():
 		_accepting_input = false
 		GameState.end_run()
 		# Reloading rebuilds the level, so no rounds, enemies or pickups carry over.

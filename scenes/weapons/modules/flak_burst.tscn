@@ -1,0 +1,27 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://scenes/weapons/modules/flak_burst.gd" id="1_flak"]
+[ext_resource type="Script" path="res://scenes/weapons/object_pool.gd" id="2_pool"]
+[ext_resource type="PackedScene" path="res://scenes/weapons/modules/flak_round.tscn" id="3_round"]
+
+[node name="FlakBurst" type="Node2D"]
+script = ExtResource("1_flak")
+
+[node name="FlakPool" type="Node2D" parent="."]
+script = ExtResource("2_pool")
+scene = ExtResource("3_round")
+pool_size = 16
+
+[node name="Visual" type="Node2D" parent="."]
+
+[node name="Pod" type="Polygon2D" parent="Visual"]
+color = Color(0.32, 0.3, 0.28, 1)
+polygon = PackedVector2Array(-5, -3, 5, -3, 6, 3, -6, 3)
+
+[node name="BarrelLeft" type="Polygon2D" parent="Visual"]
+color = Color(0.85, 0.7, 0.25, 1)
+polygon = PackedVector2Array(-4, -3, -2, -3, -2, -9, -4, -9)
+
+[node name="BarrelRight" type="Polygon2D" parent="Visual"]
+color = Color(0.85, 0.7, 0.25, 1)
+polygon = PackedVector2Array(2, -3, 4, -3, 4, -9, 2, -9)

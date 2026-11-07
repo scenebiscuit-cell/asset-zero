@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="AirframeSet" load_steps=11 format=3]
+
+[ext_resource type="Script" path="res://resources/airframe_set.gd" id="1_set"]
+[ext_resource type="Resource" path="res://data/shapes/xf0_light_gunship.tres" id="g_light"]
+[ext_resource type="Resource" path="res://data/shapes/xf0_light_thresher.tres" id="l_light"]
+[ext_resource type="Resource" path="res://data/shapes/xf0_medium_gunship.tres" id="g_medium"]
+[ext_resource type="Resource" path="res://data/shapes/xf0_medium_thresher.tres" id="l_medium"]
+[ext_resource type="Resource" path="res://data/shapes/xf0_heavy_gunship.tres" id="g_heavy"]
+[ext_resource type="Resource" path="res://data/shapes/xf0_heavy_thresher.tres" id="l_heavy"]
+[ext_resource type="Resource" path="res://data/shapes/xf0_assault_gunship.tres" id="g_assault"]
+[ext_resource type="Resource" path="res://data/shapes/xf0_assault_thresher.tres" id="l_assault"]
+[ext_resource type="Script" path="res://resources/airframe_shape.gd" id="2_shape"]
+
+[resource]
+script = ExtResource("1_set")
+gunship_shapes = Array[ExtResource("2_shape")]([ExtResource("g_light"), ExtResource("g_medium"), ExtResource("g_heavy"), ExtResource("g_assault")])
+thresher_shapes = Array[ExtResource("2_shape")]([ExtResource("l_light"), ExtResource("l_medium"), ExtResource("l_heavy"), ExtResource("l_assault")])

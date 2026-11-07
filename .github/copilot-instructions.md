@@ -88,7 +88,7 @@ res://
 ## Core systems to keep consistent
 
 - **Morph system** (`scenes/fx/morph`): one shared system that tweens polygon point lists. Used by Combat Morph, refit morphs, weight class changes and Assimilate. Don't write a second one.
-- **Combat Morph**: every weapon and module needs both a Gunship and a Lance behavior (DESIGN.md §5.6, §5.8).
+- **Combat Morph**: every weapon and module needs both a Gunship and a Thresher behavior (DESIGN.md §5.6, §5.8).
 - **Graze**: done with an Area2D on the player that watches the enemy_bullets layer; each round may count only once.
 
 ## Editing Godot files
@@ -98,7 +98,7 @@ res://
 
 ## Theme words (use these in code, UI and file names)
 
-Military hardware style, like a mech game's loadout screen. XF-0 (the player's aircraft), Armor (health), Plating (regenerating shield), Salvage (in-run currency), Combat Data (meta currency), Refits (upgrades), Hardpoints (Nose, Wing Pylons, Engine, Hull, Salvage Mount), Weight class (Light/Medium/Heavy/Assault), Field Refit (the pick-1-of-3 screen), Armory (the shop), R&D (meta unlocks), Combat Morph (switching between **Gunship form** and **Lance form**), Graze / near miss, Overclock (meter + white-hot burst), Meltdown pulse, Assimilate (absorbing an enemy weapon), Weapon module, Elite (yellow-outlined enemy), HSD Threat Level (LOW/ELEVATED/HIGH/SEVERE). Weapons use designations like "M20 Autocannon" (see DESIGN.md §6). Don't use old names like biomass, mutation, reform, scrap currency, Foundry or Integrity. Precision mode is now Lance form.
+Military hardware style, like a mech game's loadout screen. XF-0 (the player's aircraft), Armor (health), Plating (regenerating shield), Salvage (in-run currency), Combat Data (meta currency), Refits (upgrades), Hardpoints (Nose, Wing Pylons, Engine, Hull, Salvage Mount), Weight class (Light/Medium/Heavy/Assault), Field Refit (the pick-1-of-3 screen), Armory (the shop), R&D (meta unlocks), Combat Morph (switching between **Gunship form** and **Thresher form**), Graze / near miss, Overclock (meter + white-hot burst), Meltdown pulse, Assimilate (absorbing an enemy weapon), Weapon module, Elite (yellow-outlined enemy), HSD Threat Level (LOW/ELEVATED/HIGH/SEVERE). Weapons use designations like "M20 Autocannon" (see DESIGN.md §6). Don't use old names like biomass, mutation, reform, scrap currency, Foundry or Integrity. Precision mode and Lance form are now Thresher form (the HEL-3T Thermal Lance weapon and the Drill Lance module keep their names).
 
 ## Don't
 

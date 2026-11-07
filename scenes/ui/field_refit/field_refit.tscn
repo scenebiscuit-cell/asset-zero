@@ -1,0 +1,143 @@
+[gd_scene load_steps=7 format=3]
+
+[ext_resource type="Resource" path="res://data/shapes/xf0_airframes.tres" id="4_airframes"]
+[ext_resource type="Script" path="res://scenes/ui/field_refit/field_refit.gd" id="1_refit"]
+[ext_resource type="Script" path="res://scenes/ui/field_refit/ship_schematic.gd" id="2_schematic"]
+[ext_resource type="Resource" path="res://data/refits/catalog.tres" id="3_catalog"]
+[ext_resource type="Theme" path="res://scenes/ui/terminal_theme.tres" id="6_theme"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_screen"]
+bg_color = Color(0.02, 0.05, 0.05, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.35, 0.85, 1, 0.25)
+
+[node name="FieldRefit" type="CanvasLayer"]
+process_mode = 3
+layer = 15
+script = ExtResource("1_refit")
+catalog = ExtResource("3_catalog")
+
+[node name="Root" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 540.0
+offset_bottom = 960.0
+theme = ExtResource("6_theme")
+
+[node name="Frame" type="Panel" parent="Root"]
+layout_mode = 0
+offset_left = 8.0
+offset_top = 8.0
+offset_right = 532.0
+offset_bottom = 952.0
+mouse_filter = 2
+
+[node name="Title" type="Label" parent="Root"]
+layout_mode = 0
+offset_top = 22.0
+offset_right = 540.0
+offset_bottom = 54.0
+theme_override_font_sizes/font_size = 28
+text = "FIELD_REFIT"
+horizontal_alignment = 1
+
+[node name="Subtitle" type="Label" parent="Root"]
+layout_mode = 0
+offset_top = 56.0
+offset_right = 540.0
+offset_bottom = 74.0
+theme_override_colors/font_color = Color(0.55, 1, 0.6, 1)
+theme_override_font_sizes/font_size = 13
+text = "REFIT_SUBTITLE"
+horizontal_alignment = 1
+
+[node name="ScreenBack" type="Panel" parent="Root"]
+layout_mode = 0
+offset_left = 24.0
+offset_top = 84.0
+offset_right = 516.0
+offset_bottom = 422.0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_screen")
+
+[node name="Schematic" type="Control" parent="Root"]
+layout_mode = 0
+anchors_preset = 0
+offset_left = 24.0
+offset_top = 88.0
+offset_right = 516.0
+offset_bottom = 278.0
+mouse_filter = 2
+script = ExtResource("2_schematic")
+airframes = ExtResource("4_airframes")
+
+[node name="GunshipLabel" type="Label" parent="Root"]
+layout_mode = 0
+offset_left = 24.0
+offset_top = 278.0
+offset_right = 290.0
+offset_bottom = 294.0
+theme_override_colors/font_color = Color(0.35, 0.85, 1, 0.75)
+theme_override_font_sizes/font_size = 11
+text = "FORM_GUNSHIP"
+horizontal_alignment = 1
+
+[node name="ThresherLabel" type="Label" parent="Root"]
+layout_mode = 0
+offset_left = 250.0
+offset_top = 278.0
+offset_right = 516.0
+offset_bottom = 294.0
+theme_override_colors/font_color = Color(0.35, 0.85, 1, 0.75)
+theme_override_font_sizes/font_size = 11
+text = "FORM_THRESHER"
+horizontal_alignment = 1
+
+[node name="Loadout" type="VBoxContainer" parent="Root"]
+layout_mode = 0
+offset_left = 44.0
+offset_top = 304.0
+offset_right = 500.0
+offset_bottom = 416.0
+mouse_filter = 2
+theme_override_constants/separation = 3
+
+[node name="Cards" type="VBoxContainer" parent="Root"]
+layout_mode = 0
+offset_left = 24.0
+offset_top = 434.0
+offset_right = 516.0
+offset_bottom = 860.0
+theme_override_constants/separation = 10
+
+[node name="Reroll" type="Button" parent="Root"]
+layout_mode = 0
+offset_left = 24.0
+offset_top = 872.0
+offset_right = 300.0
+offset_bottom = 908.0
+text = "REFIT_REROLL"
+
+[node name="Salvage" type="Label" parent="Root"]
+layout_mode = 0
+offset_left = 310.0
+offset_top = 872.0
+offset_right = 516.0
+offset_bottom = 908.0
+theme_override_font_sizes/font_size = 13
+text = "REFIT_SALVAGE"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="Installed" type="Label" parent="Root"]
+layout_mode = 0
+offset_top = 914.0
+offset_right = 540.0
+offset_bottom = 940.0
+theme_override_colors/font_color = Color(0.55, 1, 0.6, 1)
+theme_override_font_sizes/font_size = 16
+text = "REFIT_INSTALLED"
+horizontal_alignment = 1

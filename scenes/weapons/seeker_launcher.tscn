@@ -1,0 +1,18 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scenes/weapons/seeker_launcher.gd" id="1_launcher"]
+
+[node name="SeekerLauncher" type="Node2D"]
+script = ExtResource("1_launcher")
+
+[node name="Visual" type="Node2D" parent="."]
+
+[node name="PodLeft" type="Polygon2D" parent="Visual"]
+position = Vector2(-14, 6)
+color = Color(0.2, 0.22, 0.24, 1)
+polygon = PackedVector2Array(0, -7, 1.8, -4, 1.8, 5, -1.8, 5, -1.8, -4)
+
+[node name="PodRight" type="Polygon2D" parent="Visual"]
+position = Vector2(14, 6)
+color = Color(0.2, 0.22, 0.24, 1)
+polygon = PackedVector2Array(0, -7, 1.8, -4, 1.8, 5, -1.8, 5, -1.8, -4)

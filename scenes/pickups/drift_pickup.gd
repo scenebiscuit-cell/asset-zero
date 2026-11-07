@@ -34,7 +34,7 @@ func _physics_process(delta: float) -> void:
 			_on_collected(_target)
 			deactivate()
 			return
-		if distance < magnet_radius:
+		if distance < magnet_radius * (1.0 + GameState.magnet_bonus):
 			velocity = to_target / distance * pull_speed
 	position += velocity * delta
 	if global_position.y > get_viewport_rect().size.y + 30.0:

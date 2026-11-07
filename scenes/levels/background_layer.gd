@@ -6,6 +6,10 @@ extends Node2D
 
 enum Style { GROUND, HAZE }
 
+## A radar dome on a base is about to scroll onto the screen at `at` (global). The Level spawns a
+## destructible dome there, so it scrolls in with the base. Only the GROUND style sends this.
+signal dome_entering(at: Vector2)
+
 const SIZE: Vector2 = Vector2(540.0, 960.0)
 
 # Verdance: dark jungle over oxblood mining earth, toxic-teal water, concrete HEG structures.
@@ -26,6 +30,12 @@ const CONCRETE_SHADOW: Color = Color("363331")
 const HAZARD_YELLOW: Color = Color("c9a227")
 const HAZARD_DARK: Color = Color("1e1e1b")
 const HAZARD_ORANGE: Color = Color("b45424")
+const ROOF: Color = Color("4d5246")
+const ROOF_LIGHT: Color = Color("646a5a")
+const SANDBAG: Color = Color("7a6a4c")
+const MISSILE: Color = Color("c8c6bc")
+## Domes are spawned this far above the screen, so they never pop in.
+const DOME_SPAWN_MARGIN: float = 30.0
 
 @export var style: Style = Style.GROUND
 @export var scroll_speed: float = 60.0
@@ -33,10 +43,53 @@ const HAZARD_ORANGE: Color = Color("b45424")
 @export var pit_count: int = 2
 @export var canopy_count: int = 90
 @export var structure_count: int = 3
+## Chance (0-1) each base is a SAM site rather than a barracks compound.
+@export_range(0.0, 1.0) var sam_chance: float = 0.45
+
+## Radar dome spots in pattern space (0..SIZE), filled while drawing.
+var _dome_points: PackedVector2Array = PackedVector2Array()
+## Each dome's last scroll position, to spot when it crosses the top edge.
+var _dome_scroll: PackedFloat32Array = PackedFloat32Array()
+var _domes_seeded: bool = false
 
 
 func _process(delta: float) -> void:
 	position.y = fposmod(position.y + scroll_speed * delta, SIZE.y)
+	_update_domes()
+
+
+## Each pattern point is drawn twice: at p.y + position.y (lower copy) and SIZE.y higher (upper copy).
+## A dome enters when its upper copy scrolls past the top edge.
+func _update_domes() -> void:
+	if _dome_points.is_empty():
+		return
+	var edge: float = -DOME_SPAWN_MARGIN
+	# Screen positions below already include the scroll, so add only where the layer's parent sits.
+	var origin: Vector2 = global_position - position
+	if not _domes_seeded:
+		# First frame: bases already on screen get their domes straight away.
+		_domes_seeded = true
+		_dome_scroll.resize(_dome_points.size())
+		for i: int in _dome_points.size():
+			var point: Vector2 = _dome_points[i]
+			var upper: float = point.y + position.y - SIZE.y
+			_dome_scroll[i] = upper
+			if upper + SIZE.y < SIZE.y:
+				dome_entering.emit(origin + Vector2(point.x, upper + SIZE.y))
+			if upper >= edge:
+				dome_entering.emit(origin + Vector2(point.x, upper))
+		return
+	for i: int in _dome_points.size():
+		var point: Vector2 = _dome_points[i]
+		var upper: float = point.y + position.y - SIZE.y
+		var before: float = _dome_scroll[i]
+		_dome_scroll[i] = upper
+		# When the layer wraps, the upper copy jumps up a whole screen; that's not an entry,
+		# unless the dome sits so low in the pattern that it lands inside the top margin.
+		var wrapped: bool = upper < before
+		var entered: bool = (wrapped and upper >= edge) or (not wrapped and before < edge and upper >= edge)
+		if entered:
+			dome_entering.emit(origin + Vector2(point.x, upper))
 
 
 func _draw() -> void:
@@ -49,6 +102,8 @@ func _draw() -> void:
 
 
 func _draw_ground(top: float) -> void:
+	if top == 0.0:
+		_dome_points.clear()
 	var rng: RandomNumberGenerator = RandomNumberGenerator.new()
 	rng.seed = pattern_seed
 	# Areas the jungle must leave open: x, y, radius.
@@ -87,13 +142,20 @@ func _draw_ground(top: float) -> void:
 			_draw_canopy(Vector2(pos.x, top + pos.y + shift), outline, radius, shade)
 
 	for i: int in structure_count:
-		var size: Vector2 = Vector2(rng.randf_range(54.0, 80.0), rng.randf_range(38.0, 56.0))
+		var size: Vector2 = Vector2(rng.randf_range(64.0, 84.0), rng.randf_range(50.0, 62.0))
 		var pad_y: float = (i + 0.3) * SIZE.y / structure_count + rng.randf_range(-40.0, 40.0)
 		var road_x: float = _road_x(pad_y)
 		var pad_x: float = road_x + 30.0 if road_x < SIZE.x * 0.5 else road_x - 30.0 - size.x
-		var has_tank: bool = rng.randf() < 0.6
+		var is_sam: bool = rng.randf() < sam_chance
+		var rect: Rect2 = Rect2(pad_x, pad_y, size.x, size.y)
+		if top == 0.0:
+			_dome_points.append(_sam_dome(rect) if is_sam else _barracks_dome(rect))
 		for shift: float in _wrap_shifts(pad_y + size.y * 0.5, size.y):
-			_draw_structure(Rect2(pad_x, top + pad_y + shift, size.x, size.y), has_tank)
+			var placed: Rect2 = Rect2(rect.position + Vector2(0.0, top + shift), rect.size)
+			if is_sam:
+				_draw_sam_site(placed, _sam_dome(placed))
+			else:
+				_draw_barracks(placed, _barracks_dome(placed))
 
 	draw_set_transform(Vector2.ZERO)
 	_draw_side_shade(top)
@@ -143,23 +205,74 @@ func _draw_canopy(center: Vector2, outline: PackedVector2Array, radius: float, s
 	_draw_shape(outline, center + Vector2(-radius, -radius) * 0.25, 0.5, Color(CANOPY_HIGHLIGHT, 0.55))
 
 
-func _draw_structure(rect: Rect2, has_tank: bool) -> void:
+func _barracks_dome(rect: Rect2) -> Vector2:
+	return rect.position + Vector2(rect.size.x - 13.0, 14.0)
+
+
+func _sam_dome(rect: Rect2) -> Vector2:
+	return rect.position + Vector2(rect.size.x - 10.0, rect.size.y - 10.0)
+
+
+## Fenced compound with two long barracks huts. The radar dome is a destructible enemy, so only
+## its mount ring is painted here; a destroyed dome leaves the bare mount behind.
+func _draw_barracks(rect: Rect2, dome: Vector2) -> void:
 	draw_set_transform(Vector2.ZERO)
-	draw_rect(Rect2(rect.position + Vector2(6.0, 8.0), rect.size), Color(DEEP_SHADOW, 0.55))
-	draw_rect(rect, CONCRETE)
-	# Bevel: lit top/left edges, shaded bottom/right edges.
-	draw_rect(Rect2(rect.position, Vector2(rect.size.x, 2.0)), CONCRETE_LIGHT)
-	draw_rect(Rect2(rect.position, Vector2(2.0, rect.size.y)), CONCRETE_LIGHT)
-	draw_rect(Rect2(rect.position.x, rect.end.y - 2.0, rect.size.x, 2.0), CONCRETE_SHADOW)
-	draw_rect(Rect2(rect.end.x - 2.0, rect.position.y, 2.0, rect.size.y), CONCRETE_SHADOW)
-	_draw_hazard_stripes(Rect2(rect.position + Vector2(2.0, 4.0), Vector2(rect.size.x - 4.0, 6.0)))
-	draw_rect(rect.grow(-1.0), Color(HAZARD_ORANGE, 0.6), false, 1.0)
-	if has_tank:
-		var tank_center: Vector2 = rect.position + rect.size * Vector2(0.62, 0.6)
-		var tank_radius: float = minf(rect.size.x, rect.size.y) * 0.24
-		draw_circle(tank_center + Vector2(3.0, 4.0), tank_radius, Color(DEEP_SHADOW, 0.5))
-		draw_circle(tank_center, tank_radius, CONCRETE_SHADOW.lerp(CONCRETE, 0.6))
-		draw_circle(tank_center - Vector2(tank_radius, tank_radius) * 0.3, tank_radius * 0.45, CONCRETE_LIGHT)
+	draw_rect(rect, Color(CONCRETE_SHADOW, 0.55))
+	_draw_dashed_rect(rect.grow(-1.0), Color(CONCRETE_LIGHT, 0.7))
+	var hut_h: float = (rect.size.y - 14.0) * 0.5
+	for row: int in 2:
+		var hut: Rect2 = Rect2(rect.position + Vector2(5.0, 5.0 + row * (hut_h + 4.0)), Vector2(rect.size.x - 10.0, hut_h))
+		draw_rect(Rect2(hut.position + Vector2(4.0, 5.0), hut.size), Color(DEEP_SHADOW, 0.6))
+		# Pitched roof: lit top half, shaded bottom half, ridge line between.
+		draw_rect(Rect2(hut.position, Vector2(hut.size.x, hut.size.y * 0.5)), ROOF_LIGHT)
+		draw_rect(Rect2(hut.position + Vector2(0.0, hut.size.y * 0.5), Vector2(hut.size.x, hut.size.y * 0.5)), ROOF)
+		draw_line(Vector2(hut.position.x, hut.get_center().y), Vector2(hut.end.x, hut.get_center().y), CONCRETE_SHADOW, 1.0)
+		var x: float = hut.position.x + 6.0
+		while x < hut.end.x - 2.0:
+			draw_line(Vector2(x, hut.position.y + 1.0), Vector2(x, hut.end.y - 1.0), Color(CONCRETE_SHADOW, 0.35), 1.0)
+			x += 6.0
+	_draw_dome_mount(dome)
+
+
+## Round pad ringed with sandbags, a launcher with four missiles, and a radar dome on a control hut.
+func _draw_sam_site(rect: Rect2, dome: Vector2) -> void:
+	draw_set_transform(Vector2.ZERO)
+	var center: Vector2 = rect.get_center() - Vector2(6.0, 4.0)
+	var radius: float = minf(rect.size.x, rect.size.y) * 0.42
+	draw_circle(center + Vector2(4.0, 5.0), radius + 4.0, Color(DEEP_SHADOW, 0.5))
+	draw_circle(center, radius + 4.0, SANDBAG.darkened(0.35))
+	for i: int in 16:
+		var bag: Vector2 = center + Vector2.from_angle(TAU * i / 16.0) * (radius + 1.5)
+		draw_circle(bag, 3.2, SANDBAG if i % 2 == 0 else SANDBAG.lightened(0.12))
+	draw_circle(center, radius - 2.0, CONCRETE)
+	draw_circle(center - Vector2(2.0, 2.0), radius - 5.0, CONCRETE_LIGHT.lerp(CONCRETE, 0.6))
+	# Launcher on its turntable, angled up-screen.
+	draw_set_transform(center, -0.35)
+	draw_circle(Vector2.ZERO, 8.0, CONCRETE_SHADOW)
+	draw_rect(Rect2(-10.0, -4.0, 20.0, 9.0), HAZARD_DARK)
+	for i: int in 4:
+		var x: float = -9.0 + i * 5.0
+		draw_rect(Rect2(x, -18.0, 3.0, 16.0), MISSILE)
+		draw_rect(Rect2(x, -20.0, 3.0, 3.0), HAZARD_ORANGE)
+	draw_set_transform(Vector2.ZERO)
+	# Control hut under the radar dome.
+	var hut: Rect2 = Rect2(dome - Vector2(10.0, 9.0), Vector2(20.0, 18.0))
+	draw_rect(Rect2(hut.position + Vector2(3.0, 4.0), hut.size), Color(DEEP_SHADOW, 0.6))
+	draw_rect(hut, CONCRETE)
+	draw_rect(Rect2(hut.position, Vector2(hut.size.x, 2.0)), CONCRETE_LIGHT)
+	_draw_dome_mount(dome)
+
+
+func _draw_dome_mount(at: Vector2) -> void:
+	draw_circle(at, 8.5, CONCRETE_SHADOW)
+	draw_arc(at, 8.5, 0.0, TAU, 16, Color(HAZARD_YELLOW, 0.5), 1.0)
+
+
+func _draw_dashed_rect(rect: Rect2, color: Color) -> void:
+	var corners: PackedVector2Array = PackedVector2Array([
+		rect.position, Vector2(rect.end.x, rect.position.y), rect.end, Vector2(rect.position.x, rect.end.y)])
+	for i: int in 4:
+		draw_dashed_line(corners[i], corners[(i + 1) % 4], color, 1.0, 3.0)
 
 
 func _draw_side_shade(top: float) -> void:

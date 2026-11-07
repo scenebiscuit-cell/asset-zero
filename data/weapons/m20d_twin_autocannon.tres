@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="GunData" load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://resources/gun_data.gd" id="1_gun"]
+[ext_resource type="PackedScene" path="res://scenes/weapons/autocannon.tscn" id="2_scene"]
+[ext_resource type="Resource" path="res://data/shapes/overlays/m20d_gunship.tres" id="air_g"]
+[ext_resource type="Resource" path="res://data/shapes/overlays/m20d_thresher.tres" id="air_l"]
+
+[resource]
+script = ExtResource("1_gun")
+name_key = "WEAPON_M20D"
+scene = ExtResource("2_scene")
+fire_interval = 0.09
+damage = 7
+round_speed = 1050.0
+spread_degrees = 3.0
+barrel_count = 2
+barrel_spacing = 7.0
+splay_degrees = 1.5
+airframe_gunship = ExtResource("air_g")
+airframe_thresher = ExtResource("air_l")

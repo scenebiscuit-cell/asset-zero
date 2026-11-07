@@ -15,7 +15,7 @@
 [resource]
 script = ExtResource("1_level")
 sector_number = 2
-duration = 150.0
+duration = 105.0
 wave_pool = Array[ExtResource("1_wave_script")]([ExtResource("2_rd2_column5"), ExtResource("3_rd2_v5"), ExtResource("4_rd2_row4"), ExtResource("5_aa_single"), ExtResource("6_aa_pair"), ExtResource("7_id4_v3"), ExtResource("8_id4_column4"), ExtResource("9_mp_single"), ExtResource("10_at_side")])
 budget_rate = 1.4
 budget_growth = 0.01

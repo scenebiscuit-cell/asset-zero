@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="SpreadCannonData" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://resources/spread_cannon_data.gd" id="1_spread"]
+[ext_resource type="PackedScene" path="res://scenes/weapons/modules/spread_cannon.tscn" id="2_scene"]
+
+[resource]
+script = ExtResource("1_spread")
+color = Color(1, 0.55, 0.15, 1)
+name_key = "MODULE_SPREAD_CANNON"
+hardpoint = 4
+scene = ExtResource("2_scene")
+fire_interval = 0.35
+damage = 7
+rounds = 5
+fan_degrees = 48.0
+round_speed = 850.0
+thresher_spacing = 12.0

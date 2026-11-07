@@ -1,0 +1,26 @@
+[gd_resource type="Resource" script_class="GunData" load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://resources/gun_data.gd" id="1_script"]
+[ext_resource type="PackedScene" path="res://scenes/weapons/autocannon.tscn" id="2_scene"]
+[ext_resource type="Resource" path="res://data/shapes/overlays/m40_gunship.tres" id="air_g"]
+[ext_resource type="Resource" path="res://data/shapes/overlays/m40_thresher.tres" id="air_l"]
+
+[resource]
+script = ExtResource("1_script")
+scene = ExtResource("2_scene")
+name_key = "WEAPON_M40"
+fire_interval = 0.13
+damage = 11
+round_speed = 900.0
+spread_degrees = 2.0
+barrel_count = 3
+barrel_spacing = 6.0
+splay_degrees = 0.0
+fan_degrees = 12.0
+round_tint = Color(1, 0.8, 0.45, 1)
+fragments = 4
+fragment_damage = 4
+fragment_speed = 480.0
+fragment_range = 70.0
+airframe_gunship = ExtResource("air_g")
+airframe_thresher = ExtResource("air_l")

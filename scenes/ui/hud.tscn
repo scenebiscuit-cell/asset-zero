@@ -1,8 +1,10 @@
-[gd_scene load_steps=6 format=3]
+[gd_scene load_steps=8 format=3]
 
 [ext_resource type="Script" path="res://scenes/ui/hud.gd" id="1_hud"]
 [ext_resource type="Script" path="res://scenes/ui/hud_bar.gd" id="2_bar"]
 [ext_resource type="Script" path="res://scenes/ui/sector_progress.gd" id="3_progress"]
+[ext_resource type="Script" path="res://scenes/ui/weapon_icon.gd" id="4_weapon_icon"]
+[ext_resource type="Script" path="res://scenes/ui/strike_meter.gd" id="5_strike_meter"]
 
 [sub_resource type="SystemFont" id="SystemFont_mono"]
 font_names = PackedStringArray("Consolas", "Lucida Console", "Courier New", "monospace")
@@ -62,215 +64,446 @@ offset_bottom = 960.0
 mouse_filter = 2
 color = Color(0.42, 0.44, 0.47, 0.6)
 
+[node name="Console" type="Control" parent="Root"]
+offset_top = 860.0
+offset_right = 540.0
+offset_bottom = 960.0
+mouse_filter = 2
+
+[node name="Back" type="ColorRect" parent="Root/Console"]
+offset_right = 540.0
+offset_bottom = 100.0
+mouse_filter = 2
+color = Color(0.065, 0.07, 0.075, 1)
+
+[node name="TopEdge" type="ColorRect" parent="Root/Console"]
+offset_right = 540.0
+offset_bottom = 2.0
+mouse_filter = 2
+color = Color(0.42, 0.44, 0.47, 1)
+
+[node name="Shadow" type="ColorRect" parent="Root/Console"]
+offset_top = 2.0
+offset_right = 540.0
+offset_bottom = 5.0
+mouse_filter = 2
+color = Color(0, 0, 0, 0.6)
+
+
 [node name="SectorProgress" type="Control" parent="Root"]
 offset_left = 524.0
 offset_top = 72.0
 offset_right = 540.0
-offset_bottom = 888.0
+offset_bottom = 852.0
 mouse_filter = 2
 script = ExtResource("3_progress")
 
+[node name="StrikeMeter" type="Control" parent="Root"]
+offset_left = 0.0
+offset_top = 72.0
+offset_right = 16.0
+offset_bottom = 852.0
+mouse_filter = 2
+script = ExtResource("5_strike_meter")
+
+[node name="TopConsole" type="Control" parent="Root"]
+offset_right = 540.0
+offset_bottom = 66.0
+mouse_filter = 2
+
+[node name="Back" type="ColorRect" parent="Root/TopConsole"]
+offset_right = 540.0
+offset_bottom = 66.0
+mouse_filter = 2
+color = Color(0.065, 0.07, 0.075, 1)
+
+[node name="BottomEdge" type="ColorRect" parent="Root/TopConsole"]
+offset_top = 64.0
+offset_right = 540.0
+offset_bottom = 66.0
+mouse_filter = 2
+color = Color(0.42, 0.44, 0.47, 1)
+
+[node name="Shadow" type="ColorRect" parent="Root/TopConsole"]
+offset_top = 66.0
+offset_right = 540.0
+offset_bottom = 69.0
+mouse_filter = 2
+color = Color(0, 0, 0, 0.6)
+
 [node name="TopLeft" type="Control" parent="Root"]
-offset_left = 12.0
-offset_top = 8.0
-offset_right = 212.0
-offset_bottom = 58.0
+offset_left = 10.0
+offset_top = 6.0
+offset_right = 214.0
+offset_bottom = 60.0
 mouse_filter = 2
 
 [node name="Back" type="ColorRect" parent="Root/TopLeft"]
-offset_right = 200.0
-offset_bottom = 50.0
+offset_right = 204.0
+offset_bottom = 54.0
 mouse_filter = 2
-color = Color(0, 0, 0, 0.45)
+color = Color(0.08, 0.09, 0.1, 1)
 
 [node name="ArmorLabel" type="Label" parent="Root/TopLeft"]
 offset_left = 6.0
 offset_top = 2.0
 offset_right = 150.0
-offset_bottom = 18.0
-theme_override_font_sizes/font_size = 12
+offset_bottom = 19.0
+theme_override_font_sizes/font_size = 13
 text = "HUD_ARMOR"
 
 [node name="ArmorBar" type="Control" parent="Root/TopLeft"]
 anchors_preset = 0
 offset_left = 6.0
-offset_top = 18.0
+offset_top = 20.0
 offset_right = 156.0
-offset_bottom = 30.0
+offset_bottom = 34.0
 mouse_filter = 2
 script = ExtResource("2_bar")
 fill_color = Color(0.55, 1, 0.6, 1)
 
 [node name="ArmorValue" type="Label" parent="Root/TopLeft"]
-offset_left = 158.0
-offset_top = 14.0
-offset_right = 196.0
-offset_bottom = 32.0
-theme_override_font_sizes/font_size = 15
+offset_left = 156.0
+offset_top = 15.0
+offset_right = 200.0
+offset_bottom = 37.0
+theme_override_font_sizes/font_size = 18
 text = "100"
 horizontal_alignment = 2
 
 [node name="PlatingLabel" type="Label" parent="Root/TopLeft"]
-offset_left = 158.0
-offset_top = 32.0
-offset_right = 196.0
-offset_bottom = 48.0
+offset_left = 150.0
+offset_top = 36.0
+offset_right = 200.0
+offset_bottom = 52.0
 theme_override_colors/font_color = Color(0.35, 0.85, 1, 1)
-theme_override_font_sizes/font_size = 9
+theme_override_font_sizes/font_size = 10
 text = "HUD_PLATING"
 horizontal_alignment = 2
 
 [node name="PlatingBar" type="Control" parent="Root/TopLeft"]
 anchors_preset = 0
 offset_left = 6.0
-offset_top = 35.0
-offset_right = 156.0
-offset_bottom = 43.0
+offset_top = 39.0
+offset_right = 148.0
+offset_bottom = 48.0
 mouse_filter = 2
 script = ExtResource("2_bar")
 fill_color = Color(0.35, 0.85, 1, 1)
 
 [node name="TopCenter" type="Control" parent="Root"]
-offset_left = 190.0
-offset_top = 4.0
-offset_right = 350.0
-offset_bottom = 54.0
+offset_left = 218.0
+offset_top = 6.0
+offset_right = 348.0
+offset_bottom = 60.0
 mouse_filter = 2
 
+[node name="Back" type="ColorRect" parent="Root/TopCenter"]
+offset_right = 130.0
+offset_bottom = 54.0
+mouse_filter = 2
+color = Color(0.08, 0.09, 0.1, 1)
+
 [node name="SalvageValue" type="Label" parent="Root/TopCenter"]
-offset_right = 160.0
-offset_bottom = 32.0
-theme_override_font_sizes/font_size = 24
+offset_top = 2.0
+offset_right = 130.0
+offset_bottom = 34.0
+theme_override_font_sizes/font_size = 22
 theme_override_constants/outline_size = 5
 text = "00000000"
 horizontal_alignment = 1
 
 [node name="SalvageLabel" type="Label" parent="Root/TopCenter"]
-offset_top = 28.0
-offset_right = 160.0
-offset_bottom = 44.0
+offset_top = 33.0
+offset_right = 130.0
+offset_bottom = 50.0
 theme_override_colors/font_color = Color(1, 0.7, 0.2, 0.7)
 theme_override_font_sizes/font_size = 11
 text = "HUD_SALVAGE"
 horizontal_alignment = 1
 
 [node name="TopRight" type="Control" parent="Root"]
-offset_left = 356.0
-offset_top = 8.0
-offset_right = 528.0
-offset_bottom = 58.0
+offset_left = 352.0
+offset_top = 6.0
+offset_right = 530.0
+offset_bottom = 60.0
 mouse_filter = 2
 
 [node name="Back" type="ColorRect" parent="Root/TopRight"]
-offset_right = 172.0
-offset_bottom = 50.0
+offset_right = 178.0
+offset_bottom = 54.0
 mouse_filter = 2
-color = Color(0, 0, 0, 0.45)
+color = Color(0.08, 0.09, 0.1, 1)
 
 [node name="Sector" type="Label" parent="Root/TopRight"]
 offset_left = 4.0
 offset_top = 1.0
-offset_right = 166.0
-offset_bottom = 17.0
-theme_override_font_sizes/font_size = 13
+offset_right = 172.0
+offset_bottom = 19.0
+theme_override_font_sizes/font_size = 14
 text = "SECTOR 1"
 horizontal_alignment = 2
 
 [node name="WeightClass" type="Label" parent="Root/TopRight"]
 offset_left = 4.0
-offset_top = 17.0
-offset_right = 166.0
-offset_bottom = 33.0
+offset_top = 18.0
+offset_right = 172.0
+offset_bottom = 35.0
 theme_override_colors/font_color = Color(0.75, 0.78, 0.8, 1)
-theme_override_font_sizes/font_size = 12
+theme_override_font_sizes/font_size = 13
 text = "CLASS_LIGHT"
 horizontal_alignment = 2
 
 [node name="Threat" type="Label" parent="Root/TopRight"]
 offset_left = 4.0
-offset_top = 32.0
-offset_right = 166.0
-offset_bottom = 48.0
-theme_override_font_sizes/font_size = 12
+offset_top = 35.0
+offset_right = 172.0
+offset_bottom = 52.0
+theme_override_font_sizes/font_size = 13
 text = "THREAT_LOW"
 horizontal_alignment = 2
 
 [node name="BottomLeft" type="Control" parent="Root"]
 offset_left = 12.0
-offset_top = 894.0
-offset_right = 92.0
-offset_bottom = 952.0
+offset_top = 866.0
+offset_right = 104.0
+offset_bottom = 954.0
 mouse_filter = 2
 
 [node name="Back" type="ColorRect" parent="Root/BottomLeft"]
-offset_right = 80.0
-offset_bottom = 58.0
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 92.0
+offset_bottom = 88.0
 mouse_filter = 2
 color = Color(0, 0, 0, 0.45)
 
 [node name="ModuleLabel" type="Label" parent="Root/BottomLeft"]
-offset_left = 4.0
-offset_top = 1.0
-offset_right = 76.0
-offset_bottom = 17.0
-theme_override_font_sizes/font_size = 11
+offset_left = 2.0
+offset_top = 3.0
+offset_right = 90.0
+offset_bottom = 19.0
+theme_override_font_sizes/font_size = 12
 text = "HUD_MODULE"
 horizontal_alignment = 1
+clip_text = true
 
 [node name="ModuleSlot" type="ColorRect" parent="Root/BottomLeft"]
-offset_left = 22.0
-offset_top = 18.0
-offset_right = 58.0
-offset_bottom = 54.0
+offset_left = 18.0
+offset_top = 24.0
+offset_right = 74.0
+offset_bottom = 80.0
 mouse_filter = 2
 color = Color(0.08, 0.09, 0.1, 1)
 
-[node name="ModuleValue" type="Label" parent="Root/BottomLeft/ModuleSlot"]
-offset_right = 36.0
-offset_bottom = 36.0
-theme_override_colors/font_color = Color(1, 1, 1, 0.35)
-theme_override_font_sizes/font_size = 16
+[node name="ModuleIcon" type="Control" parent="Root/BottomLeft/ModuleSlot"]
+anchors_preset = 0
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 56.0
+offset_bottom = 56.0
+mouse_filter = 2
+script = ExtResource("4_weapon_icon")
+
+[node name="Weapons" type="Control" parent="Root"]
+offset_left = 110.0
+offset_top = 866.0
+offset_right = 300.0
+offset_bottom = 954.0
+mouse_filter = 2
+
+[node name="Back" type="ColorRect" parent="Root/Weapons"]
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 190.0
+offset_bottom = 88.0
+mouse_filter = 2
+color = Color(0, 0, 0, 0.45)
+
+[node name="NoseIcon" type="Control" parent="Root/Weapons"]
+anchors_preset = 0
+offset_left = 6.0
+offset_top = 7.0
+offset_right = 38.0
+offset_bottom = 39.0
+mouse_filter = 2
+script = ExtResource("4_weapon_icon")
+
+[node name="NoseName" type="Label" parent="Root/Weapons"]
+offset_left = 46.0
+offset_top = 7.0
+offset_right = 186.0
+offset_bottom = 39.0
+theme_override_font_sizes/font_size = 13
 text = "—"
+vertical_alignment = 1
+autowrap_mode = 3
+theme_override_constants/line_spacing = -3
+
+[node name="PylonIcon" type="Control" parent="Root/Weapons"]
+anchors_preset = 0
+offset_left = 6.0
+offset_top = 49.0
+offset_right = 38.0
+offset_bottom = 81.0
+mouse_filter = 2
+script = ExtResource("4_weapon_icon")
+
+[node name="PylonName" type="Label" parent="Root/Weapons"]
+offset_left = 46.0
+offset_top = 49.0
+offset_right = 186.0
+offset_bottom = 81.0
+theme_override_font_sizes/font_size = 13
+text = "—"
+vertical_alignment = 1
+autowrap_mode = 3
+theme_override_constants/line_spacing = -3
+
+[node name="Strike" type="Control" parent="Root"]
+offset_left = 306.0
+offset_top = 866.0
+offset_right = 372.0
+offset_bottom = 954.0
+mouse_filter = 2
+
+[node name="Back" type="ColorRect" parent="Root/Strike"]
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 66.0
+offset_bottom = 88.0
+mouse_filter = 2
+color = Color(0, 0, 0, 0.45)
+
+[node name="Title" type="Label" parent="Root/Strike"]
+offset_left = 0.0
+offset_top = 3.0
+offset_right = 66.0
+offset_bottom = 19.0
+theme_override_colors/font_color = Color(1, 0.4, 0.3, 1)
+theme_override_font_sizes/font_size = 12
+text = "HUD_STRIKE"
+horizontal_alignment = 1
+
+[node name="Pip1" type="ColorRect" parent="Root/Strike"]
+offset_left = 6.0
+offset_top = 28.0
+offset_right = 20.0
+offset_bottom = 42.0
+mouse_filter = 2
+color = Color(1, 1, 1, 0.12)
+
+[node name="Pip2" type="ColorRect" parent="Root/Strike"]
+offset_left = 26.0
+offset_top = 28.0
+offset_right = 40.0
+offset_bottom = 42.0
+mouse_filter = 2
+color = Color(1, 1, 1, 0.12)
+
+[node name="Pip3" type="ColorRect" parent="Root/Strike"]
+offset_left = 46.0
+offset_top = 28.0
+offset_right = 60.0
+offset_bottom = 42.0
+mouse_filter = 2
+color = Color(1, 1, 1, 0.12)
+
+[node name="State" type="Label" parent="Root/Strike"]
+offset_left = 0.0
+offset_top = 52.0
+offset_right = 66.0
+offset_bottom = 82.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 12
+text = "HUD_STRIKE_READY"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="BottomRight" type="Control" parent="Root"]
-offset_left = 328.0
-offset_top = 902.0
+[node name="FireControl" type="Control" parent="Root"]
+offset_left = 378.0
+offset_top = 866.0
 offset_right = 528.0
-offset_bottom = 952.0
+offset_bottom = 908.0
+mouse_filter = 2
+
+[node name="Back" type="ColorRect" parent="Root/FireControl"]
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 150.0
+offset_bottom = 42.0
+mouse_filter = 2
+color = Color(0, 0, 0, 0.45)
+
+[node name="Title" type="Label" parent="Root/FireControl"]
+offset_left = 6.0
+offset_top = 1.0
+offset_right = 144.0
+offset_bottom = 15.0
+theme_override_colors/font_color = Color(0.35, 0.85, 1, 1)
+theme_override_font_sizes/font_size = 12
+text = "HUD_FIRE_CONTROL"
+
+[node name="Bar" type="Control" parent="Root/FireControl"]
+anchors_preset = 0
+offset_left = 6.0
+offset_top = 16.0
+offset_right = 144.0
+offset_bottom = 26.0
+mouse_filter = 2
+script = ExtResource("2_bar")
+fill_color = Color(0.35, 0.85, 1, 1)
+segments = 18
+
+[node name="State" type="Label" parent="Root/FireControl"]
+offset_left = 6.0
+offset_top = 26.0
+offset_right = 144.0
+offset_bottom = 41.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 12
+text = "HUD_FIRE_CONTROL_READY"
+horizontal_alignment = 2
+
+[node name="BottomRight" type="Control" parent="Root"]
+offset_left = 378.0
+offset_top = 912.0
+offset_right = 528.0
+offset_bottom = 954.0
 mouse_filter = 2
 
 [node name="Back" type="ColorRect" parent="Root/BottomRight"]
-offset_right = 200.0
-offset_bottom = 50.0
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 150.0
+offset_bottom = 42.0
 mouse_filter = 2
 color = Color(0, 0, 0, 0.45)
 
 [node name="OverclockLabel" type="Label" parent="Root/BottomRight"]
 offset_left = 6.0
-offset_top = 2.0
-offset_right = 194.0
-offset_bottom = 18.0
+offset_top = 1.0
+offset_right = 144.0
+offset_bottom = 15.0
 theme_override_font_sizes/font_size = 12
 text = "HUD_OVERCLOCK"
 
 [node name="OverclockBar" type="Control" parent="Root/BottomRight"]
 anchors_preset = 0
 offset_left = 6.0
-offset_top = 18.0
-offset_right = 194.0
-offset_bottom = 30.0
+offset_top = 16.0
+offset_right = 144.0
+offset_bottom = 26.0
 mouse_filter = 2
 script = ExtResource("2_bar")
 fill_color = Color(1, 0.55, 0.15, 1)
-segments = 25
+segments = 22
 
 [node name="OverclockState" type="Label" parent="Root/BottomRight"]
 offset_left = 6.0
-offset_top = 31.0
-offset_right = 194.0
-offset_bottom = 47.0
+offset_top = 26.0
+offset_right = 144.0
+offset_bottom = 41.0
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_font_sizes/font_size = 12
 text = "HUD_OVERCLOCK_READY"
@@ -278,9 +511,9 @@ horizontal_alignment = 2
 
 [node name="BottomCenter" type="Control" parent="Root"]
 offset_left = 110.0
-offset_top = 846.0
+offset_top = 826.0
 offset_right = 430.0
-offset_bottom = 896.0
+offset_bottom = 876.0
 mouse_filter = 2
 
 [node name="Warning" type="Label" parent="Root/BottomCenter"]
@@ -290,13 +523,4 @@ theme_override_colors/font_color = Color(1, 0.25, 0.2, 1)
 theme_override_font_sizes/font_size = 16
 theme_override_constants/outline_size = 5
 text = "WARN_ARMOR_CRITICAL"
-horizontal_alignment = 1
-
-[node name="AutoFire" type="Label" parent="Root/BottomCenter"]
-offset_top = 24.0
-offset_right = 320.0
-offset_bottom = 44.0
-theme_override_colors/font_color = Color(0.35, 0.85, 1, 1)
-theme_override_font_sizes/font_size = 12
-text = "HUD_AUTOFIRE_ON"
 horizontal_alignment = 1

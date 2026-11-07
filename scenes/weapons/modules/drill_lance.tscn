@@ -1,0 +1,23 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scenes/weapons/modules/drill_lance.gd" id="1_drill"]
+
+[node name="DrillLance" type="Node2D"]
+script = ExtResource("1_drill")
+
+[node name="Bore" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 12
+monitoring = false
+monitorable = false
+
+[node name="Shape" type="CollisionShape2D" parent="Bore"]
+
+[node name="Visual" type="Node2D" parent="."]
+
+[node name="Drill" type="Node2D" parent="Visual"]
+z_index = -1
+
+[node name="Pod" type="Polygon2D" parent="Visual"]
+color = Color(0.32, 0.3, 0.28, 1)
+polygon = PackedVector2Array(-6, -3, 6, -3, 7, 3, -7, 3)

@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="AirframeShape" format=3]
+
+[ext_resource type="Script" path="res://resources/airframe_shape.gd" id="1_shape"]
+
+[resource]
+script = ExtResource("1_shape")
+parts = Dictionary[String, PackedVector2Array]({
+"PodL": PackedVector2Array(-8.704, 10.8, -8.704, 18.09, -11.776, 18.09, -11.776, 10.8, -10.24, 8.37),
+"PodR": PackedVector2Array(10.24, 8.37, 11.776, 10.8, 11.776, 18.09, 8.704, 18.09, 8.704, 10.8)
+})

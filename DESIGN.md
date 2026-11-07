@@ -28,20 +28,20 @@ Megacorporations are fighting over the resources of distant planets and strippin
 
 - **1 sector** (one planet, one enemy corporation)
 - **3 levels + 1 boss**, played in order as a single run
-- **Combat Morph** (Gunship form ↔ Lance form)
+- **Combat Morph** (Gunship form ↔ Thresher form)
 - **Assimilate** (4 enemy weapon modules)
 - **Overclock** meter
 - **Threat Level** (4 tiers tied to weight class)
-- **3 weapon systems** (Autocannon, Beam Laser, Seeker Missiles), each with 3 refit levels
+- **3 weapon systems** (Autocannon, Beam Laser, Missiles), each with 3 refit levels (the Missile line has 4)
 - **2 support systems** (Propulsion, Armor)
 - **4 weight classes** (Light → Medium → Heavy → Assault)
 - **6 regular enemy types (any can spawn as an elite) + 1 boss**
 - **Pick-1-of-3 Field Refit after each level + Armory shop**
 - **Small meta progression** (persistent currency that unlocks new systems)
 - **Platform:** Web browser (itch.io), Godot 4 HTML5 export
-- **Controls:** Keyboard and mouse
+- **Controls:** Keyboard or gamepad (the mouse only clicks menus)
 
-**Out of scope for the demo** (write ideas into the "Later" list at the bottom, don't build them): more sectors, multiple starting airframes, heat management, contract board, laser-designated strikes, gamepad, touch, story cutscenes, online leaderboards, co-op, Steam features.
+**Out of scope for the demo** (write ideas into the "Later" list at the bottom, don't build them): more sectors, multiple starting airframes, heat management, contract board, laser-designated strikes, touch, story cutscenes, online leaderboards, co-op, Steam features.
 
 ## 4. Setting (sector 1)
 
@@ -62,7 +62,7 @@ The airframe has **hardpoints**, like a mech:
 | Hardpoint | Holds | Starts with |
 |---|---|---|
 | Nose | Primary weapon (Autocannon or Beam Laser line) | M20 Autocannon |
-| Wing pylons (L+R) | Secondary weapon (Seeker Missile line) | Empty |
+| Wing pylons (L+R) | Secondary weapon (Missile line) | Empty |
 | Engine | Propulsion line | Stock thrusters |
 | Hull | Armor line | Bare frame (no plating) |
 | Salvage Mount | One assimilated enemy weapon (§5.8) | Empty |
@@ -78,69 +78,83 @@ The airframe grows as you refit. **Weight class** is based on the total number o
 | Heavy (gunship) | 6–8 | Wide, armored, extra pylons visible | +30 max Armor | −10% speed |
 | Assault | 9+ | Huge flying fortress | +50 max Armor | −15% speed |
 
-The **hitbox stays the same size** in every class (body + wing roots, §5.4), so a bigger ship isn't unfair. Moving up a class plays a bigger morph and a "CLASS UPGRADE: MEDIUM" callout. Weight class also sets the **Threat Level** (§9.1).
+The **hitbox stays the same size** in every class (body + wing roots, §5.4), so a bigger ship isn't unfair. Moving up a class plays a bigger morph and a "CLASS UPGRADE: MEDIUM" banner that slides down over the top of the screen. Weight class also sets the **Threat Level** (§9.1).
 
 ### 5.3 Liquid-metal behavior (visual rules)
 
-The ship always looks like a hard-edged military aircraft. The liquid metal shows in moments:
+Gunship form is the metal locked into hard armour: a hard-edged military aircraft. **Thresher form is the metal unlocked and hunting:** a dark, ribbed predator. The hull sweeps into a crescent with a forked tail, hooked tines hang back off the trailing edges (more of them each weight class), stacked chevron plates run down the spine with ember cores glowing between them, and a dark glossy eye sits where the canopy was. The Gunship's panels, intakes and fins melt into the hull. It's the same metal reshaped, not a smaller ship: Thresher keeps most of the Gunship's area (about 80%), with the wings' mass pulled into a longer, thicker body. The open, softer metal is why Thresher form takes more damage (§5.6).
 
-- **Combat Morph:** flowing transition between Gunship and Lance form (§5.6).
-- **Refit morph:** every refit plays a quick ~0.3 s flowing transition from the old airframe to the new one. Weapons extrude out of the hull.
+The metal is alive every second, not only when a button is pressed (the **live metal**, an offset laid over the resting outline by the morph system):
+
+- **Thresher form ripples:** while held, a slow wave runs down the outline the whole time, and a short metal trail drips off the tail.
+- **Movement:** the tips trail the body when the ship moves and spring back when it stops, in both forms.
+- **Vector Dash:** the hull stretches along the dash and relaxes.
+- **Hits:** a round pushes the hull in where it lands, and the dent heals over about half a second. Plating takes the hit instead when it's up.
+- **Graze:** a brief shiver through the metal.
+
+The liquid metal also shows in moments:
+
+- **Combat Morph:** flowing transition between Gunship and Thresher form (§5.6).
+- **Refit morph:** every refit plays a quick ~0.3 s flowing transition from the old airframe to the new one. Weapons extrude out of the hull. Refits are installed between sectors, so the next sector starts in the old airframe and flows into the new one after a moment (~0.7 s with a liquid ripple when the weight class changes). The Field Refit schematic shows the new shape straight away.
 - **Assimilate:** the enemy weapon module gets swallowed into the hull and re-extrudes on the Salvage Mount.
 - **Salvage absorb:** scrap pickups get pulled in and melt into the hull with a small ripple.
 - **Overclock:** the hull glows white-hot and ripples.
-- **Damage:** when hit, the armor splashes briefly and droplets fly off. At low Armor the outline gets unstable and drippy.
+- **Damage:** when hit, the armor splashes briefly, droplets fly off and the hull dents (above). At low Armor the outline gets unstable and drippy.
 - **Death:** the airframe loses its shape, collapses into a liquid splash and falls.
 
-**Technical note:** all of these use one shared morph system that tweens polygon points from one shape to another. Every airframe shape (each form × weight class × refit) is just a list of points, so the same system handles every transformation.
+**Technical note:** all of these use one shared morph system that tweens polygon points from one shape to another. Every airframe shape (each form × weight class × refit) is just a list of points, so the same system handles every transformation. Each weight class has a Gunship and a Thresher base shape (bigger each class, with armor plates from Medium and a dorsal spine from Heavy); each weapon and Propulsion refit carries a small overlay (barrels, lens, heat sinks, pylon pods, swept wings, blades, nozzles) that's laid on top and scaled to the class. Armor-line refits show as the Plating ring, shrapnel and repair drones instead.
 
 ### 5.4 Stats
 
 | Stat | Start value | Notes |
 |---|---|---|
-| Armor | 100 | Health. Run ends at 0. Repairable in the Armory |
+| Armor | 100 | Health. Run ends at 0. Repairable in the Armory, and every 20 enemies destroyed drop a repair kit (+20 Armor) |
 | Plating | 0 | Regenerating shield, absorbs damage first, recharges after 3 s without being hit |
 | Move speed | 300 px/s | Gunship form. Changed by Propulsion and weight class |
-| Hitbox | capsule over the body + wing roots: ~24 px wide (Gunship), ~14 px wide (Lance) | Wing tips don't count. Shrinks as the wings fold in Lance form (§5.6). Stored per airframe shape |
+| Hitbox | capsule over the body + wing roots: ~24 px wide (Gunship), ~14 px wide (Thresher) | Wing tips don't count. Shrinks as the wings fold in Thresher form (§5.6). Stored per airframe shape |
 | Graze radius | ~28 px | Enemy rounds passing inside this (but not hitting) count as near misses for Overclock |
 | Invulnerability after hit | 1.0 s | Ship flashes |
 
 ### 5.5 Controls
 
-| Action | Keyboard | Mouse |
+| Action | Keyboard | Gamepad |
 |---|---|---|
-| Move | WASD / Arrow keys | Ship moves toward cursor (capped at move speed) |
-| Fire | Hold Space or J | Hold left mouse button |
-| Combat Morph (Lance form) | Hold Shift or K | Hold right mouse button |
-| Overclock | E or L | Middle mouse button |
-| Auto-fire | — (no key) | Only from Fire Control power-ups (§7.3) or the accessibility setting |
-| Pause | Esc / P | — |
+| Move | WASD / Arrow keys | Left stick (analog: a half push flies at half speed) or D-pad |
+| Fire | Hold Space or J | Hold A or right trigger |
+| Combat Morph (Thresher form) | Hold Shift or K | Hold left trigger or left bumper |
+| Overclock | E or L | Y |
+| Fire Control | Q or I | X | Starts a stored Fire Control pickup: auto-fire for ~10 s (§7.3) |
+| Vector Dash | Double-tap a direction | Right bumper (dashes the way you're moving, or forward) | Only with the Vector Dash refit (§6) |
+| Saturation Strike | R or U | B | Spends a stored strike charge: clears the screen (§7.4) |
+| Auto-fire | — (no key) | — | Only from Fire Control (§7.3) or the accessibility setting |
+| Pause | Esc / P | Start |
 | Fullscreen | F11 / Alt+Enter | — |
 
-Keyboard and mouse can both work in the same session. Whichever moved last takes control.
+Keyboard and gamepad both work at once. The mouse doesn't fly the ship: the cursor is hidden during play and shows as a small green reticle in menus, which can be clicked or driven with the keyboard / D-pad.
 
 ### 5.6 Combat Morph
 
-XF-0 has two combat forms. **Hold** the Morph button for Lance form, and release to flow back to Gunship form. The morph takes **0.15 s** (fast, it must feel responsive) and can be done at any time.
+XF-0 has two combat forms. **Hold** the Morph button for Thresher form, and release to flow back to Gunship form. The morph takes about **0.22 s** and can be done at any time: the metal flows in a wave from nose to tail, darkening as the ribs and tines grow out and the cores light up. Speed and fire pattern change the moment the button is pressed, so it stays responsive.
 
-| | Gunship form (default) | Lance form (hold Morph) |
+| | Gunship form (default) | Thresher form (hold Morph) |
 |---|---|---|
-| Shape | Wide, wings spread, weapons angled outward | Narrow arrowhead, wings folded back, weapons pulled to the nose |
+| Shape | Hard-edged military jet: wide, wings spread, weapons angled outward | Dark ribbed predator: forked crescent, hooked tines along the trailing edges, ember cores between the spine plates, dark eye, one ember plume, weapons pulled to the nose |
 | Speed | 100% | 55% (for precise dodging) |
 | Fire pattern | Weapons use their normal spread | Every weapon **converges** forward into a tight stream |
 | Damage | 100% | 140% |
+| Damage taken | 100% | 300% (Plating and Armor): about 3 standard rounds kill a Light airframe from full Armor |
 | Ground targets | Normal | Normal |
-| Seeker Missiles | Seek any target | Seek only targets ahead of the ship |
+| Missiles | Seekers seek any target; rockets angle slightly outward | Seekers seek only targets ahead of the ship; rockets fire dead straight |
 | Hitbox | ~24 px wide | ~14 px wide (wings folded) |
 | Graze radius | 28 px | 36 px (easier to charge Overclock while threading bullets) |
 
-How each weapon line converges in Lance form:
+How each weapon line converges in Thresher form:
 
-- **Autocannon lines:** all barrels fire straight ahead in one tight stream. The Flak Battery spread closes to a narrow cone. The Railgun fires faster.
+- **Autocannon lines:** one dead-straight stream from the centre of the nose: multi-barrel guns take turns instead of firing side by side, ~25% more rounds per second, rounds fly ~20% faster, no scatter. The Flak Battery spread closes completely. The Railgun fires 40% faster instead.
 - **Beam Laser lines:** the beam gets thinner and brighter. The Split Array's three beams merge into one.
-- **Assimilated weapons:** each module defines its own Lance behavior (§5.8).
+- **Assimilated weapons:** each module defines its own Thresher behavior (§5.8).
 
-Every refit changes **both** shapes. The Gunship and Lance shapes for each weight class are drawn as a pair.
+Every refit changes **both** shapes. The Gunship and Thresher shapes for each weight class are drawn as a pair, and each class has its own silhouette in one stealth-fighter style: faceted nose, straight edges, matching wing angles, canted tail fins (Light: slim diamond wing; Medium: canards and tailplanes; Heavy: thick body, broad trapezoid wings, twin booms; Assault: faceted shoulders, double delta, long twin tails). Swept-wing refits lean the class's own wings back.
 
 ### 5.7 Overclock
 
@@ -170,7 +184,7 @@ Overclock is the "panic button" and the "go aggressive" button in one. It does n
 - Lasts until the **end of the level**, then dissolves (unless a Retention Matrix field mod says otherwise).
 - Modules have no ammo limit.
 
-| Module | Dropped by | Gunship behavior | Lance behavior |
+| Module | Dropped by | Gunship behavior | Thresher behavior |
 |---|---|---|---|
 | Spread Cannon | HG-7 Gunship (elite) | 5-way fan of medium rounds | 5 rounds stacked in a tight line |
 | Flak Burst | AA Emplacement (elite) | Rounds explode in a small blast after a short distance | Longer range before exploding |
@@ -181,7 +195,7 @@ Recon and Interceptor drones don't carry modules. The **Retention Matrix** field
 
 ## 6. Weapon and support systems
 
-All weapons fire while Fire is held. **Missiles fire automatically** on their own timer. Each system has **3 refit levels**, and at level 3 the player picks **one of two variants** (shown as "Variant A / Variant B"). Each level changes the *visual* and the *behavior*, not just the numbers. Names follow a military designation style: a model code plus a plain name. All weapons follow the Lance-form convergence rules in §5.6.
+All weapons fire while Fire is held. **Missiles fire automatically** on their own timer. Each system has **3 refit levels** (the Missile line has 4), and at the last level the player picks **one of two variants** (shown as "Variant A / Variant B"). Each level changes the *visual* and the *behavior*, not just the numbers. Names follow a military designation style: a model code plus a plain name. All weapons follow the Thresher-form convergence rules in §5.6.
 
 ### Autocannon line (nose, starting weapon)
 
@@ -201,14 +215,17 @@ All weapons fire while Fire is held. **Missiles fire automatically** on their ow
 | 3A | HEL-3T Thermal Lance | Targets keep burning after the beam leaves | Red-hot heat sinks |
 | 3B | HEL-3S Split Array | Beam splits into 3 angled beams | Triple-emitter array |
 
-### Seeker Missile line (wing pylons, secondary)
+### Missile line (wing pylons, secondary)
+
+Starts with unguided rockets; homing is a later refit, because Seekers are very strong. This line has **4 levels** instead of 3.
 
 | Level | Designation | Behavior |
 |---|---|---|
-| 1 | Mk1 Seeker | 2 slow homing missiles every 1.5 s |
-| 2 | Mk2 Seeker Pod | 4 faster homing missiles |
-| 3A | Mk3 Cluster Missile | Missiles split into small homing submunitions |
-| 3B | GBU Bunker Buster | Big slow bombs, large blast radius, strong against ground targets |
+| 1 | R1 Rocket Pod | 2 unguided rockets every 1 s, fly straight ahead |
+| 2 | Mk1 Seeker | 2 slow homing missiles every 1.5 s |
+| 3 | Mk2 Seeker Pod | 4 faster homing missiles |
+| 4A | Mk3 Cluster Missile | Missiles split into small homing submunitions |
+| 4B | GBU Bunker Buster | Big slow bombs, large blast radius, strong against ground targets |
 
 > Nose rule: one primary weapon at a time (Autocannon line OR Beam Laser line). Taking a Beam Laser while holding the Autocannon offers a swap. Keeps balance simple.
 
@@ -217,32 +234,32 @@ All weapons fire while Fire is held. **Missiles fire automatically** on their ow
 | Level | Designation | Effect | Visual |
 |---|---|---|---|
 | 1 | Afterburner Mk1 | +15% speed | Bigger engine glow |
-| 2 | Swept-Wing Refit | +30% speed, Lance form moves at 70% instead of 55% | Wings sweep back |
-| 3A | Razor Wing | Reinforced blade-edged wings damage enemies you touch (you still take contact damage) | Sharp leading edges |
-| 3B | Vector Dash | Double-tap a direction for a short thrust-vectored dash with brief invulnerability (the ship goes liquid for a moment) | Side thruster nozzles |
+| 2 | Swept-Wing Refit | +30% speed, Thresher form moves at 70% instead of 55% | Wings sweep back |
+| 3A | Razor Wing | Reinforced blade-edged wings damage aircraft you touch (~120 damage/s), and ramming aircraft no longer hurts you (enemy rounds and hazards still do) | Sharp leading edges |
+| 3B | Vector Dash | Double-tap a direction key, or press the right bumper on a gamepad: a short thrust-vectored dash (~120 px) with brief invulnerability (the ship goes liquid for a moment). 0.7 s cooldown | Side thruster nozzles |
 
 ### Armor line (hull)
 
 | Level | Designation | Effect |
 |---|---|---|
-| 1 | Ablative Plating | 25 Plating |
-| 2 | Composite Plating | 50 Plating, faster recharge |
-| 3A | Reactive Armor | Taking a hit blasts a ring of shrapnel outward |
-| 3B | Nanite Repair | Slowly restores Armor (cap: 50%) |
+| 1 | Ablative Plating | 25 Plating (recharges 10/s after 3 s without a hit). Shown as a ring of cyan hex plates around the ship that thins as Plating drops and flashes when it soaks a hit |
+| 2 | Composite Plating | 50 Plating, faster recharge (20/s after 2.5 s) |
+| 3A | Reactive Armor | Taking a hit blasts a wide ring of 16 shrapnel rounds outward (~300 px) |
+| 3B | Nanite Repair | Slowly restores Armor (~0.7/s, only while below 50%). Small liquid-metal repair drones fly out beside the ship while it heals, then fly back in |
 
 ### Field mods (filler offers)
 
-Small simple upgrades: AP Rounds (+10% damage), Improved Feed (+10% fire rate), Armor Kit (+20 max Armor), Salvage Magnet (+15% pickup radius), Field Repair (restore 30 Armor), Heat Capacitor (Overclock lasts +1.5 s), Retention Matrix (keep your assimilated weapon one extra level). Keep the list short. **Field mods don't count toward weight class.**
+Small simple upgrades: AP Rounds (+10% damage), Improved Feed (+10% fire rate), Armor Kit (+20 max Armor), Salvage Magnet (+15% pickup radius), Field Repair (restore 30 Armor), Heat Capacitor (Overclock lasts +1.5 s), Retention Matrix (keep your assimilated weapon one extra level). Keep the list short. **Field mods don't count toward weight class.** Stat mods stack: AP Rounds, Improved Feed and Salvage Magnet up to 3 times each, Heat Capacitor up to 2. Retention Matrix holds one charge at a time and is used up the next time a sector ends with a module mounted. Improved Feed also speeds up beam and drill damage ticks.
 
 ## 7. Economy
 
-- **Salvage** (in-run currency): destroyed enemies break into scrap pickups that get magnetically pulled into XF-0 when close. Ground targets, big enemies and elites drop more. Lost when the run ends. Salvage pickups also charge Overclock.
+- **Salvage** (in-run currency): destroyed enemies break into scrap pickups that get magnetically pulled into XF-0 when close. Ground targets, big enemies and elites drop more. Enemy salvage values in the table (§8) are the number of pickups; the game pays ×1.5 that total, spread across the same pickups. Lost when the run ends. Salvage pickups also charge Overclock.
 - **Combat Data** (meta currency): earned at the end of every run, win or lose (based on distance reached, boss kills and highest Threat Level reached). Kept forever, saved to disk.
 
 ### 7.1 Between levels (in order)
 
-1. **Field Refit (free):** pick 1 of 3 random refits. Shown on a **loadout screen**: a top-down schematic of the ship (both forms side by side) with its hardpoints, where the offered refit highlights the hardpoint it goes into. Can reroll once for salvage (cost rises each reroll).
-2. **Armory (shop):** a black-market arms dealer selling 4 items for salvage. Always includes at least one repair. Prices scale with level. Can leave without buying.
+1. **Field Refit (free):** pick 1 of 3 random refits. Shown on a **loadout screen**: a top-down schematic of the ship (both forms side by side) with its hardpoints, where the offered refit highlights the hardpoint it goes into. Each card shows the designation, level and hardpoint; a Beam Laser offered while you carry the Autocannon line says what it replaces (nose rule). When a line reaches its last level, its Variant A and Variant B share one card and you pick one. One reroll per screen for salvage: 15, plus 10 for every reroll already bought this run. If there aren't enough system refits to fill 3 cards, field mods fill the gaps.
+2. **Armory (shop):** a black-market arms dealer selling 4 items for salvage. The first is always a repair (Field Repair, greyed out as ARMOR FULL when Armor is full); the rest are rolled from the same refits and field mods as the Field Refit. Each item can be bought once. Prices: each item has a base price (field mods ~30–45, systems ~80–100), +40% per sector after the first, rounded to 5. Can leave without buying.
 3. Next level.
 
 ### 7.2 Meta unlocks (demo)
@@ -254,9 +271,18 @@ Spend Combat Data in **R&D** on the main menu to unlock systems so they can appe
 Auto-fire is not a standard control. It comes from two power-ups:
 
 - **FC-1 Fire Control Computer (one-run refit):** sometimes offered on the Mission Briefing screen before a run, bought with Combat Data. Gives auto-fire for that run only; it must be bought again before each run, and only when it's offered.
-- **Fire Control pickup (timed):** a rare drop from destroyed enemies. Turns on auto-fire for ~10 s (tunable). Pooled like other pickups.
+- **Fire Control pickup (timed):** a rare drop from destroyed enemies. Collecting it **stores** a charge (up to 2, kept between sectors). Press the **Fire Control key (Q / I)** to spend one and turn on auto-fire for ~10 s (tunable). The Fire Control panel above the Overclock meter shows EMPTY, "READY - PRESS Q" while you hold a charge, and the countdown while it runs. Pooled like other pickups.
 
 Separately, **Settings → Accessibility → Auto-fire** (off by default) gives always-on auto-fire for players who can't hold a button for long.
+
+### 7.4 Saturation Strike (kill meter)
+
+A bomb meter, earned by fighting rather than found:
+
+- The **strike meter** in the left HUD rail fills from the bottom with every enemy destroyed (80 kills, tunable). Full = one **strike charge**, and the meter starts over. Up to 3 charges are stored and kept between sectors; with storage full the meter stays full until one is used. Radar domes don't count, and kills made by the strike itself don't refill it.
+- Press the **Strike key (R / U)** to spend a charge: a white flash, every enemy round on screen disappears, every enemy in the play area takes heavy damage (600, enough for anything but a boss), and a barrage of blasts ripples up the screen. Enemies still burrowed or behind the HUD console aren't hit.
+- The console's STRIKE panel shows the stored charges as pips, "PRESS R" while one is ready, or the kill count toward the next one.
+- Different from Overclock: Overclock is earned by flying close to danger and turns nearby rounds into salvage; the strike is earned by kills and wipes the whole screen but pays nothing extra for the rounds.
 
 ## 8. Enemies (sector 1, Halcyon Security Division)
 
@@ -267,9 +293,10 @@ Air enemies fly over everything. Ground enemies scroll with the background. All 
 | RD-2 Recon Drone | Air | Flies straight down in lines/V formations; about a third fire one weak, slow aimed round (8 dmg; others 12) | Low | 1 | — |
 | ID-4 Interceptor Drone | Air | Sine-wave path, fires a single slow round | Low | 2 | — |
 | AA Emplacement | Ground | Stationary, aims and fires at the player | Medium | 3 | Flak Burst |
-| Mining Platform | Ground | Tanky, no attack, big salvage reward | High | 8 | Drill Lance |
+| Mining Platform | Ground | A drill tank on treads: tanky, big salvage reward. Its turret turns a large drill toward XF-0, winds up (glows red) and thrusts it out; burrows and resurfaces elsewhere on screen every few seconds | High | 8 | Drill Lance |
 | Armored Transport | Air | Slow, crosses sideways, sometimes drops a repair pickup | High | 6 | Drone Bay |
 | HG-7 Gunship | Air | Enters, hovers, fires spread patterns, leaves after ~6 s | Medium | 5 | Spread Cannon |
+| Radar Dome | Ground | Background target on barracks and SAM sites; no attack. Doesn't count toward waves or SECTOR CLEAR | Very low | 1 | — |
 
 ### Boss: HEG-X9 "MAWLER" Mining Crawler
 
@@ -282,7 +309,7 @@ A giant armored strip-mining machine that fills the top third of the screen.
 
 ## 9. Levels
 
-- Each level is about **2–3 minutes** of vertical scrolling, except Sector 1, which is about **1.5 minutes** so the run gets going quickly.
+- Each level is about **1 min 45 s** of vertical scrolling, except Sector 1, which is about **1 minute** so the run gets going quickly.
 - A **wave director** spawns enemy waves from a pool, using a difficulty budget that grows over time and per level, multiplied by the Threat Level.
 - Waves are defined as data (which enemies, formation, entry side, path), so new waves can be added without new code.
 - Each level ends with a short "SECTOR CLEAR" moment, then the between-level screens.
@@ -300,7 +327,7 @@ Halcyon reacts to how dangerous the prototype has become. **Threat Level = weigh
 | 3 | Heavy | HSD THREAT: HIGH | ×1.3 | 15% | +20% |
 | 4 | Assault | HSD THREAT: SEVERE | ×1.5 | 25% | +35% |
 
-When Threat rises, show a radio-chatter pop-up ("HSD-Control: Asset has grown. Escalate response.") and a short alarm sound. The bigger and stronger you get, the more elites (and modules) show up: power growth feeds itself, but so does danger.
+When Threat rises, show a radio-chatter pop-up ("HSD-Control: Asset has grown. Escalate response.") and a short alarm sound. The line types out on a strip under the top console a moment after the CLASS UPGRADE banner, so the two don't overlap; the same strip carries any later radio chatter. The bigger and stronger you get, the more elites (and modules) show up: power growth feeds itself, but so does danger.
 
 ## 10. Feel ("juice") checklist
 
@@ -372,7 +399,7 @@ What we learned from studying gameplay footage of the 2015 Edition (Nov 2, 2026)
 
 **7. What we do differently (keeps ASSET ZERO original and fixes readability)**
 - **Enemy bullets stay hot pink/orange with a dark outline** (see placeholder rules). In the reference, small orange enemy shots blend into explosions; ours must never.
-- **Player palette stays gunmetal with cyan accents**, not white and red, so XF-0 is our own design.
+- **Player palette stays gunmetal with cyan accents**, not white and red, so XF-0 is our own design. Ember orange is reserved for heat: Overclock, heat sinks and Thresher form's cores.
 - **HUD:** keep the minimal layout and side rails, but use our cockpit-display style (amber/green monospace text on dark panels). The Field Refit and Armory screens borrow the beveled terminal frame + CRT screen idea.
 - No copying of any ship, logo, layout or sprite. The reference sets mood, palette range and readability rules only.
 
@@ -447,11 +474,11 @@ Raptor (above) sets the **world, terrain and ship look**. Mech Havoc sets the **
 
 Simple vector / geometric shapes drawn in Godot (Polygon2D, Line2D or `_draw()`), no image files needed.
 
-- **XF-0:** hard-edged military aircraft silhouette (think modern stealth fighters and gunships), gunmetal grey with a chrome highlight and cyan accent lights. Weapons and pylons are visible shapes on the airframe. Gunship and Lance forms must read differently at a glance (wide vs. arrowhead).
+- **XF-0:** Gunship form is a hard-edged military aircraft (think modern stealth fighters and gunships), gunmetal grey with a chrome highlight and cyan as its one bright accent (systems lights), plus a dark outline, a shaded side, side intakes, wing panels and twin engine glows. Thresher form is a dark ribbed predator in darker iron: forked crescent, hooked tines, mid-grey spine plates, a dark eye, and ember orange for everything that glows (cores, wingtips, one plume). Two accents, two meanings: cyan is systems, ember orange is heat (Overclock, heat sinks, Thresher form). Weapons and pylons are visible shapes on the airframe. The two forms must read as different machines at a glance.
 - **Halcyon forces:** blocky, utilitarian industrial machines in grey/orange with hazard-yellow stripes. Elites get a yellow outline.
 - **Weapon modules:** glowing hexagons in the color of the enemy that dropped them, pulsing
 - **Enemy rounds:** hot pink/orange, round, with an outline, always the highest-contrast thing on screen
-- **Background:** top-down terrain using the Verdance palette from §11.8: dark jungle greens over oxblood/rust mining earth (`#5b2d2c` family), teal water (`#1b6259` family), concrete-grey HEG structures with hazard trim. Built from simple shapes for now, scrolling slowly in layers.
+- **Background:** top-down terrain using the Verdance palette from §11.8: dark jungle greens over oxblood/rust mining earth (`#5b2d2c` family), teal water (`#1b6259` family), concrete-grey HEG structures with hazard trim: fenced barracks compounds and sandbagged SAM sites, each with a small radar dome you can shoot for 1 salvage. Built from simple shapes for now, scrolling slowly in layers.
 - **Grain:** a light noise/grain overlay on the background (one cheap shader or a tiled noise texture) so nothing reads as a flat fill.
 - **Drop shadows:** every air unit (player and enemies) gets a dark, semi-transparent copy of its shape offset down-right on the ground layer. Ground units get no shadow. This is cheap and makes air vs. ground instantly readable.
 - **Explosions:** combine both references: a bright warm flash, clustered round fireballs from yellow `#e4cc24` through orange to dark red `#9c3c24` (Raptor), then sparks, embers and debris with dark smoke trails (Mech Havoc), a white shockwave ring on big kills, and a lingering scorch mark on the ground.
@@ -475,7 +502,7 @@ Likely hand-painted art downscaled to sprites, possibly with a metallic sheen sh
 
 Title (Click to start) → Main menu (Deploy, R&D, Settings) → Mission briefing → Level 1 → Field Refit → Armory → Level 2 → … → Boss → Mission Complete / Mission Failed (shows Combat Data earned) → Main menu
 
-HUD: Armor bar, Plating bar, Overclock meter, salvage count, weight class, HSD Threat label, assimilated weapon icon, level number, auto-fire indicator, sector progress track (thin bar in the right rail that fills as the sector goes on).
+HUD: the top 66 px is a solid console strip holding the Armor/Plating bars, salvage count, sector, weight class and HSD Threat; the bottom 100 px is a solid cockpit console. The play area sits between them, so XF-0 never flies behind the HUD and enemies behind either strip don't fire or get locked on. The bottom console holds the module slot, weapons panel, Saturation Strike charges, Fire Control and Overclock. Strike meter in the left rail (§7.4). Armor bar, Plating bar, Overclock meter, salvage count, weight class, HSD Threat label, assimilated weapon icon, level number, Fire Control panel above the Overclock meter (stored charges / auto-fire countdown), sector progress track (thin bar in the right rail that fills as the sector goes on), weapons panel bottom-left (icon + designation for the Nose and Wing Pylon weapons).
 
 Settings: master/music/SFX volume, screen shake on/off, Accessibility: auto-fire on/off (off by default, §7.3).
 
@@ -510,7 +537,7 @@ Inspired by the *formula* of 90s shooters and by mech-combat loadout games, usin
 - More sectors and corporations (each with its own planet, enemies and boss)
 - More weapon modules, and a refit that lets you hold two at once
 - Several starting airframes (XF-1, XF-2…) with different hardpoint layouts
-- Gamepad, Steam Deck and touch support
+- Steam Deck and touch support, button prompts that match the gamepad
 - Steam release (achievements, cloud saves)
 - Daily seeded run
 - Hand-painted final art with a metallic shader

@@ -1,0 +1,22 @@
+[gd_resource type="Resource" script_class="GunData" load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://resources/gun_data.gd" id="1_script"]
+[ext_resource type="PackedScene" path="res://scenes/weapons/autocannon.tscn" id="2_scene"]
+[ext_resource type="Resource" path="res://data/shapes/overlays/rg9_gunship.tres" id="air_g"]
+[ext_resource type="Resource" path="res://data/shapes/overlays/rg9_thresher.tres" id="air_l"]
+
+[resource]
+script = ExtResource("1_script")
+scene = ExtResource("2_scene")
+name_key = "WEAPON_RG9"
+fire_interval = 0.42
+damage = 55
+round_speed = 1700.0
+spread_degrees = 0.0
+splay_degrees = 0.0
+thresher_interval_scale = 0.6
+round_tint = Color(0.7, 0.9, 1, 1)
+round_length = 3.0
+pierce = true
+airframe_gunship = ExtResource("air_g")
+airframe_thresher = ExtResource("air_l")

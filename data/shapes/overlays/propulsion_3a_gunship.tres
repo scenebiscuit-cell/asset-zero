@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="AirframeShape" format=3]
+
+[ext_resource type="Script" path="res://resources/airframe_shape.gd" id="1_shape"]
+
+[resource]
+script = ExtResource("1_shape")
+parts = Dictionary[String, PackedVector2Array]({
+"EngineGlow": PackedVector2Array(-6, 16, 6, 16, 5.5, 32, 2.7, 32, 2.3, 17, -2.3, 17, -2.7, 32, -5.5, 32),
+"BladeL": PackedVector2Array(-22, 11.2, -23.5, 9.5, -8.5, -8.5, -7, -5),
+"BladeR": PackedVector2Array(7, -5, 8.5, -8.5, 23.5, 9.5, 22, 11.2)
+})
+wing_sweep = 0.35
+sweep_pivot = 7.0

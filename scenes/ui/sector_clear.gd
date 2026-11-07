@@ -38,6 +38,6 @@ func show_screen(sector_number: int, breaches: int = 0, bonus: int = 0) -> void:
 func _unhandled_input(event: InputEvent) -> void:
 	if not _accepting_input:
 		return
-	if (event is InputEventKey or event is InputEventMouseButton) and event.is_pressed() and not event.is_echo():
+	if (event is InputEventKey or event is InputEventMouseButton or event is InputEventJoypadButton) and event.is_pressed() and not event.is_echo():
 		_accepting_input = false
 		continue_pressed.emit()

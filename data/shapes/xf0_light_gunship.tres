@@ -6,14 +6,29 @@
 script = ExtResource("1_shape")
 parts = Dictionary[String, PackedVector2Array]({
 "Barrel": PackedVector2Array(-1.5, -35, 1.5, -35, 1.5, -20, -1.5, -20),
-"Hull": PackedVector2Array(0, -30, 5, -16, 7, -4, 22, 6, 24, 12, 8, 10, 9, 20, 4, 22, 0, 18, -4, 22, -9, 20, -8, 10, -24, 12, -22, 6, -7, -4, -5, -16),
+"Hull": PackedVector2Array(0, -30, 3, -24, 5, -15, 7, -4, 24, 7.3, 24, 10.5, 10, 18, 12, 23, 7, 24, 4, 21, 0, 18, -4, 21, -7, 24, -12, 23, -10, 18, -24, 10.5, -24, 7.3, -7, -4, -5, -15, -3, -24),
+"PlateL": PackedVector2Array(-7, 15.5, -10, 17, -9, 11, -6, 9),
+"PlateR": PackedVector2Array(6, 9, 9, 11, 10, 17, 7, 15.5),
 "Highlight": PackedVector2Array(0, -26, 2.5, -14, 2, 6, 0, 12, -2, 6, -2.5, -14),
-"Sensor": PackedVector2Array(0, -21, 1.5, -15, 0, -11, -1.5, -15),
-"WingLightL": PackedVector2Array(-24, 12, -22, 6, -20, 7, -21, 11.7),
-"WingLightR": PackedVector2Array(24, 12, 22, 6, 20, 7, 21, 11.7),
-"EngineGlow": PackedVector2Array(-3, 19, 3, 19, 2, 26, -2, 26)
+"Sensor": PackedVector2Array(0, -23, 1.8, -18, 1.5, -13, 0, -10, -1.5, -13, -1.8, -18),
+"WingLightL": PackedVector2Array(-24, 10.5, -24, 7.3, -22.2, 6.1, -22.2, 11.5),
+"WingLightR": PackedVector2Array(24, 10.5, 24, 7.3, 22.2, 6.1, 22.2, 11.5),
+"EngineGlow": PackedVector2Array(-5.5, 16, 5.5, 16, 5, 27, 3, 27, 2.5, 17, -2.5, 17, -3, 27, -5, 27),
+"Outline": PackedVector2Array(0, -31.8, 3.949, -24.337, 5.98, -15.198, 7.908, -4.597, 25, 6.764, 25, 11.099, 11.261, 18.459, 13.375, 23.745, 6.671, 25.086, 3.343, 21.757, 0, 19.25, -3.343, 21.757, -6.671, 25.086, -13.375, 23.745, -11.261, 18.459, -25, 11.099, -25, 6.764, -7.908, -4.597, -5.98, -15.198, -3.949, -24.337),
+"HullShade": PackedVector2Array(0, -30, 3, -24, 5, -15, 7, -4, 24, 7.3, 24, 10.5, 10, 18, 12, 23, 7, 24, 4, 21, 0, 18),
+"WingPanelR": PackedVector2Array(11.5, 0.5, 20, 6.2, 20.5, 9.5, 11.5, 14.5),
+"WingPanelL": PackedVector2Array(-11.5, 0.5, -20, 6.2, -20.5, 9.5, -11.5, 14.5),
+"IntakeR": PackedVector2Array(2.8, -10, 4.8, -9, 6, -2, 3.4, -4),
+"IntakeL": PackedVector2Array(-2.8, -10, -4.8, -9, -6, -2, -3.4, -4),
+"EdgeR": PackedVector2Array(7.4, -3.2, 23.2, 7.3, 22.8, 8.3, 7.4, -2),
+"EdgeL": PackedVector2Array(-7.4, -3.2, -23.2, 7.3, -22.8, 8.3, -7.4, -2),
+"StripeR": PackedVector2Array(13, 3, 16, 5, 16, 6.2, 13, 4.2),
+"StripeL": PackedVector2Array(-13, 3, -16, 5, -16, 6.2, -13, 4.2)
 })
 muzzle_offset = Vector2(0, -35)
+pylon_offset = Vector2(14, 6)
+mount_offset = Vector2(0, 10)
+overlay_scale = 1
 hitbox_radius = 12.0
 hitbox_height = 36.0
 hitbox_offset = Vector2(0, 0)

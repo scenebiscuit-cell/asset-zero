@@ -47,8 +47,8 @@ How to hand a milestone to Claude Code (in VS Code, terminal at `C:\Projects\ass
 
 - [x] **Step 5: Morph system + Combat Morph**
   - Shared **morph system**: tweens a Polygon2D (or set of polygons) from one point list to another. Airframe shapes stored as data (DESIGN.md §5.3 technical note)
-  - Combat Morph from DESIGN.md §5.6: hold `morph` → Lance form (0.15 s morph), release → Gunship form
-  - Lance form: 55% speed, 140% damage, autocannon fire converges into a tight stream
+  - Combat Morph from DESIGN.md §5.6: hold `morph` → Thresher form (0.15 s morph), release → Gunship form
+  - Thresher form: 55% speed, 140% damage, autocannon fire converges into a tight stream
   - Distinct placeholder sound for each morph direction
   - **Done when:** tapping and holding morph feels instant, the shape flows smoothly both ways, and speed, damage and fire pattern change correctly
 
@@ -80,36 +80,36 @@ How to hand a milestone to Claude Code (in VS Code, terminal at `C:\Projects\ass
 
 ## Milestone C — Loadouts, refits and assimilation
 
-- [ ] **Step 10: Data-driven weapon systems + hardpoints**
+- [x] **Step 10: Data-driven weapon systems + hardpoints**
   - Weapon system using Resources; Nose, Wing Pylon, Engine, Hull and Salvage Mount hardpoints
-  - M20 Autocannon levels 1–2, HEL-1 Beam Laser, Mk1 Seeker missiles, each with its Lance-form behavior
+  - M20 Autocannon levels 1–2, HEL-1 Beam Laser, R1 Rocket Pod, Mk1 Seeker missiles, each with its Thresher-form behavior
   - Debug keys (only in debug builds) to give yourself weapons for testing
   - **Done when:** you can switch between all of these with debug keys and each fires correctly in both forms
 
-- [ ] **Step 11: Assimilate**
+- [x] **Step 11: Assimilate**
   - Elites drop their weapon module (DESIGN.md §5.8): glowing hexagon that drifts for ~6 s
   - Fly into it → absorb animation → module mounts on the Salvage Mount and fires with your main weapon
-  - All 4 modules (Spread Cannon, Flak Burst, Drill Lance, Drone Bay) with Gunship and Lance behaviors, as Resources (`data/modules/*.tres`)
+  - All 4 modules (Spread Cannon, Flak Burst, Drill Lance, Drone Bay) with Gunship and Thresher behaviors, as Resources (`data/modules/*.tres`)
   - Only one module at a time (new replaces old); dissolves at level end
   - **Done when:** killing each elite type drops its module, and each module works in both forms
 
-- [ ] **Step 12: Field Refit (loadout) screen**
+- [x] **Step 12: Field Refit (loadout) screen**
   - After a level: pick 1 of 3 random refits on a ship schematic (both forms side by side) that highlights the hardpoint; one reroll that costs salvage (rising price)
   - Refits as Resources (`data/refits/*.tres`); handles level-ups and the level-3 Variant A/B choice
   - Nose swap rule (Autocannon line OR Beam Laser line)
   - **Done when:** finishing a level shows the offer and the chosen refit actually changes the ship
 
-- [ ] **Step 13: Armory shop**
+- [x] **Step 13: Armory shop**
   - 4 items for salvage, always at least one repair, prices scale per level
   - **Done when:** you can buy, can't buy what you can't afford, and can leave
 
-- [ ] **Step 14: All systems, weight classes + refit morph**
+- [x] **Step 14: All systems, weight classes + refit morph**
   - Every weapon, Propulsion and Armor level from DESIGN.md §6, including the Variant A/B choices, plus all field mods (including Heat Capacitor and Retention Matrix)
-  - Each refit changes the airframe's Gunship AND Lance shapes, using the morph system from Step 5 (~0.3 s refit morph)
+  - Each refit changes the airframe's Gunship AND Thresher shapes, using the morph system from Step 5 (~0.3 s refit morph)
   - Weight classes Light → Assault (§5.2) with "CLASS UPGRADE" callout
   - **Done when:** every refit works, looks different in both forms, morphs smoothly, and weight class changes at the right refit counts
 
-- [ ] **Step 15: Threat Level**
+- [x] **Step 15: Threat Level**
   - Threat = weight class (DESIGN.md §9.1); feeds the wave director's budget multiplier, elite chance and salvage bonus
   - HUD label updates; radio-chatter pop-up + alarm when Threat rises
   - **Done when:** growing to each weight class visibly increases enemy pressure, elites and salvage
@@ -135,7 +135,7 @@ How to hand a milestone to Claude Code (in VS Code, terminal at `C:\Projects\ass
 
 - [ ] **Step 19: Balance pass and bug fixing**
   - Play 10+ full runs, write down problems, fix the biggest ones
-  - Check that Lance form, Overclock and modules all feel worth using, and that Threat 4 is hard but fair
+  - Check that Thresher form, Overclock and modules all feel worth using, and that Threat 4 is hard but fair
   - **Done when:** a run takes 10–15 minutes and is beatable but not easy
 
 - [ ] **Step 20: itch.io demo release**
@@ -150,13 +150,41 @@ How to hand a milestone to Claude Code (in VS Code, terminal at `C:\Projects\ass
 
 Write down decisions here as you make them (date — decision), so the AI tools know about them.
 
+- 2026-11-07 — Threat Level (Step 15): the tables from §9.1 live in GameState next to the weight-class tables; the wave director and salvage drops read them live. The HSD radio line types out on a strip under the top console about 1.2 s after the CLASS UPGRADE banner, so the two don't overlap; the strip is reusable for later chatter, and a line started on the refit screens is remembered in GameState so the sector reload doesn't lose it. Background radar domes now pay the Threat salvage bonus too (not the x1.5 enemy multiplier). Steps 14 and 15 were built and auto-tested overnight and confirmed in play the next day.
+- 2026-11-07 — Lance form renamed **Thresher form** everywhere (text, docs, code, shape files, sounds; the HEL-3T Thermal Lance weapon and the Drill Lance module keep their names). It's now a dark ribbed predator (forked crescent, hooked tines, spine plates, ember cores, dark eye) instead of a polished spaceship. Ember orange joins cyan as a second accent, reserved for heat: Overclock, heat sinks and Thresher form's glow. DESIGN.md §5.3, §5.6, §11.
+- 2026-11-07 — Live metal: the ship deforms every frame, not just on a morph. Thresher form ripples while held and trails metal; tips lag the body when moving; a dash stretches the hull; hits dent it and heal; a graze shivers it. Thresher keeps about 80% of the Gunship's area (was 60%) so the morph reads as the same metal reshaped. All of it runs through the one morph system. DESIGN.md §5.3.
+- 2026-11-06 — Thresher form is now a smooth, curved, polished-metal spaceship, the opposite of the hard-edged Gunship, so the shape-shifting stays the star. Morph flows in a nose-to-tail wave with a ripple and a colour change, 0.22 s (was 0.15 s). Replaces "always a hard-edged aircraft". DESIGN.md §5.3, §5.6, §11.
+- 2026-11-06 — Airframes stay gunmetal with cyan as the one bright accent. Every class gets surface detail (dark outline, shaded side, intakes, wing panels, bright leading edges, larger canopy) and twin engine glows. DESIGN.md §11.
+- 2026-11-06 — Airframes use a generic stealth-fighter style (faceted noses, matching wing angles, canted fins); Thresher form damage stays a multiplier, so Armor still buys extra hits. DESIGN.md §5.6.
+- 2026-11-06 — Weight classes get their own silhouettes instead of one hull scaled up; swept-wing refits lean each class's wings back rather than replacing the hull. DESIGN.md §5.6. Final ship art is still to come.
+- 2026-11-06 — Thresher form takes 300% damage from hits (about 3 standard rounds kill from full Armor), to pay for its higher firepower. DESIGN.md §5.6.
+- 2026-11-05 — Thresher form guns: one straight stream from the nose centre (barrels take turns), +25% fire rate, +20% round speed; Flak Battery no longer keeps a cone in Thresher form. DESIGN.md §5.6.
+- 2026-11-05 — Refit morph: shapes are a base per weight class × form plus refit overlays (data/shapes/, data/shapes/overlays/); the morph plays at the start of the next sector since refits are installed between sectors. Missile line gets pylon pods (no visual was listed). Armor line has no airframe overlay (its Plating ring, shrapnel and drones already show it). DESIGN.md §5.3.
+- 2026-11-05 — Top HUD moved into a solid 66 px console strip like the bottom one (play area starts below it; enemies under it don't fire or get locked on). CLASS UPGRADE callout is now a banner that slides down over the top of the screen. DESIGN.md §5.2, §13.
+- 2026-11-05 — Weight classes: the class bonus is the total over Light (+15/+30/+50 max Armor, Armor raised by the same step), callout shows CLASS UPGRADE + class name + bonus over any screen. Debug key 6 cycles the class. DESIGN.md §5.2 unchanged.
+- 2026-11-05 — Field mods: AP Rounds, Improved Feed, Salvage Magnet stack up to 3, Heat Capacitor up to 2, Retention Matrix one charge at a time. Prices 30–45, offered less often than system refits. DESIGN.md §6.
+- 2026-11-05 — Controls are now keyboard + gamepad; mouse flying is removed (the wheel and mouse-flick dashes were awkward). Gamepad moved out of the "Later" list. Vector Dash on gamepad is the right bumper. Cursor hidden during play, small green reticle in menus. DESIGN.md §2, §5.5, §6, Later list.
+- 2026-11-05 — After playtest: Razor Wing ignores ramming damage (was "you still take contact damage"); Vector Dash also on the mouse wheel; Plating shown as a hex-plate ring; Reactive shrapnel ring wider (16 rounds, 300 px); Nanite Repair shows repair drones while healing. DESIGN.md §5.5, §6.
+- 2026-11-04 — Propulsion/Armor numbers set (Razor Wing ~120 dps on air units only, Vector Dash keyboard-only with 0.7 s cooldown, Plating recharge rates, Nanite ~0.7 Armor/s). Plating refills at the start of each sector. Debug keys 4/5 cycle Propulsion/Armor. DESIGN.md §6.
+- 2026-11-04 — Shorter sectors (Sector 1 60 s, others 105 s, was 90/150) and a slower strike meter (80 kills, was 40), after playtesting. Enemy salvage ×1.5 to compensate (same number of pickups, each worth more, so Overclock charge is unchanged). DESIGN.md §9, §7.4.
+- 2026-11-04 — Debug loadout keys (debug builds only) now cycle: 1 = next nose weapon, 2 = pylons, 3 = Salvage Mount module, since there are now more weapons than number keys.
+- 2026-11-04 — Added Saturation Strike (developer request): kill meter in the left rail, 40 kills = 1 charge (max 3), R/U clears the screen. Bomb meters are an allowed genre idea (§15); name and numbers are ours. Console panels enlarged; Fire Control panel now always shown (EMPTY when nothing stored). DESIGN.md §5.5, §7.4, §13.
+- 2026-11-04 — Bottom HUD moved into a solid 100 px console strip; the player can't fly below it and enemies behind it count as off screen (no firing, no missile lock). Chosen over fading panels so nothing ever hides behind the HUD. DESIGN.md §13 HUD line.
+- 2026-11-04 — Repair kit (+20 Armor) drops after every 20 enemies destroyed; the count carries over between sectors, radar domes don't count. DESIGN.md §5 Armor row.
+- 2026-11-04 — Armory: first slot is always Field Repair, other slots roll from the refit catalog, each item sells once, prices = base price on the refit +40% per sector after the first. Shows fewer than 4 items if the catalog runs dry (only until Step 14 adds the rest). DESIGN.md §7.1.
+- 2026-11-04 — Field Refit reroll: one per screen, costs 15 salvage + 10 for each reroll already bought this run. Field Repair and Armor Kit field mods added early (Step 12) as filler so there are always 3 cards; the other field mods come in Step 14. DESIGN.md §7.1.
+- 2026-11-04 — Fire Control pickups are now stored (up to 2, kept between sectors) and started with a new Fire Control key (Q / I / mouse side button). Its HUD panel moved above the Overclock meter and spells out READY - PRESS Q, then counts down AUTO-FIRE. DESIGN.md §5.5, §7.3, §13.
+- 2026-11-04 — Mining Platform now looks like a drill tank (treads, turret, drill as the barrel); burrowing digs into a dirt mound, and a mound churns up where it will resurface. Background bases are now barracks compounds and SAM sites; their radar domes are destructible ground targets worth 1 salvage that don't count toward waves or SECTOR CLEAR. DESIGN.md §8, §11.
+- 2026-11-04 — Mining Platform now attacks: a large drill that tracks XF-0, winds up (glows red) and thrusts out, 20 Armor on touch. It burrows and resurfaces somewhere else on screen up to 3 times, then scrolls away. DESIGN.md §8 enemy table.
+- 2026-11-04 — Enemies made tougher (~30% more HP): RD-2 25, ID-4 20, AA 80, HG-7 120, Transport 210, Mining Platform 290. The M20 now needs 3 rounds for an RD-2 (2 in Thresher form).
+- 2026-11-04 — Missile line is now 4 levels: R1 Rocket Pod (unguided) at level 1, then Mk1 Seeker, Mk2 Seeker Pod, and the Cluster Missile / Bunker Buster variants at level 4, so homing missiles take longer to get. M20D Twin Autocannon toned down (7 damage per round, 0.09 s between shots). DESIGN.md §2/§5.1/§5.6/§6.
 - 2026-11-03 — Fullscreen: stretch aspect stays `keep`, so the 540×960 battlefield is centred at full screen height with dark bars at the sides, and the HUD and rails stay inside it on its edges (like Raptor). Tried first and dropped: a battlefield widened to the whole monitor (changed balance between screens) and HUD panels moved out into cockpit side panels (felt disconnected). The BREACH popup was removed (distracting); the salvage penalty and Perimeter Held bonus stay. DESIGN.md §9, §14.
 - 2026-11-03 — Added a sector progress track to the HUD (right rail) and an F11 / Alt+Enter fullscreen toggle (in SaveManager until the Settings screen exists). DESIGN.md §5.5, §13.
 - 2026-11-03 — Sector 1 shortened to 90 s (was 150 s) so the run gets going quickly; later sectors stay 2–3 minutes. DESIGN.md §9.
 - 2026-11-03 — Breach penalty: each enemy aircraft that escapes costs 2 salvage; a sector with no escapes pays a 25-salvage Perimeter Held bonus at SECTOR CLEAR. Enemy round damage raised (RD-2 8, others 12). DESIGN.md §8, §9.
 - 2026-11-03 — RD-2 Recon Drones now fire one weak, slow aimed round (about a third of them since 2026-11-03 retune, at a random moment) so Sector 1 has rounds to dodge and graze. AA Emplacements fire 2-round bursts every 1.4 s and appear more often (pairs from 45 s). DESIGN.md §8.
 
-- 2026-11-02 — XF-0 hitbox changed from a ~6 px circle to a capsule over the body + wing roots (~24 px wide in Gunship form, ~14 px in Lance form), stored per airframe shape and morphing with it. Lance form is now also the dodge form. Same size in every weight class. DESIGN.md §5.2, §5.4, §5.6.
+- 2026-11-02 — XF-0 hitbox changed from a ~6 px circle to a capsule over the body + wing roots (~24 px wide in Gunship form, ~14 px in Thresher form), stored per airframe shape and morphing with it. Thresher form is now also the dodge form. Same size in every weight class. DESIGN.md §5.2, §5.4, §5.6.
 
 - 2026-11-02 — Auto-fire is no longer a standard control (F key removed). It comes from the FC-1 Fire Control Computer (one-run purchase for Combat Data at the briefing, only when offered) or a rare timed Fire Control pickup; an Accessibility setting keeps it available for players who need it. DESIGN.md §5.5, §7.3, §13.
 - 2026-11-02 — Effects reference added from Mech Havoc footage (DESIGN.md §11): glowing muzzle cones, thin tracers, cyan beam lasers with bloom, red glowing enemy streaks, coral warning circles, flash → sparks → debris smoke trails → scorch. Raptor stays the world/ship reference.

@@ -1,0 +1,8 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scenes/weapons/split_array.gd" id="1_split"]
+[ext_resource type="PackedScene" path="res://scenes/weapons/beam_laser.tscn" id="2_beam"]
+
+[node name="SplitArray" type="Node2D"]
+script = ExtResource("1_split")
+beam_scene = ExtResource("2_beam")

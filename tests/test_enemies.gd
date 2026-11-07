@@ -26,10 +26,12 @@ func _unhandled_key_input(event: InputEvent) -> void:
 		return
 	var drop_at: Vector2 = Vector2(get_viewport_rect().size.x * 0.5, 120.0)
 	if key.physical_keycode == KEY_7:
+		get_viewport().set_input_as_handled()
 		_level.drop_fire_control(drop_at)
 		print("Dropped Fire Control pickup")
 		return
 	if key.physical_keycode == KEY_8:
+		get_viewport().set_input_as_handled()
 		_level.drop_repair(drop_at)
 		print("Dropped repair pickup")
 		return
@@ -41,5 +43,7 @@ func _unhandled_key_input(event: InputEvent) -> void:
 	var at: Vector2 = Vector2(randf_range(80.0, size.x - 80.0), -50.0)
 	if SIDE_ENTRY.has(key.physical_keycode):
 		at = Vector2(-50.0 if randf() < 0.5 else size.x + 50.0, randf_range(120.0, 320.0))
+	# Handled here, so the Player's debug weapon keys don't fire on the same press.
+	get_viewport().set_input_as_handled()
 	var enemy: Enemy = _level.spawn_enemy(scene, at, key.shift_pressed)
 	print("Spawned ", enemy.name, " elite=", enemy.elite, " hp=", enemy.hp, " salvage=", enemy.salvage_value())

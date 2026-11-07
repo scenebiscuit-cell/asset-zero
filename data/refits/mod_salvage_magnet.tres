@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="FieldModData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://resources/field_mod_data.gd" id="1_mod"]
+
+[resource]
+script = ExtResource("1_mod")
+effect = 4
+bonus = 0.15
+max_stacks = 3
+name_key = "REFIT_SALVAGE_MAGNET"
+desc_key = "REFIT_DESC_SALVAGE_MAGNET"
+hardpoint = 3
+offer_weight = 0.3
+price = 30

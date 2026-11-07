@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="SystemRefitData" load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://resources/system_refit_data.gd" id="1_system"]
+[ext_resource type="Resource" path="res://data/shapes/overlays/propulsion_2_gunship.tres" id="air_g"]
+[ext_resource type="Resource" path="res://data/shapes/overlays/propulsion_2_thresher.tres" id="air_l"]
+
+[resource]
+script = ExtResource("1_system")
+name_key = "REFIT_SWEPT_WING"
+desc_key = "REFIT_DESC_SWEPT_WING"
+line = 4
+level = 2
+hardpoint = 2
+price = 100
+speed_bonus = 0.3
+thresher_speed_multiplier = 0.7
+airframe_gunship = ExtResource("air_g")
+airframe_thresher = ExtResource("air_l")

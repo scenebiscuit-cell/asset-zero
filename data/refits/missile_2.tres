@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="RefitData" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://resources/refit_data.gd" id="1_refit"]
+[ext_resource type="Resource" path="res://data/weapons/mk1_seeker.tres" id="2_weapon"]
+
+[resource]
+script = ExtResource("1_refit")
+desc_key = "REFIT_DESC_MK1"
+line = 3
+level = 2
+hardpoint = 1
+weapon = ExtResource("2_weapon")
+offer_weight = 1.0
+price = 100

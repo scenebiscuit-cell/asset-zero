@@ -15,6 +15,8 @@ enum Layer { AIR, GROUND }
 @export var contact_damage: int = 20
 ## Chance (0-1) to drop a repair pickup on death.
 @export_range(0.0, 1.0) var repair_drop_chance: float = 0.0
+## Weapon module this enemy drops when it's an elite (DESIGN.md §5.8). Empty for drones.
+@export var module: ModuleData
 
 @export_group("Fire")
 @export var fire_interval: float = 1.5

@@ -70,6 +70,7 @@ res://
   resources/       custom Resource class scripts (weapon_data.gd, etc.)
   audio/           sfx/, music/
   tests/           test scenes for trying single objects
+  tools/           gen_shapes.py writes data/shapes (edit the points there, never the .tres files); check_shapes.gd verifies them
 ```
 
 ## Collision layers

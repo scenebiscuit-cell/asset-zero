@@ -42,6 +42,9 @@ signal morph_finished
 ## Graze: a brief shiver through the metal.
 @export var flinch_amplitude: float = 1.0
 @export var flinch_time: float = 0.25
+## Small, fine parts (tines, glow slits, wingtip lights) ripple as one piece, phased from their centre:
+## a wave running through a 2 px tine would twist it inside out.
+@export var rigid_parts: PackedStringArray = ["EdgeL", "EdgeR", "WingPanelL", "WingPanelR", "WingLightL", "WingLightR"]
 
 const MAX_DENTS: int = 4
 
@@ -244,8 +247,9 @@ func _is_live() -> bool:
 			or not _dent_left.is_empty()
 
 
-## The live-metal offset for one resting outline point.
-func _offset(p: Vector2) -> Vector2:
+## The live-metal offset for one resting outline point. `phase_y` is the height the ripple phase is
+## taken at: the point's own, or the part's centre for rigid parts.
+func _offset(p: Vector2, phase_y: float) -> Vector2:
 	# Tips (r near 1) trail the body; the centre barely moves.
 	var r2: float = minf(p.length_squared() / (_extent * _extent), 1.0)
 	var offset: Vector2 = -_lag * r2
@@ -255,7 +259,7 @@ func _offset(p: Vector2) -> Vector2:
 		offset += _stretch_dir * along * _stretch - across * _stretch * 0.4
 	var amplitude: float = liquid_amplitude * _liquid + flinch_amplitude * _flinch
 	if amplitude > 0.0:
-		var phase: float = _time * liquid_speed + p.y * TAU / liquid_wavelength
+		var phase: float = _time * liquid_speed + phase_y * TAU / liquid_wavelength
 		# Fades out near the centreline, so thin parts straddling it (spine cores, barrel) don't twist.
 		offset.x += clampf(p.x / 3.0, -1.0, 1.0) * amplitude * sin(phase)
 		offset.y += amplitude * 0.35 * cos(phase * 0.7)
@@ -285,11 +289,21 @@ func _present() -> void:
 		var out: PackedVector2Array = _out[part_name]
 		if out.size() != rest.size():
 			out.resize(rest.size())
+		var rigid: bool = rigid_parts.has(part_name)
+		var centre_y: float = 0.0
+		if rigid:
+			for point: Vector2 in rest:
+				centre_y += point.y
+			centre_y /= rest.size()
 		for i: int in rest.size():
-			out[i] = rest[i] + _offset(rest[i])
-		# A wave can twist an outline for a frame; such a polygon can't be drawn, so hold the last good one.
+			out[i] = rest[i] + _offset(rest[i], centre_y if rigid else rest[i].y)
+		# A wave can twist an outline for a frame; such a polygon can't be drawn, so show it undeformed
+		# for that frame instead (never a stale one, which could be a half-morphed shape). Mid-morph the
+		# undeformed outline can be twisted too; then the part keeps its last good frame.
 		if not Geometry2D.triangulate_polygon(out).is_empty():
 			polygon.polygon = out
+		elif not Geometry2D.triangulate_polygon(rest).is_empty():
+			polygon.polygon = rest
 	shape_changed.emit()
 
 

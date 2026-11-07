@@ -61,6 +61,10 @@ var shown_airframe: AirframeShape = null
 var shown_class: int = 0
 ## Which sector of the run we're on (0 = Sector 1).
 var sector_index: int = 0
+## Radio line (translation key) and sound still to be shown by the next RadioChatter strip; a line
+## started on the refit screens survives the sector reload this way.
+var pending_chatter: String = ""
+var pending_chatter_sound: String = ""
 ## False until a level starts a run; the Level resets everything when it finds no run in progress.
 var run_active: bool = false
 
@@ -92,6 +96,8 @@ func reset_run() -> void:
 	strike_progress = 0
 	strike_charges = 0
 	sector_index = 0
+	pending_chatter = ""
+	pending_chatter_sound = ""
 	run_active = true
 
 
@@ -145,16 +151,17 @@ func class_speed_multiplier() -> float:
 	return CLASS_SPEED[weight_class]
 
 
+# Threat = weight class, so the tables are indexed by class; threat_level itself is for the HUD and signals.
 func threat_budget_multiplier() -> float:
-	return THREAT_BUDGET[clampi(threat_level - 1, 0, THREAT_BUDGET.size() - 1)]
+	return THREAT_BUDGET[weight_class]
 
 
 func threat_elite_chance() -> float:
-	return THREAT_ELITE_CHANCE[clampi(threat_level - 1, 0, THREAT_ELITE_CHANCE.size() - 1)]
+	return THREAT_ELITE_CHANCE[weight_class]
 
 
 func threat_salvage_bonus() -> float:
-	return THREAT_SALVAGE_BONUS[clampi(threat_level - 1, 0, THREAT_SALVAGE_BONUS.size() - 1)]
+	return THREAT_SALVAGE_BONUS[weight_class]
 
 
 ## Called on death: the next level load starts a fresh run.

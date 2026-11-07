@@ -153,15 +153,15 @@ func _on_dome_entering(at: Vector2) -> void:
 	_ground_targets.add_child(dome)
 
 
-## Background targets only pay salvage: no Fire Control or repair rolls.
+## Background targets only pay salvage: no Fire Control or repair rolls, and no enemy multiplier.
 func _on_ground_target_destroyed(target: Enemy) -> void:
 	_explosion_pool.spawn(target.global_position)
-	_salvage_pool.spawn_burst(target.global_position, target.salvage_value())
+	_drop_salvage(target.global_position, target.salvage_value(), 1.0)
 
 
 func _on_enemy_destroyed(enemy: Enemy) -> void:
 	_explosion_pool.spawn(enemy.global_position)
-	_drop_enemy_salvage(enemy.global_position, enemy.salvage_value())
+	_drop_salvage(enemy.global_position, enemy.salvage_value(), salvage_multiplier)
 	if enemy.elite:
 		GameState.add_overclock(GameState.OVERCLOCK_PER_ELITE)
 		if enemy.data.module != null:
@@ -178,12 +178,12 @@ func _on_enemy_destroyed(enemy: Enemy) -> void:
 		drop_pickup(_fire_control_pool, enemy.global_position + Vector2(0.0, -12.0))
 
 
-## Same pickup count as the enemy's salvage value, with the boosted total spread across them.
-## Threat Level pays a bonus on top (DESIGN.md §9.1).
-func _drop_enemy_salvage(at: Vector2, base: int) -> void:
+## Same pickup count as the target's salvage value, with the boosted total spread across them.
+## Threat Level pays a bonus on top of `multiplier` (DESIGN.md §9.1).
+func _drop_salvage(at: Vector2, base: int, multiplier: float) -> void:
 	if base <= 0:
 		return
-	var total: int = roundi(base * salvage_multiplier * (1.0 + GameState.threat_salvage_bonus()))
+	var total: int = roundi(base * multiplier * (1.0 + GameState.threat_salvage_bonus()))
 	var each: int = floori(float(total) / base)
 	var extra: int = total % base
 	_salvage_pool.spawn_burst(at, base - extra, each)

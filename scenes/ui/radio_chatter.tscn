@@ -5,16 +5,16 @@
 
 [node name="RadioChatter" type="CanvasLayer"]
 process_mode = 3
-layer = 15
+layer = 17
 script = ExtResource("1_chatter")
 
 [node name="Panel" type="Control" parent="."]
 layout_mode = 3
 anchors_preset = 0
 offset_left = 16.0
-offset_top = 78.0
+offset_top = 84.0
 offset_right = 524.0
-offset_bottom = 104.0
+offset_bottom = 110.0
 mouse_filter = 2
 theme = ExtResource("2_theme")
 

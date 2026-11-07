@@ -72,10 +72,12 @@ func _make_alarm(duration: float) -> AudioStreamWAV:
 	for i: int in frames:
 		var t: float = float(i) / SAMPLE_RATE
 		var beat: float = t / BEEP
-		var on: bool = fmod(beat, 1.0) < 0.7
+		var within: float = fmod(beat, 1.0) * BEEP
+		# Each beep ramps in and out over 4 ms, so the edges don't click.
+		var gate: float = clampf(minf(within, 0.7 * BEEP - within) / 0.004, 0.0, 1.0)
 		var hz: float = 720.0 if int(beat) % 2 == 0 else 540.0
 		phase += TAU * hz / SAMPLE_RATE
-		var envelope: float = (1.0 if on else 0.0) * (1.0 - 0.35 * t / duration)
+		var envelope: float = gate * (1.0 - 0.35 * t / duration)
 		# A touch of square wave gives it the edge of a real klaxon.
 		var sample: float = (0.6 * sin(phase) + 0.25 * signf(sin(phase))) * envelope * 0.4
 		data.encode_s16(i * 2, int(clampf(sample, -1.0, 1.0) * 32767.0))

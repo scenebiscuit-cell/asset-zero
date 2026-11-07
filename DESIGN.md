@@ -300,12 +300,13 @@ Air enemies fly over everything. Ground enemies scroll with the background. All 
 
 ### Boss: HEG-X9 "MAWLER" Mining Crawler
 
-A giant armored strip-mining machine that fills the top third of the screen.
+A giant armored strip-mining machine that fills the top third of the screen. It gets its own short sector after Sector 3: a few light waves while it crawls in from the top (HSD-Control calls it on the radio), then it holds its ground, driving against the scroll, and the sector can't clear until it's dead.
 
-- **Phase 1 (100–66%):** Two flank turrets fire aimed bursts. Destroy the turrets to expose the core. Each destroyed turret drops a Flak Burst module.
-- **Phase 2 (66–33%):** Grinding jaws open, spray debris in a wide fan (great for grazing), launches Recon Drones.
-- **Phase 3 (33–0%):** Damaged and erratic, rotating spiral bullet pattern, screen shake.
-- Big explosion sequence, huge salvage drop, run victory.
+- **Phase 1 (100–66%):** Two flank turrets track XF-0 and fire aimed 3-round bursts. The plated body shrugs off every hit (a dull flash, no damage) until both turrets are gone; damage to the turrets comes off the boss's health bar, so the bar reads 66% exactly when the second one dies. Each destroyed turret drops a Flak Burst module. Seekers ignore the body in this phase.
+- **Phase 2 (66–33%):** The jaws swing open on the glowing core, which is now the only thing that takes damage. Every ~1.6 s the jaws spray a wide fan of slow debris (great for grazing), and every ~4 s they launch two Recon Drones.
+- **Phase 3 (33–0%):** Smoke, darkened plates, and the whole machine sways and shudders. The core fires a rotating double spiral in bursts (~2.6 s on, ~1.1 s off), with screen shake.
+- Death: blasts ripple across the body for ~2.6 s, then it goes up all at once with a big shake. Huge salvage drop. Run victory comes with Step 17; until then the run loops back to Sector 1.
+- A Saturation Strike does its 600 to the core in phases 2–3 (about a fifth of its health) and nothing in phase 1.
 
 ## 9. Levels
 

@@ -4,6 +4,8 @@ extends Node
 ## to spawn each enemy (signal up), then reports when the sector is done.
 
 signal spawn_requested(scene: PackedScene, at: Vector2, elite: bool)
+## The waves are spent (the Level sends the boss in here on a boss sector).
+signal spawning_finished
 ## Time is up and the screen is clear.
 signal sector_cleared
 
@@ -16,6 +18,8 @@ signal sector_cleared
 var level_data: LevelData
 ## Where live enemies are, so the director can count them. Set by the Level.
 var enemies: Node
+## While true the sector can't clear, however long it takes (a boss is on screen).
+var hold_clear: bool = false
 
 var _elapsed: float = 0.0
 var _budget: float = 0.0
@@ -36,6 +40,9 @@ func _physics_process(delta: float) -> void:
 	if not _finished_spawning:
 		_update_spawning(delta)
 		return
+	if hold_clear:
+		_wait_after_end = 0.0
+		return
 	_wait_after_end += delta
 	if (enemies.get_child_count() == 0 and _queue.is_empty()) or _wait_after_end >= clear_timeout:
 		_done = true
@@ -52,6 +59,7 @@ func progress() -> float:
 func _update_spawning(delta: float) -> void:
 	if _elapsed >= level_data.duration:
 		_finished_spawning = true
+		spawning_finished.emit()
 		return
 	var rate: float = level_data.budget_rate + level_data.budget_growth * _elapsed
 	_budget += rate * GameState.threat_budget_multiplier() * delta

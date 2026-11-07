@@ -7,6 +7,8 @@ extends Resource
 ## Seconds of waves before the director stops spawning.
 @export var duration: float = 150.0
 @export var wave_pool: Array[WaveData] = []
+## Boss sector: once the waves are spent, this crawls in and the sector only clears when it's dead.
+@export var boss_scene: PackedScene
 
 @export_group("Budget")
 ## Budget points gained per second at the start of the level.

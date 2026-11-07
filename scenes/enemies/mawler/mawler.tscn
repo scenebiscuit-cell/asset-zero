@@ -1,0 +1,327 @@
+[gd_scene load_steps=9 format=3]
+
+[ext_resource type="Script" path="res://scenes/enemies/mawler/mawler.gd" id="1_mawler"]
+[ext_resource type="Resource" path="res://data/enemies/mawler.tres" id="2_data"]
+[ext_resource type="Script" path="res://scenes/enemies/mawler/mawler_turret.gd" id="3_turret"]
+[ext_resource type="Resource" path="res://data/enemies/mawler_turret.tres" id="4_turret_data"]
+[ext_resource type="PackedScene" path="res://scenes/enemies/recon_drone/recon_drone.tscn" id="5_drone"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_body"]
+size = Vector2(190, 200)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_tread"]
+size = Vector2(50, 180)
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_turret"]
+radius = 22.0
+
+[node name="Mawler" type="Area2D"]
+collision_layer = 8
+collision_mask = 0
+monitoring = false
+script = ExtResource("1_mawler")
+data = ExtResource("2_data")
+drone_scene = ExtResource("5_drone")
+
+[node name="BodyHitbox" type="CollisionShape2D" parent="."]
+position = Vector2(0, -5)
+shape = SubResource("RectangleShape2D_body")
+
+[node name="TreadHitboxL" type="CollisionShape2D" parent="."]
+position = Vector2(-175, 0)
+shape = SubResource("RectangleShape2D_tread")
+
+[node name="TreadHitboxR" type="CollisionShape2D" parent="."]
+position = Vector2(175, 0)
+shape = SubResource("RectangleShape2D_tread")
+
+[node name="Visual" type="Node2D" parent="."]
+
+[node name="TreadL" type="Polygon2D" parent="Visual"]
+color = Color(0.16, 0.17, 0.18, 1)
+polygon = PackedVector2Array(-200, -92, -150, -92, -150, 92, -200, 92)
+
+[node name="TreadBarsL" type="Node2D" parent="Visual"]
+position = Vector2(-175, 0)
+
+[node name="Bar0" type="Polygon2D" parent="Visual/TreadBarsL"]
+position = Vector2(0, -85)
+color = Color(0.3, 0.3, 0.3, 1)
+polygon = PackedVector2Array(-22, -4, 22, -4, 22, 4, -22, 4)
+
+[node name="Bar1" type="Polygon2D" parent="Visual/TreadBarsL"]
+position = Vector2(0, -55)
+color = Color(0.3, 0.3, 0.3, 1)
+polygon = PackedVector2Array(-22, -4, 22, -4, 22, 4, -22, 4)
+
+[node name="Bar2" type="Polygon2D" parent="Visual/TreadBarsL"]
+position = Vector2(0, -25)
+color = Color(0.3, 0.3, 0.3, 1)
+polygon = PackedVector2Array(-22, -4, 22, -4, 22, 4, -22, 4)
+
+[node name="Bar3" type="Polygon2D" parent="Visual/TreadBarsL"]
+position = Vector2(0, 5)
+color = Color(0.3, 0.3, 0.3, 1)
+polygon = PackedVector2Array(-22, -4, 22, -4, 22, 4, -22, 4)
+
+[node name="Bar4" type="Polygon2D" parent="Visual/TreadBarsL"]
+position = Vector2(0, 35)
+color = Color(0.3, 0.3, 0.3, 1)
+polygon = PackedVector2Array(-22, -4, 22, -4, 22, 4, -22, 4)
+
+[node name="Bar5" type="Polygon2D" parent="Visual/TreadBarsL"]
+position = Vector2(0, 65)
+color = Color(0.3, 0.3, 0.3, 1)
+polygon = PackedVector2Array(-22, -4, 22, -4, 22, 4, -22, 4)
+
+[node name="TreadR" type="Polygon2D" parent="Visual"]
+color = Color(0.16, 0.17, 0.18, 1)
+polygon = PackedVector2Array(200, -92, 150, -92, 150, 92, 200, 92)
+
+[node name="TreadBarsR" type="Node2D" parent="Visual"]
+position = Vector2(175, 0)
+
+[node name="Bar0" type="Polygon2D" parent="Visual/TreadBarsR"]
+position = Vector2(0, -85)
+color = Color(0.3, 0.3, 0.3, 1)
+polygon = PackedVector2Array(-22, -4, 22, -4, 22, 4, -22, 4)
+
+[node name="Bar1" type="Polygon2D" parent="Visual/TreadBarsR"]
+position = Vector2(0, -55)
+color = Color(0.3, 0.3, 0.3, 1)
+polygon = PackedVector2Array(-22, -4, 22, -4, 22, 4, -22, 4)
+
+[node name="Bar2" type="Polygon2D" parent="Visual/TreadBarsR"]
+position = Vector2(0, -25)
+color = Color(0.3, 0.3, 0.3, 1)
+polygon = PackedVector2Array(-22, -4, 22, -4, 22, 4, -22, 4)
+
+[node name="Bar3" type="Polygon2D" parent="Visual/TreadBarsR"]
+position = Vector2(0, 5)
+color = Color(0.3, 0.3, 0.3, 1)
+polygon = PackedVector2Array(-22, -4, 22, -4, 22, 4, -22, 4)
+
+[node name="Bar4" type="Polygon2D" parent="Visual/TreadBarsR"]
+position = Vector2(0, 35)
+color = Color(0.3, 0.3, 0.3, 1)
+polygon = PackedVector2Array(-22, -4, 22, -4, 22, 4, -22, 4)
+
+[node name="Bar5" type="Polygon2D" parent="Visual/TreadBarsR"]
+position = Vector2(0, 65)
+color = Color(0.3, 0.3, 0.3, 1)
+polygon = PackedVector2Array(-22, -4, 22, -4, 22, 4, -22, 4)
+
+[node name="Body" type="Node2D" parent="Visual"]
+
+[node name="Hull" type="Polygon2D" parent="Visual/Body"]
+color = Color(0.36, 0.36, 0.34, 1)
+polygon = PackedVector2Array(-150, -100, 150, -100, 165, -60, 165, 70, 125, 95, -125, 95, -165, 70, -165, -60)
+
+[node name="HullLight" type="Polygon2D" parent="Visual/Body"]
+color = Color(0.5, 0.49, 0.45, 1)
+polygon = PackedVector2Array(-150, -100, 150, -100, 140, -84, -140, -84)
+
+[node name="StackL" type="Polygon2D" parent="Visual/Body"]
+color = Color(0.2, 0.2, 0.2, 1)
+polygon = PackedVector2Array(-72, -122, -48, -122, -48, -96, -72, -96)
+
+[node name="StackR" type="Polygon2D" parent="Visual/Body"]
+color = Color(0.2, 0.2, 0.2, 1)
+polygon = PackedVector2Array(48, -122, 72, -122, 72, -96, 48, -96)
+
+[node name="PlateL" type="Polygon2D" parent="Visual/Body"]
+color = Color(0.43, 0.43, 0.41, 1)
+polygon = PackedVector2Array(-140, -70, -40, -70, -40, 40, -140, 40)
+
+[node name="PlateR" type="Polygon2D" parent="Visual/Body"]
+color = Color(0.43, 0.43, 0.41, 1)
+polygon = PackedVector2Array(40, -70, 140, -70, 140, 40, 40, 40)
+
+[node name="PlateLShade" type="Polygon2D" parent="Visual/Body"]
+color = Color(0.3, 0.3, 0.29, 1)
+polygon = PackedVector2Array(-140, 36, -40, 36, -40, 40, -140, 40)
+
+[node name="PlateRShade" type="Polygon2D" parent="Visual/Body"]
+color = Color(0.3, 0.3, 0.29, 1)
+polygon = PackedVector2Array(40, 36, 140, 36, 140, 40, 40, 40)
+
+[node name="Spine" type="Polygon2D" parent="Visual/Body"]
+color = Color(0.3, 0.31, 0.3, 1)
+polygon = PackedVector2Array(-30, -96, 30, -96, 30, 30, -30, 30)
+
+[node name="HazardBack" type="Polygon2D" parent="Visual/Body"]
+color = Color(0.08, 0.08, 0.08, 1)
+polygon = PackedVector2Array(-125, 74, 125, 74, 125, 90, -125, 90)
+
+[node name="Hazard0" type="Polygon2D" parent="Visual/Body"]
+color = Color(0.85, 0.42, 0.1, 1)
+polygon = PackedVector2Array(-122, 74, -108, 74, -100, 90, -114, 90)
+
+[node name="Hazard1" type="Polygon2D" parent="Visual/Body"]
+color = Color(0.85, 0.42, 0.1, 1)
+polygon = PackedVector2Array(-90, 74, -76, 74, -68, 90, -82, 90)
+
+[node name="Hazard2" type="Polygon2D" parent="Visual/Body"]
+color = Color(0.85, 0.42, 0.1, 1)
+polygon = PackedVector2Array(-58, 74, -44, 74, -36, 90, -50, 90)
+
+[node name="Hazard3" type="Polygon2D" parent="Visual/Body"]
+color = Color(0.85, 0.42, 0.1, 1)
+polygon = PackedVector2Array(-26, 74, -12, 74, -4, 90, -18, 90)
+
+[node name="Hazard4" type="Polygon2D" parent="Visual/Body"]
+color = Color(0.85, 0.42, 0.1, 1)
+polygon = PackedVector2Array(6, 74, 20, 74, 28, 90, 14, 90)
+
+[node name="Hazard5" type="Polygon2D" parent="Visual/Body"]
+color = Color(0.85, 0.42, 0.1, 1)
+polygon = PackedVector2Array(38, 74, 52, 74, 60, 90, 46, 90)
+
+[node name="Hazard6" type="Polygon2D" parent="Visual/Body"]
+color = Color(0.85, 0.42, 0.1, 1)
+polygon = PackedVector2Array(70, 74, 84, 74, 92, 90, 78, 90)
+
+[node name="Hazard7" type="Polygon2D" parent="Visual/Body"]
+color = Color(0.85, 0.42, 0.1, 1)
+polygon = PackedVector2Array(102, 74, 116, 74, 124, 90, 110, 90)
+
+[node name="LampL" type="Polygon2D" parent="Visual/Body"]
+color = Color(1, 0.15, 0.1, 1)
+polygon = PackedVector2Array(-110, -98, -98, -98, -98, -90, -110, -90)
+
+[node name="LampR" type="Polygon2D" parent="Visual/Body"]
+color = Color(1, 0.15, 0.1, 1)
+polygon = PackedVector2Array(98, -98, 110, -98, 110, -90, 98, -90)
+
+[node name="StumpL" type="Polygon2D" parent="Visual"]
+position = Vector2(-125, 20)
+color = Color(0.14, 0.13, 0.12, 1)
+polygon = PackedVector2Array(12.934, 5.358, 5.358, 12.934, -5.358, 12.934, -12.934, 5.358, -12.934, -5.358, -5.358, -12.934, 5.358, -12.934, 12.934, -5.358)
+
+[node name="StumpR" type="Polygon2D" parent="Visual"]
+position = Vector2(125, 20)
+color = Color(0.14, 0.13, 0.12, 1)
+polygon = PackedVector2Array(12.934, 5.358, 5.358, 12.934, -5.358, 12.934, -12.934, 5.358, -12.934, -5.358, -5.358, -12.934, 5.358, -12.934, 12.934, -5.358)
+
+[node name="Core" type="Polygon2D" parent="Visual"]
+position = Vector2(0, 58)
+color = Color(1, 0.35, 0.1, 1)
+polygon = PackedVector2Array(26, 0, 13, 22.517, -13, 22.517, -26, 0, -13, -22.517, 13, -22.517)
+
+[node name="JawL" type="Polygon2D" parent="Visual"]
+position = Vector2(-50, 40)
+color = Color(0.3, 0.3, 0.29, 1)
+polygon = PackedVector2Array(0, 0, 50, 0, 50, 30, 44, 38, 38, 30, 32, 38, 26, 30, 20, 38, 14, 30, 8, 38, 2, 30, 0, 30)
+
+[node name="JawR" type="Polygon2D" parent="Visual"]
+position = Vector2(50, 40)
+color = Color(0.3, 0.3, 0.29, 1)
+polygon = PackedVector2Array(0, 0, -50, 0, -50, 30, -44, 38, -38, 30, -32, 38, -26, 30, -20, 38, -14, 30, -8, 38, -2, 30, 0, 30)
+
+[node name="SmokeL" type="CPUParticles2D" parent="Visual"]
+position = Vector2(-70, -40)
+emitting = false
+amount = 14
+lifetime = 1.4
+local_coords = false
+direction = Vector2(0, -1)
+spread = 30.0
+gravity = Vector2(0, -30)
+initial_velocity_min = 20.0
+initial_velocity_max = 55.0
+scale_amount_min = 3.0
+scale_amount_max = 7.0
+color = Color(0.12, 0.12, 0.12, 0.55)
+
+[node name="SmokeR" type="CPUParticles2D" parent="Visual"]
+position = Vector2(70, -40)
+emitting = false
+amount = 14
+lifetime = 1.4
+local_coords = false
+direction = Vector2(0, -1)
+spread = 30.0
+gravity = Vector2(0, -30)
+initial_velocity_min = 20.0
+initial_velocity_max = 55.0
+scale_amount_min = 3.0
+scale_amount_max = 7.0
+color = Color(0.12, 0.12, 0.12, 0.55)
+
+[node name="TurretL" type="Area2D" parent="."]
+position = Vector2(-125, 20)
+collision_layer = 8
+collision_mask = 0
+monitoring = false
+script = ExtResource("3_turret")
+data = ExtResource("4_turret_data")
+
+[node name="Hitbox" type="CollisionShape2D" parent="TurretL"]
+shape = SubResource("CircleShape2D_turret")
+
+[node name="Visual" type="Node2D" parent="TurretL"]
+
+[node name="Base" type="Polygon2D" parent="TurretL/Visual"]
+color = Color(0.26, 0.26, 0.26, 1)
+polygon = PackedVector2Array(20.325, 8.419, 8.419, 20.325, -8.419, 20.325, -20.325, 8.419, -20.325, -8.419, -8.419, -20.325, 8.419, -20.325, 20.325, -8.419)
+
+[node name="Mount" type="Node2D" parent="TurretL/Visual"]
+
+[node name="BarrelL" type="Polygon2D" parent="TurretL/Visual/Mount"]
+color = Color(0.17, 0.19, 0.21, 1)
+polygon = PackedVector2Array(-9, -36, -4, -36, -4, 0, -9, 0)
+
+[node name="BarrelR" type="Polygon2D" parent="TurretL/Visual/Mount"]
+color = Color(0.17, 0.19, 0.21, 1)
+polygon = PackedVector2Array(4, -36, 9, -36, 9, 0, 4, 0)
+
+[node name="Housing" type="Polygon2D" parent="TurretL/Visual/Mount"]
+color = Color(0.42, 0.42, 0.4, 1)
+polygon = PackedVector2Array(-13, -14, 13, -14, 13, 11, -13, 11)
+
+[node name="HousingLight" type="Polygon2D" parent="TurretL/Visual/Mount"]
+color = Color(0.55, 0.54, 0.5, 1)
+polygon = PackedVector2Array(-13, -14, 13, -14, 11, -11, -11, -11)
+
+[node name="Lamp" type="Polygon2D" parent="TurretL/Visual/Mount"]
+color = Color(1, 0.15, 0.1, 1)
+polygon = PackedVector2Array(-3, 2, 3, 2, 3, 8, -3, 8)
+
+[node name="TurretR" type="Area2D" parent="."]
+position = Vector2(125, 20)
+collision_layer = 8
+collision_mask = 0
+monitoring = false
+script = ExtResource("3_turret")
+data = ExtResource("4_turret_data")
+
+[node name="Hitbox" type="CollisionShape2D" parent="TurretR"]
+shape = SubResource("CircleShape2D_turret")
+
+[node name="Visual" type="Node2D" parent="TurretR"]
+
+[node name="Base" type="Polygon2D" parent="TurretR/Visual"]
+color = Color(0.26, 0.26, 0.26, 1)
+polygon = PackedVector2Array(20.325, 8.419, 8.419, 20.325, -8.419, 20.325, -20.325, 8.419, -20.325, -8.419, -8.419, -20.325, 8.419, -20.325, 20.325, -8.419)
+
+[node name="Mount" type="Node2D" parent="TurretR/Visual"]
+
+[node name="BarrelL" type="Polygon2D" parent="TurretR/Visual/Mount"]
+color = Color(0.17, 0.19, 0.21, 1)
+polygon = PackedVector2Array(-9, -36, -4, -36, -4, 0, -9, 0)
+
+[node name="BarrelR" type="Polygon2D" parent="TurretR/Visual/Mount"]
+color = Color(0.17, 0.19, 0.21, 1)
+polygon = PackedVector2Array(4, -36, 9, -36, 9, 0, 4, 0)
+
+[node name="Housing" type="Polygon2D" parent="TurretR/Visual/Mount"]
+color = Color(0.42, 0.42, 0.4, 1)
+polygon = PackedVector2Array(-13, -14, 13, -14, 13, 11, -13, 11)
+
+[node name="HousingLight" type="Polygon2D" parent="TurretR/Visual/Mount"]
+color = Color(0.55, 0.54, 0.5, 1)
+polygon = PackedVector2Array(-13, -14, 13, -14, 11, -11, -11, -11)
+
+[node name="Lamp" type="Polygon2D" parent="TurretR/Visual/Mount"]
+color = Color(1, 0.15, 0.1, 1)
+polygon = PackedVector2Array(-3, 2, 3, 2, 3, 8, -3, 8)

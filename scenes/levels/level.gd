@@ -3,7 +3,8 @@ extends Node2D
 ## Runs one sector: the wave director sends enemies, this spawns them, handles drops, death and
 ## SECTOR CLEAR. Which sector comes from GameState, so the same scene plays every sector.
 
-## Sectors of the run, in order (data/levels/). After the last one it loops until the boss exists (Step 16).
+## Sectors of the run, in order (data/levels/); the last is the boss sector. After it the run loops
+## back to the first until Mission Complete exists (Step 17).
 @export var sectors: Array[LevelData] = []
 ## Off in test scenes that spawn enemies by hand.
 @export var run_waves: bool = true
@@ -59,6 +60,8 @@ var _striking: bool = false
 @onready var _player: Player = $Player
 @onready var _mission_failed: MissionFailedScreen = $MissionFailed
 @onready var _strike_flash: StrikeFlash = $StrikeFlash
+@onready var _screen_shake: ScreenShake = $ScreenShake
+@onready var _radio: RadioChatter = $RadioChatter
 
 
 ## Before any child's _ready, so the Player and HUD start from the fresh run, not the old one.
@@ -95,11 +98,48 @@ func _ready() -> void:
 	_hud.wave_director = _wave_director
 	_wave_director.enemies = _enemies
 	_wave_director.spawn_requested.connect(_on_spawn_requested)
+	_wave_director.spawning_finished.connect(_on_spawning_finished)
 	_wave_director.sector_cleared.connect(_on_sector_cleared)
 
 
 func _on_spawn_requested(scene: PackedScene, at: Vector2, elite: bool) -> void:
 	spawn_enemy(scene, at, elite)
+
+
+## A boss sector: the waves are spent, so the boss crawls in and holds the sector open until it's dead.
+func _on_spawning_finished() -> void:
+	if _level_data.boss_scene != null and not _player_dead:
+		spawn_boss(_level_data.boss_scene)
+
+
+## Wired like any enemy, plus the services it asks the Level for (drops, drones, blasts, shake).
+func spawn_boss(scene: PackedScene) -> Mawler:
+	var boss: Mawler = spawn_enemy(scene, Vector2(get_viewport_rect().size.x * 0.5, -240.0)) as Mawler
+	_wave_director.hold_clear = true
+	boss.part_destroyed.connect(_on_boss_part_destroyed)
+	boss.drone_requested.connect(_on_boss_drone_requested.bind(boss))
+	boss.blast_requested.connect(_explosion_pool.spawn)
+	boss.shake_requested.connect(_screen_shake.shake)
+	boss.destroyed.connect(_on_boss_destroyed)
+	_hud.boss = boss
+	_radio.say("RADIO_BOSS", 0.8, "threat_alarm")
+	return boss
+
+
+func _on_boss_part_destroyed(at: Vector2, module: ModuleData) -> void:
+	_explosion_pool.spawn(at)
+	if module != null:
+		drop_module(module, at)
+
+
+func _on_boss_drone_requested(at: Vector2, boss: Mawler) -> void:
+	if boss.drone_scene != null and not _player_dead:
+		spawn_enemy(boss.drone_scene, at)
+
+
+func _on_boss_destroyed(_boss: Enemy) -> void:
+	_wave_director.hold_clear = false
+	_hud.boss = null
 
 
 func _on_sector_cleared() -> void:

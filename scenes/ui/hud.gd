@@ -60,6 +60,13 @@ var _shown_strike: Vector2i = Vector2i(-1, -1)
 @onready var _nose_name: Label = $Root/Weapons/NoseName
 @onready var _pylon_icon: WeaponIcon = $Root/Weapons/PylonIcon
 @onready var _pylon_name: Label = $Root/Weapons/PylonName
+@onready var _boss_panel: Control = $Root/Boss
+@onready var _boss_name: Label = $Root/Boss/Name
+@onready var _boss_bar: HudBar = $Root/Boss/Bar
+
+## The sector boss while one is on screen; its health bar shows under the top console.
+var boss: Mawler = null
+var _shown_boss: Mawler = null
 
 
 func _ready() -> void:
@@ -76,6 +83,7 @@ func _process(delta: float) -> void:
 	if wave_director != null:
 		_sector_progress.value = wave_director.progress()
 	_update_status()
+	_update_boss()
 	_update_module()
 	_update_overclock(blink_on)
 	_update_fire_control(blink_on)
@@ -114,6 +122,17 @@ func _update_status() -> void:
 		var index: int = clampi(GameState.threat_level - 1, 0, THREAT_KEYS.size() - 1)
 		_threat_label.text = tr(THREAT_KEYS[index])
 		_threat_label.add_theme_color_override("font_color", THREAT_COLORS[index])
+
+
+func _update_boss() -> void:
+	var alive: bool = is_instance_valid(boss) and boss.hp > 0 and boss.phase != Mawler.Phase.DYING
+	_boss_panel.visible = alive
+	if not alive:
+		return
+	if boss != _shown_boss:
+		_shown_boss = boss
+		_boss_name.text = tr(boss.name_key)
+	_boss_bar.value = float(boss.hp) / maxi(boss.data.max_hp, 1)
 
 
 func _update_overclock(blink_on: bool) -> void:

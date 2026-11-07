@@ -8,6 +8,8 @@ signal salvage_collected
 signal grazed(at: Vector2)
 ## XF-0 moved up a weight class (GameState.WeightClass).
 signal weight_class_changed(weight_class: int)
+## HSD Threat Level rose (1-4, DESIGN.md §9.1). Fires right after weight_class_changed.
+signal threat_level_changed(threat_level: int)
 ## Overclock started / ended.
 signal overclock_started
 signal overclock_ended

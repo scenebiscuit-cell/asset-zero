@@ -1,4 +1,4 @@
-[gd_scene load_steps=34 format=3]
+[gd_scene load_steps=35 format=3]
 
 [ext_resource type="Script" path="res://scenes/levels/level.gd" id="1_level"]
 [ext_resource type="Script" path="res://scenes/levels/background_layer.gd" id="2_bg"]
@@ -32,6 +32,7 @@
 [ext_resource type="PackedScene" path="res://scenes/ui/armory/armory.tscn" id="30_armory"]
 [ext_resource type="PackedScene" path="res://scenes/fx/strike_flash/strike_flash.tscn" id="31_strike_flash"]
 [ext_resource type="PackedScene" path="res://scenes/ui/class_callout.tscn" id="32_class_callout"]
+[ext_resource type="PackedScene" path="res://scenes/ui/radio_chatter.tscn" id="33_radio_chatter"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_grain"]
 shader = ExtResource("10_grain")
@@ -122,6 +123,8 @@ script = ExtResource("20_wave_director")
 [node name="Armory" parent="." instance=ExtResource("30_armory")]
 
 [node name="ClassCallout" parent="." instance=ExtResource("32_class_callout")]
+
+[node name="RadioChatter" parent="." instance=ExtResource("33_radio_chatter")]
 
 [node name="MissionFailed" parent="." instance=ExtResource("13_mission_failed")]
 

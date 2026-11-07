@@ -179,10 +179,11 @@ func _on_enemy_destroyed(enemy: Enemy) -> void:
 
 
 ## Same pickup count as the enemy's salvage value, with the boosted total spread across them.
+## Threat Level pays a bonus on top (DESIGN.md §9.1).
 func _drop_enemy_salvage(at: Vector2, base: int) -> void:
 	if base <= 0:
 		return
-	var total: int = roundi(base * salvage_multiplier)
+	var total: int = roundi(base * salvage_multiplier * (1.0 + GameState.threat_salvage_bonus()))
 	var each: int = floori(float(total) / base)
 	var extra: int = total % base
 	_salvage_pool.spawn_burst(at, base - extra, each)

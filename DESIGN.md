@@ -327,7 +327,7 @@ Halcyon reacts to how dangerous the prototype has become. **Threat Level = weigh
 | 3 | Heavy | HSD THREAT: HIGH | ×1.3 | 15% | +20% |
 | 4 | Assault | HSD THREAT: SEVERE | ×1.5 | 25% | +35% |
 
-When Threat rises, show a radio-chatter pop-up ("HSD-Control: Asset has grown. Escalate response.") and a short alarm sound. The bigger and stronger you get, the more elites (and modules) show up: power growth feeds itself, but so does danger.
+When Threat rises, show a radio-chatter pop-up ("HSD-Control: Asset has grown. Escalate response.") and a short alarm sound. The line types out on a strip under the top console a moment after the CLASS UPGRADE banner, so the two don't overlap; the same strip carries any later radio chatter. The bigger and stronger you get, the more elites (and modules) show up: power growth feeds itself, but so does danger.
 
 ## 10. Feel ("juice") checklist
 

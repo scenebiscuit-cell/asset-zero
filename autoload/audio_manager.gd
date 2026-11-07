@@ -19,6 +19,7 @@ func _ready() -> void:
 	_streams["assimilate"] = _make_metallic_sweep(1400.0, 240.0, 0.22)
 	_streams["strike"] = _make_rising_roar(0.9)
 	_streams["denied"] = _make_metallic_sweep(240.0, 170.0, 0.12)
+	_streams["threat_alarm"] = _make_alarm(0.8)
 	for i: int in VOICES:
 		var player: AudioStreamPlayer = AudioStreamPlayer.new()
 		add_child(player)
@@ -52,6 +53,31 @@ func _make_rising_roar(duration: float) -> AudioStreamWAV:
 		noise = lerpf(noise, rng.randf_range(-1.0, 1.0), 0.25)
 		var envelope: float = minf(1.0, t * 12.0) * (1.0 - t)
 		var sample: float = (0.55 * sin(phase) + 0.25 * sin(phase * 1.5) + 0.5 * noise) * envelope * 0.5
+		data.encode_s16(i * 2, int(clampf(sample, -1.0, 1.0) * 32767.0))
+	var wav: AudioStreamWAV = AudioStreamWAV.new()
+	wav.format = AudioStreamWAV.FORMAT_16_BITS
+	wav.mix_rate = SAMPLE_RATE
+	wav.stereo = false
+	wav.data = data
+	return wav
+
+
+## Alternating two-tone beeps with a hard edge: the HSD escalation alarm (Threat Level rising).
+func _make_alarm(duration: float) -> AudioStreamWAV:
+	var frames: int = int(SAMPLE_RATE * duration)
+	var data: PackedByteArray = PackedByteArray()
+	data.resize(frames * 2)
+	var phase: float = 0.0
+	const BEEP: float = 0.16
+	for i: int in frames:
+		var t: float = float(i) / SAMPLE_RATE
+		var beat: float = t / BEEP
+		var on: bool = fmod(beat, 1.0) < 0.7
+		var hz: float = 720.0 if int(beat) % 2 == 0 else 540.0
+		phase += TAU * hz / SAMPLE_RATE
+		var envelope: float = (1.0 if on else 0.0) * (1.0 - 0.35 * t / duration)
+		# A touch of square wave gives it the edge of a real klaxon.
+		var sample: float = (0.6 * sin(phase) + 0.25 * signf(sin(phase))) * envelope * 0.4
 		data.encode_s16(i * 2, int(clampf(sample, -1.0, 1.0) * 32767.0))
 	var wav: AudioStreamWAV = AudioStreamWAV.new()
 	wav.format = AudioStreamWAV.FORMAT_16_BITS

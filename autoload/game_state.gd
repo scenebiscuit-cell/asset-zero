@@ -13,6 +13,11 @@ enum WeightClass { LIGHT, MEDIUM, HEAVY, ASSAULT }
 const CLASS_MIN_REFITS: Array[int] = [0, 3, 6, 9]
 const CLASS_ARMOR_BONUS: Array[int] = [0, 15, 30, 50]
 const CLASS_SPEED: Array[float] = [1.0, 0.95, 0.9, 0.85]
+## HSD Threat Level (DESIGN.md §9.1), by threat index 0-3: wave budget multiplier, elite chance,
+## salvage bonus (fraction). Threat = weight class, so these line up with the class tables above.
+const THREAT_BUDGET: Array[float] = [1.0, 1.15, 1.3, 1.5]
+const THREAT_ELITE_CHANCE: Array[float] = [0.05, 0.1, 0.15, 0.25]
+const THREAT_SALVAGE_BONUS: Array[float] = [0.0, 0.1, 0.2, 0.35]
 
 var salvage: int = 0
 var max_armor: int = START_MAX_ARMOR
@@ -21,7 +26,7 @@ var armor: int = START_MAX_ARMOR
 var plating: int = 0
 var max_plating: int = 0
 var weight_class: WeightClass = WeightClass.LIGHT
-## HSD Threat Level 1-4 (§9.1). Follows weight class from Step 15.
+## HSD Threat Level 1-4 (§9.1). Follows weight class: set in set_refit_count().
 var threat_level: int = 1
 ## What's mounted on each hardpoint (WeaponData.Hardpoint -> WeaponData). Empty = stock loadout.
 var weapons: Dictionary[int, WeaponData] = {}
@@ -128,14 +133,28 @@ func set_refit_count(count: int) -> void:
 	var gain: int = CLASS_ARMOR_BONUS[new_class] - CLASS_ARMOR_BONUS[weight_class]
 	var upgraded: bool = new_class > weight_class
 	weight_class = new_class as WeightClass
+	threat_level = weight_class + 1
 	max_armor += gain
 	armor = clampi(armor + gain, 1, max_armor)
 	if upgraded:
 		Events.weight_class_changed.emit(weight_class)
+		Events.threat_level_changed.emit(threat_level)
 
 
 func class_speed_multiplier() -> float:
 	return CLASS_SPEED[weight_class]
+
+
+func threat_budget_multiplier() -> float:
+	return THREAT_BUDGET[clampi(threat_level - 1, 0, THREAT_BUDGET.size() - 1)]
+
+
+func threat_elite_chance() -> float:
+	return THREAT_ELITE_CHANCE[clampi(threat_level - 1, 0, THREAT_ELITE_CHANCE.size() - 1)]
+
+
+func threat_salvage_bonus() -> float:
+	return THREAT_SALVAGE_BONUS[clampi(threat_level - 1, 0, THREAT_SALVAGE_BONUS.size() - 1)]
 
 
 ## Called on death: the next level load starts a fresh run.

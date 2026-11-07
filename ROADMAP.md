@@ -116,7 +116,7 @@ How to hand a milestone to Claude Code (in VS Code, terminal at `C:\Projects\ass
 
 ## Milestone D — Complete run
 
-- [ ] **Step 16: Boss — HEG-X9 MAWLER**
+- [x] **Step 16: Boss — HEG-X9 MAWLER**
   - Three phases from DESIGN.md §8 (turrets drop Flak Burst modules), boss health bar, big death sequence
   - **Done when:** the boss can be fought and beaten with all three phases working
 

@@ -103,13 +103,13 @@ How to hand a milestone to Claude Code (in VS Code, terminal at `C:\Projects\ass
   - 4 items for salvage, always at least one repair, prices scale per level
   - **Done when:** you can buy, can't buy what you can't afford, and can leave
 
-- [ ] **Step 14: All systems, weight classes + refit morph**
+- [x] **Step 14: All systems, weight classes + refit morph**
   - Every weapon, Propulsion and Armor level from DESIGN.md §6, including the Variant A/B choices, plus all field mods (including Heat Capacitor and Retention Matrix)
   - Each refit changes the airframe's Gunship AND Thresher shapes, using the morph system from Step 5 (~0.3 s refit morph)
   - Weight classes Light → Assault (§5.2) with "CLASS UPGRADE" callout
   - **Done when:** every refit works, looks different in both forms, morphs smoothly, and weight class changes at the right refit counts
 
-- [ ] **Step 15: Threat Level**
+- [x] **Step 15: Threat Level**
   - Threat = weight class (DESIGN.md §9.1); feeds the wave director's budget multiplier, elite chance and salvage bonus
   - HUD label updates; radio-chatter pop-up + alarm when Threat rises
   - **Done when:** growing to each weight class visibly increases enemy pressure, elites and salvage
@@ -150,7 +150,7 @@ How to hand a milestone to Claude Code (in VS Code, terminal at `C:\Projects\ass
 
 Write down decisions here as you make them (date — decision), so the AI tools know about them.
 
-- 2026-11-07 — Threat Level (Step 15): the tables from §9.1 live in GameState next to the weight-class tables; the wave director and salvage drops read them live. The HSD radio line types out on a strip under the top console about 1.2 s after the CLASS UPGRADE banner, so the two don't overlap; the strip is reusable for later chatter, and a line started on the refit screens is remembered in GameState so the sector reload doesn't lose it. Background radar domes now pay the Threat salvage bonus too (not the x1.5 enemy multiplier). Steps 14 and 15 were built and auto-tested overnight; their boxes stay open until the developer's hands-on check.
+- 2026-11-07 — Threat Level (Step 15): the tables from §9.1 live in GameState next to the weight-class tables; the wave director and salvage drops read them live. The HSD radio line types out on a strip under the top console about 1.2 s after the CLASS UPGRADE banner, so the two don't overlap; the strip is reusable for later chatter, and a line started on the refit screens is remembered in GameState so the sector reload doesn't lose it. Background radar domes now pay the Threat salvage bonus too (not the x1.5 enemy multiplier). Steps 14 and 15 were built and auto-tested overnight and confirmed in play the next day.
 - 2026-11-07 — Lance form renamed **Thresher form** everywhere (text, docs, code, shape files, sounds; the HEL-3T Thermal Lance weapon and the Drill Lance module keep their names). It's now a dark ribbed predator (forked crescent, hooked tines, spine plates, ember cores, dark eye) instead of a polished spaceship. Ember orange joins cyan as a second accent, reserved for heat: Overclock, heat sinks and Thresher form's glow. DESIGN.md §5.3, §5.6, §11.
 - 2026-11-07 — Live metal: the ship deforms every frame, not just on a morph. Thresher form ripples while held and trails metal; tips lag the body when moving; a dash stretches the hull; hits dent it and heal; a graze shivers it. Thresher keeps about 80% of the Gunship's area (was 60%) so the morph reads as the same metal reshaped. All of it runs through the one morph system. DESIGN.md §5.3.
 - 2026-11-06 — Thresher form is now a smooth, curved, polished-metal spaceship, the opposite of the hard-edged Gunship, so the shape-shifting stays the star. Morph flows in a nose-to-tail wave with a ripple and a colour change, 0.22 s (was 0.15 s). Replaces "always a hard-edged aircraft". DESIGN.md §5.3, §5.6, §11.

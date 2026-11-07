@@ -1,10 +1,9 @@
-[gd_scene load_steps=8 format=3]
+[gd_scene load_steps=7 format=3]
 
+[ext_resource type="Resource" path="res://data/shapes/xf0_airframes.tres" id="4_airframes"]
 [ext_resource type="Script" path="res://scenes/ui/field_refit/field_refit.gd" id="1_refit"]
 [ext_resource type="Script" path="res://scenes/ui/field_refit/ship_schematic.gd" id="2_schematic"]
 [ext_resource type="Resource" path="res://data/refits/catalog.tres" id="3_catalog"]
-[ext_resource type="Resource" path="res://data/shapes/xf0_light_gunship.tres" id="4_gunship"]
-[ext_resource type="Resource" path="res://data/shapes/xf0_light_lance.tres" id="5_lance"]
 [ext_resource type="Theme" path="res://scenes/ui/terminal_theme.tres" id="6_theme"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_screen"]
@@ -73,8 +72,7 @@ offset_right = 516.0
 offset_bottom = 278.0
 mouse_filter = 2
 script = ExtResource("2_schematic")
-gunship_shape = ExtResource("4_gunship")
-lance_shape = ExtResource("5_lance")
+airframes = ExtResource("4_airframes")
 
 [node name="GunshipLabel" type="Label" parent="Root"]
 layout_mode = 0
@@ -87,7 +85,7 @@ theme_override_font_sizes/font_size = 11
 text = "FORM_GUNSHIP"
 horizontal_alignment = 1
 
-[node name="LanceLabel" type="Label" parent="Root"]
+[node name="ThresherLabel" type="Label" parent="Root"]
 layout_mode = 0
 offset_left = 250.0
 offset_top = 278.0
@@ -95,7 +93,7 @@ offset_right = 516.0
 offset_bottom = 294.0
 theme_override_colors/font_color = Color(0.35, 0.85, 1, 0.75)
 theme_override_font_sizes/font_size = 11
-text = "FORM_LANCE"
+text = "FORM_THRESHER"
 horizontal_alignment = 1
 
 [node name="Loadout" type="VBoxContainer" parent="Root"]

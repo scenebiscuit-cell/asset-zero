@@ -11,7 +11,11 @@ enum Hardpoint { NOSE, WING_PYLONS, ENGINE, HULL, SALVAGE_MOUNT }
 @export var hardpoint: Hardpoint = Hardpoint.NOSE
 ## The weapon scene mounted on the hardpoint (autocannon.tscn, beam_laser.tscn, ...).
 @export var scene: PackedScene
+## How this weapon changes the airframe (barrels, lens, pylon pods), drawn at Light size.
+## Only the parts it changes. Empty = the base shape's own parts.
+@export var airframe_gunship: AirframeShape
+@export var airframe_thresher: AirframeShape
 ## Seconds between shots (for beams: between damage ticks; for missiles: between volleys).
 @export var fire_interval: float = 0.08
-## Per round, per tick or per missile, before Lance form and Overclock bonuses.
+## Per round, per tick or per missile, before Thresher form and Overclock bonuses.
 @export var damage: int = 10

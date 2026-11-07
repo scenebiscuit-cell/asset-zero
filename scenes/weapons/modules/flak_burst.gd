@@ -1,7 +1,7 @@
 class_name FlakBurst
 extends ModuleWeapon
 ## Flak Burst module (DESIGN.md §5.8): rounds burst in a small blast after a short distance.
-## Lance form fires them straight and lets them fly twice as far before bursting.
+## Thresher form fires them straight and lets them fly twice as far before bursting.
 
 var _flak: FlakBurstData
 var _cooldown: float = 0.0
@@ -25,7 +25,7 @@ func _physics_process(delta: float) -> void:
 	if _cooldown > 0.0:
 		return
 	_cooldown += interval(_flak.fire_interval)
-	var distance: float = _flak.lance_burst_distance if converged else _flak.burst_distance
+	var distance: float = _flak.thresher_burst_distance if converged else _flak.burst_distance
 	for i: int in _flak.rounds:
 		var t: float = 0.0 if _flak.rounds < 2 else float(i) / (_flak.rounds - 1) - 0.5
 		var start: Vector2 = global_position

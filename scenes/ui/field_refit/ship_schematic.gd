@@ -1,12 +1,16 @@
 class_name ShipSchematic
 extends Control
-## Top-down blueprint of XF-0 for the Field Refit screen (DESIGN.md §7.1): Gunship and Lance form
+## Top-down blueprint of XF-0 for the Field Refit screen (DESIGN.md §7.1): Gunship and Thresher form
 ## side by side, drawn from the same AirframeShape data the ship uses, with a marker on each
 ## hardpoint. The hardpoint of the offer in focus pulses.
 
-@export var gunship_shape: AirframeShape
-@export var lance_shape: AirframeShape
+## Same shapes the ship flies with, built from the current loadout every redraw.
+@export var airframes: AirframeSet
 @export var draw_scale: float = 2.3
+## 0 = classes drawn at their full size difference, 1 = every class drawn the same size.
+@export var class_shrink: float = 0.8
+## Space kept between the drawing and the panel edge, in pixels.
+@export var fit_margin: float = 8.0
 @export var line_color: Color = Color(0.35, 0.85, 1.0, 0.85)
 @export var fill_color: Color = Color(0.35, 0.85, 1.0, 0.08)
 @export var marker_color: Color = Color(0.35, 0.85, 1.0, 0.5)
@@ -23,7 +27,8 @@ var highlight: int = -1:
 
 var _time: float = 0.0
 ## Only the outline is drawn, so these parts are skipped (they sit inside the hull).
-var _skip_parts: PackedStringArray = PackedStringArray(["Highlight", "Sensor", "EngineGlow"])
+var _skip_parts: PackedStringArray = PackedStringArray(["Highlight", "Sensor", "EngineGlow", "Outline", "HullShade",
+		"WingPanelL", "WingPanelR", "IntakeL", "IntakeR", "EdgeL", "EdgeR", "StripeL", "StripeR"])
 
 
 func _process(delta: float) -> void:
@@ -33,17 +38,42 @@ func _process(delta: float) -> void:
 
 
 func _draw() -> void:
-	# A bit below centre: the Lance form's long nose needs the room at the top.
+	# A bit below centre: the Thresher form's long nose needs the room at the top.
 	var centers: Array[Vector2] = [Vector2(size.x * 0.27, size.y * 0.6), Vector2(size.x * 0.73, size.y * 0.6)]
-	var shapes: Array[AirframeShape] = [gunship_shape, lance_shape]
+	if airframes == null:
+		return
+	var shapes: Array[AirframeShape] = [airframes.build(false), airframes.build(true)]
+	# One zoom for both forms, so they stay true to size next to each other.
+	var zoom: float = minf(_fit_zoom(shapes[0], centers[0]), _fit_zoom(shapes[1], centers[1]))
 	for i: int in 2:
-		if shapes[i] != null:
-			_draw_ship(shapes[i], centers[i])
+		_draw_ship(shapes[i], centers[i], zoom)
 
 
-func _draw_ship(shape: AirframeShape, center: Vector2) -> void:
-	draw_set_transform(center, 0.0, Vector2(draw_scale, draw_scale))
-	var width: float = 1.2 / draw_scale
+## Bigger weight classes still look bigger, but grow less than in flight; long noses (railgun,
+## Thresher form) shrink the drawing so nothing pokes out of the panel.
+func _fit_zoom(shape: AirframeShape, center: Vector2) -> float:
+	var zoom: float = draw_scale / pow(shape.overlay_scale, class_shrink)
+	var top: float = 0.0
+	var bottom: float = 0.0
+	var side: float = 0.0
+	for part: String in shape.parts:
+		for point: Vector2 in shape.parts[part]:
+			top = minf(top, point.y)
+			bottom = maxf(bottom, point.y)
+			side = maxf(side, absf(point.x))
+	# Room to the panel edge or to the middle, whichever is nearer.
+	if side > 0.0:
+		zoom = minf(zoom, (minf(center.x, absf(size.x * 0.5 - center.x)) - fit_margin * 0.5) / side)
+	if top < 0.0:
+		zoom = minf(zoom, (center.y - fit_margin) / -top)
+	if bottom > 0.0:
+		zoom = minf(zoom, (size.y - center.y - fit_margin) / bottom)
+	return zoom
+
+
+func _draw_ship(shape: AirframeShape, center: Vector2, zoom: float) -> void:
+	draw_set_transform(center, 0.0, Vector2(zoom, zoom))
+	var width: float = 1.2 / zoom
 	for part: String in shape.parts:
 		if _skip_parts.has(part):
 			continue
@@ -57,8 +87,8 @@ func _draw_ship(shape: AirframeShape, center: Vector2) -> void:
 	var spots: Dictionary[int, Array] = {
 		WeaponData.Hardpoint.NOSE: [shape.muzzle_offset + Vector2(0.0, 8.0)],
 		WeaponData.Hardpoint.WING_PYLONS: [shape.pylon_offset, Vector2(-shape.pylon_offset.x, shape.pylon_offset.y)],
-		WeaponData.Hardpoint.ENGINE: [engine_offset],
-		WeaponData.Hardpoint.HULL: [hull_offset],
+		WeaponData.Hardpoint.ENGINE: [engine_offset * shape.overlay_scale],
+		WeaponData.Hardpoint.HULL: [hull_offset * shape.overlay_scale],
 		WeaponData.Hardpoint.SALVAGE_MOUNT: [shape.mount_offset],
 	}
 	var pulse: float = 0.5 + 0.5 * sin(_time * 8.0)

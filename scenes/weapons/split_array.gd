@@ -1,7 +1,7 @@
 class_name SplitArray
 extends Weapon
 ## HEL-3S Split Array (DESIGN.md §6): several Beam Lasers from one emitter, fanned out in Gunship
-## form. Lance form swings them together until they merge into one hot beam (§5.6).
+## form. Thresher form swings them together until they merge into one hot beam (§5.6).
 
 @export var beam_scene: PackedScene
 ## Degrees per second the outer beams swing while the ship morphs.

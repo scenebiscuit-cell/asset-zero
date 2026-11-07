@@ -28,7 +28,7 @@ Megacorporations are fighting over the resources of distant planets and strippin
 
 - **1 sector** (one planet, one enemy corporation)
 - **3 levels + 1 boss**, played in order as a single run
-- **Combat Morph** (Gunship form ↔ Lance form)
+- **Combat Morph** (Gunship form ↔ Thresher form)
 - **Assimilate** (4 enemy weapon modules)
 - **Overclock** meter
 - **Threat Level** (4 tiers tied to weight class)
@@ -82,17 +82,27 @@ The **hitbox stays the same size** in every class (body + wing roots, §5.4), so
 
 ### 5.3 Liquid-metal behavior (visual rules)
 
-The ship always looks like a hard-edged military aircraft. The liquid metal shows in moments:
+Gunship form is the metal locked into hard armour: a hard-edged military aircraft. **Thresher form is the metal unlocked and hunting:** a dark, ribbed predator. The hull sweeps into a crescent with a forked tail, hooked tines hang back off the trailing edges (more of them each weight class), stacked chevron plates run down the spine with ember cores glowing between them, and a dark glossy eye sits where the canopy was. The Gunship's panels, intakes and fins melt into the hull. It's the same metal reshaped, not a smaller ship: Thresher keeps most of the Gunship's area (about 80%), with the wings' mass pulled into a longer, thicker body. The open, softer metal is why Thresher form takes more damage (§5.6).
 
-- **Combat Morph:** flowing transition between Gunship and Lance form (§5.6).
-- **Refit morph:** every refit plays a quick ~0.3 s flowing transition from the old airframe to the new one. Weapons extrude out of the hull.
+The metal is alive every second, not only when a button is pressed (the **live metal**, an offset laid over the resting outline by the morph system):
+
+- **Thresher form ripples:** while held, a slow wave runs down the outline the whole time, and a short metal trail drips off the tail.
+- **Movement:** the tips trail the body when the ship moves and spring back when it stops, in both forms.
+- **Vector Dash:** the hull stretches along the dash and relaxes.
+- **Hits:** a round pushes the hull in where it lands, and the dent heals over about half a second. Plating takes the hit instead when it's up.
+- **Graze:** a brief shiver through the metal.
+
+The liquid metal also shows in moments:
+
+- **Combat Morph:** flowing transition between Gunship and Thresher form (§5.6).
+- **Refit morph:** every refit plays a quick ~0.3 s flowing transition from the old airframe to the new one. Weapons extrude out of the hull. Refits are installed between sectors, so the next sector starts in the old airframe and flows into the new one after a moment (~0.7 s with a liquid ripple when the weight class changes). The Field Refit schematic shows the new shape straight away.
 - **Assimilate:** the enemy weapon module gets swallowed into the hull and re-extrudes on the Salvage Mount.
 - **Salvage absorb:** scrap pickups get pulled in and melt into the hull with a small ripple.
 - **Overclock:** the hull glows white-hot and ripples.
-- **Damage:** when hit, the armor splashes briefly and droplets fly off. At low Armor the outline gets unstable and drippy.
+- **Damage:** when hit, the armor splashes briefly, droplets fly off and the hull dents (above). At low Armor the outline gets unstable and drippy.
 - **Death:** the airframe loses its shape, collapses into a liquid splash and falls.
 
-**Technical note:** all of these use one shared morph system that tweens polygon points from one shape to another. Every airframe shape (each form × weight class × refit) is just a list of points, so the same system handles every transformation.
+**Technical note:** all of these use one shared morph system that tweens polygon points from one shape to another. Every airframe shape (each form × weight class × refit) is just a list of points, so the same system handles every transformation. Each weight class has a Gunship and a Thresher base shape (bigger each class, with armor plates from Medium and a dorsal spine from Heavy); each weapon and Propulsion refit carries a small overlay (barrels, lens, heat sinks, pylon pods, swept wings, blades, nozzles) that's laid on top and scaled to the class. Armor-line refits show as the Plating ring, shrapnel and repair drones instead.
 
 ### 5.4 Stats
 
@@ -101,7 +111,7 @@ The ship always looks like a hard-edged military aircraft. The liquid metal show
 | Armor | 100 | Health. Run ends at 0. Repairable in the Armory, and every 20 enemies destroyed drop a repair kit (+20 Armor) |
 | Plating | 0 | Regenerating shield, absorbs damage first, recharges after 3 s without being hit |
 | Move speed | 300 px/s | Gunship form. Changed by Propulsion and weight class |
-| Hitbox | capsule over the body + wing roots: ~24 px wide (Gunship), ~14 px wide (Lance) | Wing tips don't count. Shrinks as the wings fold in Lance form (§5.6). Stored per airframe shape |
+| Hitbox | capsule over the body + wing roots: ~24 px wide (Gunship), ~14 px wide (Thresher) | Wing tips don't count. Shrinks as the wings fold in Thresher form (§5.6). Stored per airframe shape |
 | Graze radius | ~28 px | Enemy rounds passing inside this (but not hitting) count as near misses for Overclock |
 | Invulnerability after hit | 1.0 s | Ship flashes |
 
@@ -111,7 +121,7 @@ The ship always looks like a hard-edged military aircraft. The liquid metal show
 |---|---|---|
 | Move | WASD / Arrow keys | Left stick (analog: a half push flies at half speed) or D-pad |
 | Fire | Hold Space or J | Hold A or right trigger |
-| Combat Morph (Lance form) | Hold Shift or K | Hold left trigger or left bumper |
+| Combat Morph (Thresher form) | Hold Shift or K | Hold left trigger or left bumper |
 | Overclock | E or L | Y |
 | Fire Control | Q or I | X | Starts a stored Fire Control pickup: auto-fire for ~10 s (§7.3) |
 | Vector Dash | Double-tap a direction | Right bumper (dashes the way you're moving, or forward) | Only with the Vector Dash refit (§6) |
@@ -124,26 +134,27 @@ Keyboard and gamepad both work at once. The mouse doesn't fly the ship: the curs
 
 ### 5.6 Combat Morph
 
-XF-0 has two combat forms. **Hold** the Morph button for Lance form, and release to flow back to Gunship form. The morph takes **0.15 s** (fast, it must feel responsive) and can be done at any time.
+XF-0 has two combat forms. **Hold** the Morph button for Thresher form, and release to flow back to Gunship form. The morph takes about **0.22 s** and can be done at any time: the metal flows in a wave from nose to tail, darkening as the ribs and tines grow out and the cores light up. Speed and fire pattern change the moment the button is pressed, so it stays responsive.
 
-| | Gunship form (default) | Lance form (hold Morph) |
+| | Gunship form (default) | Thresher form (hold Morph) |
 |---|---|---|
-| Shape | Wide, wings spread, weapons angled outward | Narrow arrowhead, wings folded back, weapons pulled to the nose |
+| Shape | Hard-edged military jet: wide, wings spread, weapons angled outward | Dark ribbed predator: forked crescent, hooked tines along the trailing edges, ember cores between the spine plates, dark eye, one ember plume, weapons pulled to the nose |
 | Speed | 100% | 55% (for precise dodging) |
 | Fire pattern | Weapons use their normal spread | Every weapon **converges** forward into a tight stream |
 | Damage | 100% | 140% |
+| Damage taken | 100% | 300% (Plating and Armor): about 3 standard rounds kill a Light airframe from full Armor |
 | Ground targets | Normal | Normal |
 | Missiles | Seekers seek any target; rockets angle slightly outward | Seekers seek only targets ahead of the ship; rockets fire dead straight |
 | Hitbox | ~24 px wide | ~14 px wide (wings folded) |
 | Graze radius | 28 px | 36 px (easier to charge Overclock while threading bullets) |
 
-How each weapon line converges in Lance form:
+How each weapon line converges in Thresher form:
 
-- **Autocannon lines:** all barrels fire straight ahead in one tight stream. The Flak Battery spread closes to a narrow cone. The Railgun fires faster.
+- **Autocannon lines:** one dead-straight stream from the centre of the nose: multi-barrel guns take turns instead of firing side by side, ~25% more rounds per second, rounds fly ~20% faster, no scatter. The Flak Battery spread closes completely. The Railgun fires 40% faster instead.
 - **Beam Laser lines:** the beam gets thinner and brighter. The Split Array's three beams merge into one.
-- **Assimilated weapons:** each module defines its own Lance behavior (§5.8).
+- **Assimilated weapons:** each module defines its own Thresher behavior (§5.8).
 
-Every refit changes **both** shapes. The Gunship and Lance shapes for each weight class are drawn as a pair.
+Every refit changes **both** shapes. The Gunship and Thresher shapes for each weight class are drawn as a pair, and each class has its own silhouette in one stealth-fighter style: faceted nose, straight edges, matching wing angles, canted tail fins (Light: slim diamond wing; Medium: canards and tailplanes; Heavy: thick body, broad trapezoid wings, twin booms; Assault: faceted shoulders, double delta, long twin tails). Swept-wing refits lean the class's own wings back.
 
 ### 5.7 Overclock
 
@@ -173,7 +184,7 @@ Overclock is the "panic button" and the "go aggressive" button in one. It does n
 - Lasts until the **end of the level**, then dissolves (unless a Retention Matrix field mod says otherwise).
 - Modules have no ammo limit.
 
-| Module | Dropped by | Gunship behavior | Lance behavior |
+| Module | Dropped by | Gunship behavior | Thresher behavior |
 |---|---|---|---|
 | Spread Cannon | HG-7 Gunship (elite) | 5-way fan of medium rounds | 5 rounds stacked in a tight line |
 | Flak Burst | AA Emplacement (elite) | Rounds explode in a small blast after a short distance | Longer range before exploding |
@@ -184,7 +195,7 @@ Recon and Interceptor drones don't carry modules. The **Retention Matrix** field
 
 ## 6. Weapon and support systems
 
-All weapons fire while Fire is held. **Missiles fire automatically** on their own timer. Each system has **3 refit levels** (the Missile line has 4), and at the last level the player picks **one of two variants** (shown as "Variant A / Variant B"). Each level changes the *visual* and the *behavior*, not just the numbers. Names follow a military designation style: a model code plus a plain name. All weapons follow the Lance-form convergence rules in §5.6.
+All weapons fire while Fire is held. **Missiles fire automatically** on their own timer. Each system has **3 refit levels** (the Missile line has 4), and at the last level the player picks **one of two variants** (shown as "Variant A / Variant B"). Each level changes the *visual* and the *behavior*, not just the numbers. Names follow a military designation style: a model code plus a plain name. All weapons follow the Thresher-form convergence rules in §5.6.
 
 ### Autocannon line (nose, starting weapon)
 
@@ -223,7 +234,7 @@ Starts with unguided rockets; homing is a later refit, because Seekers are very 
 | Level | Designation | Effect | Visual |
 |---|---|---|---|
 | 1 | Afterburner Mk1 | +15% speed | Bigger engine glow |
-| 2 | Swept-Wing Refit | +30% speed, Lance form moves at 70% instead of 55% | Wings sweep back |
+| 2 | Swept-Wing Refit | +30% speed, Thresher form moves at 70% instead of 55% | Wings sweep back |
 | 3A | Razor Wing | Reinforced blade-edged wings damage aircraft you touch (~120 damage/s), and ramming aircraft no longer hurts you (enemy rounds and hazards still do) | Sharp leading edges |
 | 3B | Vector Dash | Double-tap a direction key, or press the right bumper on a gamepad: a short thrust-vectored dash (~120 px) with brief invulnerability (the ship goes liquid for a moment). 0.7 s cooldown | Side thruster nozzles |
 
@@ -388,7 +399,7 @@ What we learned from studying gameplay footage of the 2015 Edition (Nov 2, 2026)
 
 **7. What we do differently (keeps ASSET ZERO original and fixes readability)**
 - **Enemy bullets stay hot pink/orange with a dark outline** (see placeholder rules). In the reference, small orange enemy shots blend into explosions; ours must never.
-- **Player palette stays gunmetal with cyan accents**, not white and red, so XF-0 is our own design.
+- **Player palette stays gunmetal with cyan accents**, not white and red, so XF-0 is our own design. Ember orange is reserved for heat: Overclock, heat sinks and Thresher form's cores.
 - **HUD:** keep the minimal layout and side rails, but use our cockpit-display style (amber/green monospace text on dark panels). The Field Refit and Armory screens borrow the beveled terminal frame + CRT screen idea.
 - No copying of any ship, logo, layout or sprite. The reference sets mood, palette range and readability rules only.
 
@@ -463,7 +474,7 @@ Raptor (above) sets the **world, terrain and ship look**. Mech Havoc sets the **
 
 Simple vector / geometric shapes drawn in Godot (Polygon2D, Line2D or `_draw()`), no image files needed.
 
-- **XF-0:** hard-edged military aircraft silhouette (think modern stealth fighters and gunships), gunmetal grey with a chrome highlight and cyan accent lights. Weapons and pylons are visible shapes on the airframe. Gunship and Lance forms must read differently at a glance (wide vs. arrowhead).
+- **XF-0:** Gunship form is a hard-edged military aircraft (think modern stealth fighters and gunships), gunmetal grey with a chrome highlight and cyan as its one bright accent (systems lights), plus a dark outline, a shaded side, side intakes, wing panels and twin engine glows. Thresher form is a dark ribbed predator in darker iron: forked crescent, hooked tines, mid-grey spine plates, a dark eye, and ember orange for everything that glows (cores, wingtips, one plume). Two accents, two meanings: cyan is systems, ember orange is heat (Overclock, heat sinks, Thresher form). Weapons and pylons are visible shapes on the airframe. The two forms must read as different machines at a glance.
 - **Halcyon forces:** blocky, utilitarian industrial machines in grey/orange with hazard-yellow stripes. Elites get a yellow outline.
 - **Weapon modules:** glowing hexagons in the color of the enemy that dropped them, pulsing
 - **Enemy rounds:** hot pink/orange, round, with an outline, always the highest-contrast thing on screen

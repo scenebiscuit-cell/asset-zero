@@ -1,7 +1,9 @@
-[gd_resource type="Resource" script_class="MissileData" load_steps=3 format=3]
+[gd_resource type="Resource" script_class="MissileData" load_steps=5 format=3]
 
 [ext_resource type="Script" path="res://resources/missile_data.gd" id="1_script"]
 [ext_resource type="PackedScene" path="res://scenes/weapons/seeker_launcher.tscn" id="2_scene"]
+[ext_resource type="Resource" path="res://data/shapes/overlays/mk2_gunship.tres" id="air_g"]
+[ext_resource type="Resource" path="res://data/shapes/overlays/mk2_thresher.tres" id="air_l"]
 
 [resource]
 script = ExtResource("1_script")
@@ -15,3 +17,5 @@ speed = 380.0
 turn_rate_degrees = 300.0
 launch_angle_degrees = 30.0
 lifetime = 3.0
+airframe_gunship = ExtResource("air_g")
+airframe_thresher = ExtResource("air_l")

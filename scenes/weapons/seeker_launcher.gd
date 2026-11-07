@@ -1,7 +1,7 @@
 class_name SeekerLauncher
 extends Weapon
 ## Missile line (DESIGN.md §6), rockets and seekers: fires a volley from the wing pylons on its own timer, no Fire
-## button needed. Gunship form launches outward and seeks anything; Lance form launches straight
+## button needed. Gunship form launches outward and seeks anything; Thresher form launches straight
 ## and seeks only targets ahead (§5.6).
 
 var _missile: MissileData
@@ -22,7 +22,7 @@ func _physics_process(delta: float) -> void:
 	if _cooldown > 0.0:
 		return
 	# Holds fire until something is there to seek, so it doesn't spray missiles at an empty sky.
-	if missile_pool.find_target(global_position, converged, _missile.lance_seek_cone_degrees) == null:
+	if missile_pool.find_target(global_position, converged, _missile.thresher_seek_cone_degrees) == null:
 		_cooldown = 0.0
 		return
 	_cooldown = interval(_missile.fire_interval)

@@ -50,6 +50,10 @@ var overclock_bonus_time: float = 0.0
 var retention_charges: int = 0
 ## How many of each field mod were taken (FieldModData.Effect -> count), for stack limits.
 var field_mod_counts: Dictionary[int, int] = {}
+## The Gunship shape and weight class XF-0 last flew with, so the next sector can morph from it
+## to the new loadout (the refit morph, DESIGN.md §5.3).
+var shown_airframe: AirframeShape = null
+var shown_class: int = 0
 ## Which sector of the run we're on (0 = Sector 1).
 var sector_index: int = 0
 ## False until a level starts a run; the Level resets everything when it finds no run in progress.
@@ -78,6 +82,8 @@ func reset_run() -> void:
 	overclock_bonus_time = 0.0
 	retention_charges = 0
 	field_mod_counts.clear()
+	shown_airframe = null
+	shown_class = 0
 	strike_progress = 0
 	strike_charges = 0
 	sector_index = 0

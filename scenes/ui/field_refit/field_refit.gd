@@ -177,6 +177,8 @@ func _update_reroll() -> void:
 
 
 func _refresh_loadout() -> void:
+	# A refit changes the airframe, so the schematic redraws with the new shape.
+	_schematic.queue_redraw()
 	for hardpoint: int in _loadout_rows:
 		var fitted: Label = _loadout_rows[hardpoint][1]
 		var weapon: WeaponData = GameState.weapons.get(hardpoint)

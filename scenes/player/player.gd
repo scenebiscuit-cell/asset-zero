@@ -26,9 +26,16 @@ var play_area_top: float = 0.0
 ## Fire Control: seconds of auto-fire per activation, and how many pickups can be stored.
 @export var fire_control_duration: float = 10.0
 @export var max_fire_control_charges: int = 2
+## Refit morph (DESIGN.md §5.3): a sector after new refits starts in the old airframe, then flows
+## into the new one. A weight-class change plays a slower morph with a liquid ripple.
+@export var refit_morph_delay: float = 0.6
+@export var refit_morph_time: float = 0.3
+@export var class_morph_time: float = 0.7
 ## Enemies to destroy for one Saturation Strike charge.
 @export var kills_per_strike: int = 80
 @export var max_strike_charges: int = 3
+## Vector Dash: how far the hull stretches along the dash, as a fraction of its length.
+@export var dash_stretch: float = 0.35
 
 ## Always-on auto-fire: the FC-1 refit or the accessibility setting (DESIGN.md §7.3), never a key.
 var autofire: bool = false
@@ -37,7 +44,7 @@ var _autofire_left: float = 0.0
 var _invulnerable_left: float = 0.0
 var _dead: bool = false
 var _glow_time: float = 0.0
-var _default_lance_speed: float = 0.55
+var _default_thresher_speed: float = 0.55
 
 @onready var _hardpoints: Hardpoints = $Hardpoints
 @onready var _hitbox: CollisionShape2D = $Hitbox
@@ -52,10 +59,11 @@ var _default_lance_speed: float = 0.55
 @onready var _overclock: Overclock = $Overclock
 @onready var _assimilate_fx: AssimilateFx = $Visual/AssimilateFx
 @onready var _systems: ShipSystems = $ShipSystems
+@onready var _trail: LiquidTrail = $Visual/LiquidTrail
 
 
 func _ready() -> void:
-	_default_lance_speed = _combat_morph.lance_speed_multiplier
+	_default_thresher_speed = _combat_morph.thresher_speed_multiplier
 	_hardpoints.setup(round_pool, missile_pool)
 	_hardpoints.apply_shape(_combat_morph.current_shape(), 0.0)
 	area_entered.connect(_try_hit)
@@ -66,14 +74,66 @@ func _ready() -> void:
 	_overclock.started.connect(_refresh_damage)
 	_overclock.finished.connect(_on_overclock_finished)
 	_set_hitbox(_combat_morph.current_shape(), 0.0)
+	_update_trail_anchor(_combat_morph.current_shape())
 	refresh_systems()
+	_play_refit_morph()
 
 
-## Propulsion sets the speeds (Swept-Wing raises Lance form speed). Re-run after a refit or field mod.
+## Plays the refit morph if the loadout changed since the last sector.
+func _play_refit_morph() -> void:
+	var before: AirframeShape = GameState.shown_airframe
+	var class_changed: bool = GameState.shown_class != GameState.weight_class
+	var after: AirframeShape = _combat_morph.gunship_shape()
+	GameState.shown_airframe = after
+	GameState.shown_class = GameState.weight_class
+	if before == null or before.parts == after.parts:
+		return
+	_morph_system.snap_to(before)
+	await get_tree().create_timer(refit_morph_delay, false).timeout
+	if _dead:
+		return
+	if class_changed:
+		_ripple()
+		AudioManager.play("assimilate", -2.0)
+	else:
+		AudioManager.play("morph_to_thresher", -4.0)
+	_morph_system.morph_to(_combat_morph.current_shape(), class_morph_time if class_changed else refit_morph_time)
+
+
+## The loadout changed mid-sector (debug keys): rebuild both forms and flow into the new shape.
+func refresh_airframe() -> void:
+	_combat_morph.rebuild()
+	var class_changed: bool = GameState.shown_class != GameState.weight_class
+	GameState.shown_airframe = _combat_morph.gunship_shape()
+	GameState.shown_class = GameState.weight_class
+	if class_changed:
+		_ripple()
+	_morph_system.morph_to(_combat_morph.current_shape(), class_morph_time if class_changed else refit_morph_time)
+	_hardpoints.apply_shape(_combat_morph.current_shape(), refit_morph_time)
+	_update_trail_anchor(_combat_morph.current_shape())
+
+
+## The liquid trail leaves from the tail of whatever shape the ship is in.
+func _update_trail_anchor(shape: AirframeShape) -> void:
+	var tail: float = 20.0
+	for point: Vector2 in shape.parts.get("Hull", PackedVector2Array()):
+		tail = maxf(tail, point.y)
+	_trail.tail_offset = Vector2(0.0, tail)
+
+
+## Liquid wobble as the airframe grows into a new weight class.
+func _ripple() -> void:
+	var tween: Tween = create_tween()
+	tween.tween_property(_airframe, "scale", Vector2(1.15, 0.9), class_morph_time * 0.3)
+	tween.tween_property(_airframe, "scale", Vector2(0.95, 1.06), class_morph_time * 0.3)
+	tween.tween_property(_airframe, "scale", Vector2.ONE, class_morph_time * 0.4)
+
+
+## Propulsion sets the speeds (Swept-Wing raises Thresher form speed). Re-run after a refit or field mod.
 func refresh_systems() -> void:
 	_systems.refresh()
-	var lance: float = _systems.lance_speed_multiplier()
-	_combat_morph.lance_speed_multiplier = lance if lance > 0.0 else _default_lance_speed
+	var thresher: float = _systems.thresher_speed_multiplier()
+	_combat_morph.thresher_speed_multiplier = thresher if thresher > 0.0 else _default_thresher_speed
 	# Field mods (AP Rounds) change damage too.
 	_refresh_damage()
 
@@ -93,8 +153,11 @@ func _physics_process(delta: float) -> void:
 	var direction: Vector2 = Input.get_vector("move_left", "move_right", "move_up", "move_down")
 	var speed: float = move_speed * _systems.speed_multiplier() * _combat_morph.speed_multiplier() \
 			* GameState.class_speed_multiplier()
-	position += direction * speed * delta
-	position += _systems.dash_offset(delta)
+	var step: Vector2 = direction * speed * delta + _systems.dash_offset(delta)
+	position += step
+	# The live metal: tips trail the body as it moves, and the trail shows while the metal is liquid.
+	_morph_system.set_velocity(step / delta)
+	_trail.strength = _morph_system.liquid()
 
 	_clamp_to_screen()
 	_try_activate_fire_control()
@@ -210,6 +273,7 @@ func _on_grazed(at: Vector2) -> void:
 	if _dead:
 		return
 	GameState.add_overclock(GameState.OVERCLOCK_PER_GRAZE)
+	_morph_system.flinch()
 	_graze_spark.global_position = at
 	_graze_spark.restart()
 	AudioManager.play("graze_tick", -8.0)
@@ -221,7 +285,7 @@ func _on_overclock_finished() -> void:
 	grant_invulnerability(_overclock.end_invulnerability)
 
 
-## Lance form, Overclock and AP Rounds all boost damage; they multiply.
+## Thresher form, Overclock and AP Rounds all boost damage; they multiply.
 func _refresh_damage() -> void:
 	var overclock_bonus: float = _overclock.damage_multiplier if _overclock.active else 1.0
 	var field_bonus: float = 1.0 + GameState.damage_bonus
@@ -248,26 +312,32 @@ func _update_timed_autofire(delta: float) -> void:
 		_autofire_left -= delta
 
 
-func take_damage(amount: int) -> void:
+## `hit_from` is where the hit landed, relative to the ship; the hull dents there (Plating takes it otherwise).
+func take_damage(amount: int, hit_from: Vector2 = Vector2.INF) -> void:
 	if _dead:
 		return
 	_hit_splash.restart()
 	var on_plating: bool = GameState.plating > 0
-	if GameState.damage_armor(amount):
+	if GameState.damage_armor(roundi(amount * _combat_morph.damage_taken_multiplier())):
 		_die()
 		return
+	if hit_from.is_finite() and not on_plating:
+		_morph_system.dent(hit_from)
 	_systems.on_hit(on_plating)
 	_invulnerable_left = invulnerable_time
 
 
-func _on_form_changed(is_lance: bool) -> void:
-	_hardpoints.set_converged(is_lance)
+func _on_form_changed(is_thresher: bool) -> void:
+	_hardpoints.set_converged(is_thresher)
 	_refresh_damage()
 	_hardpoints.apply_shape(_combat_morph.current_shape(), _combat_morph.morph_time)
 	_set_hitbox(_combat_morph.current_shape(), _combat_morph.morph_time)
+	# Thresher form is the metal unlocked: it ripples the whole time it's held (DESIGN.md §5.3).
+	_morph_system.set_liquid(1.0 if is_thresher else 0.0, _combat_morph.morph_time)
+	_update_trail_anchor(_combat_morph.current_shape())
 
 
-## The hitbox follows the airframe: it narrows as the wings fold into Lance form.
+## The hitbox follows the airframe: it narrows as the wings fold into Thresher form.
 func _set_hitbox(shape: AirframeShape, duration: float) -> void:
 	var capsule: CapsuleShape2D = _hitbox.shape as CapsuleShape2D
 	_graze_area.set_radius(shape.graze_radius, duration)
@@ -289,12 +359,12 @@ func _try_hit(area: Area2D) -> void:
 		var enemy_round: EnemyRound = area as EnemyRound
 		if not enemy_round.is_active():
 			return
-		take_damage(enemy_round.damage)
+		take_damage(enemy_round.damage, to_local(enemy_round.global_position))
 		enemy_round.deactivate()
 	elif area is EnemyHazard:
-		take_damage((area as EnemyHazard).damage)
+		take_damage((area as EnemyHazard).damage, to_local(area.global_position))
 	elif area is Enemy and not _systems.ignores_contact():
-		take_damage((area as Enemy).data.contact_damage)
+		take_damage((area as Enemy).data.contact_damage, to_local(area.global_position))
 
 
 func _update_invulnerability(delta: float) -> void:
@@ -320,6 +390,10 @@ func _die() -> void:
 	_overclock.cancel()
 	_airframe.modulate = Color.WHITE
 	_airframe.scale = Vector2.ONE
+	# The live metal stops; the collapse below takes over.
+	_morph_system.set_velocity(Vector2.ZERO)
+	_morph_system.set_process(false)
+	_trail.strength = 0.0
 	_death_splash.restart()
 
 	# Liquid collapse: the airframe loses its shape, spreads flat and falls away.
@@ -338,12 +412,10 @@ func set_liquid(on: bool, direction: Vector2 = Vector2.ZERO) -> void:
 	if _dead:
 		return
 	if not on:
-		_airframe.scale = Vector2.ONE
 		_airframe.modulate.a = 1.0
 		return
-	var stretch: Vector2 = Vector2(1.0 + absf(direction.x) * 0.6 - absf(direction.y) * 0.25,
-			1.0 + absf(direction.y) * 0.6 - absf(direction.x) * 0.25)
-	_airframe.scale = stretch
+	_morph_system.stretch_along(direction, dash_stretch)
+	_morph_system.flinch()
 	_airframe.modulate.a = 0.55
 
 

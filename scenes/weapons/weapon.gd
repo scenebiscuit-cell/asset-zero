@@ -7,7 +7,7 @@ var round_pool: RoundPool
 var missile_pool: MissilePool
 ## Fire is held (or auto-fire is on). Missiles ignore it: they fire on their own timer.
 var firing: bool = false
-## Lance form: every weapon converges forward (DESIGN.md §5.6).
+## Thresher form: every weapon converges forward (DESIGN.md §5.6).
 var converged: bool = false
 var damage_multiplier: float = 1.0
 ## False once XF-0 is destroyed, so nothing keeps firing on its own.

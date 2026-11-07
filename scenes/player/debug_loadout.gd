@@ -43,6 +43,7 @@ func _unhandled_input(event: InputEvent) -> void:
 		print("Debug loadout: ", GameState.WeightClass.keys()[next], " (", GameState.refit_count, " refits)")
 	else:
 		return
+	(get_parent() as Player).refresh_airframe()
 	get_viewport().set_input_as_handled()
 
 

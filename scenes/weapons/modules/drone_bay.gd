@@ -1,7 +1,7 @@
 class_name DroneBay
 extends ModuleWeapon
 ## Drone Bay module (DESIGN.md §5.8). Gunship form: allied drones orbit XF-0 and shoot at the
-## nearest enemy. Lance form: they line up beside the nose and fire straight ahead.
+## nearest enemy. Thresher form: they line up beside the nose and fire straight ahead.
 ## The drones are fixed child nodes (never spawned or freed in play), set top_level so they trail
 ## behind XF-0 in world space instead of being locked to it.
 
@@ -49,11 +49,11 @@ func _slot(i: int) -> Vector2:
 	if converged:
 		var side: float = -1.0 if i % 2 == 0 else 1.0
 		var row: float = float(i / 2) # Extra drones line up behind the first pair.
-		return global_position + Vector2(_bay.lance_offset.x * side, _bay.lance_offset.y + row * 14.0)
+		return global_position + Vector2(_bay.thresher_offset.x * side, _bay.thresher_offset.y + row * 14.0)
 	return global_position + Vector2.from_angle(_angle + TAU * i / _drones.size()) * _bay.orbit_radius
 
 
-## Lance form fires straight ahead; Gunship form aims at the nearest enemy in range.
+## Thresher form fires straight ahead; Gunship form aims at the nearest enemy in range.
 func _aim(drone: Node2D) -> Vector2:
 	if converged or missile_pool == null:
 		return Vector2.UP

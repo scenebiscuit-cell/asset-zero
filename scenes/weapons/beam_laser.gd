@@ -1,10 +1,10 @@
 class_name BeamLaser
 extends Weapon
 ## Beam Laser line (DESIGN.md §6): a continuous beam that stops at the first enemy in its path
-## and damages it every tick. Lance form makes it thinner and brighter (§5.6).
+## and damages it every tick. Thresher form makes it thinner and brighter (§5.6).
 
-## Lance form brightens the beam by this much (values above 1 glow hotter).
-@export var lance_brightness: float = 1.6
+## Thresher form brightens the beam by this much (values above 1 glow hotter).
+@export var thresher_brightness: float = 1.6
 ## Glow width compared to the hit width.
 @export var glow_scale: float = 2.6
 ## Core width compared to the hit width.
@@ -78,11 +78,11 @@ func _closest_enemy() -> Enemy:
 
 
 func _apply_width() -> void:
-	var width: float = _beam.lance_width if converged else _beam.width
+	var width: float = _beam.thresher_width if converged else _beam.width
 	(_cast.shape as RectangleShape2D).size = Vector2(width, 2.0)
 	_glow.width = width * glow_scale
 	_core.width = maxf(width * core_scale, 1.5)
-	var brightness: float = lance_brightness if converged else 1.0
+	var brightness: float = thresher_brightness if converged else 1.0
 	_visual.modulate = Color(brightness, brightness, brightness, 1.0)
 
 

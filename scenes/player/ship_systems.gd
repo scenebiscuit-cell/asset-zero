@@ -71,9 +71,9 @@ func speed_multiplier() -> float:
 	return 1.0 + (_propulsion.speed_bonus if _propulsion != null else 0.0)
 
 
-## Lance form speed (fraction of Gunship speed), or 0 to keep the default.
-func lance_speed_multiplier() -> float:
-	return _propulsion.lance_speed_multiplier if _propulsion != null else 0.0
+## Thresher form speed (fraction of Gunship speed), or 0 to keep the default.
+func thresher_speed_multiplier() -> float:
+	return _propulsion.thresher_speed_multiplier if _propulsion != null else 0.0
 
 
 func is_dashing() -> bool:
@@ -186,7 +186,7 @@ func _start_dash(direction: Vector2) -> void:
 	_dash_cooldown_left = dash_cooldown
 	_invulnerable_left = dash_time + dash_grace
 	_player.set_liquid(true, direction)
-	AudioManager.play("morph_to_lance", -6.0)
+	AudioManager.play("morph_to_thresher", -6.0)
 
 
 ## Extra movement this frame from a running dash.

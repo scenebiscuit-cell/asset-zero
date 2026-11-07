@@ -2,7 +2,8 @@ class_name Autocannon
 extends Weapon
 ## Autocannon line (DESIGN.md §6): one or more barrels side by side at the nose, firing tracer rounds.
 ## The data adds the level-3 behaviours: a fanned spread with fragmenting rounds (M40 Flak Battery)
-## or a single piercing slug that fires faster in Lance form (RG-9 Railgun).
+## or a single piercing slug (RG-9 Railgun). Thresher form fires one straight, faster stream from the
+## centre of the nose: multi-barrel guns take turns instead of firing side by side.
 
 ## How long the muzzle flash stays lit after each shot (seconds).
 @export var flash_duration: float = 0.04
@@ -14,6 +15,8 @@ extends Weapon
 
 var _gun: GunData
 var _cooldown: float = 0.0
+## Thresher form: the barrel whose turn it is.
+var _next_barrel: int = 0
 var _flash_time: float = 0.0
 ## One muzzle flash per barrel.
 var _flashes: Array[Node2D] = []
@@ -39,29 +42,38 @@ func _physics_process(delta: float) -> void:
 		_cooldown = maxf(_cooldown, 0.0)
 		return
 	if _cooldown <= 0.0:
-		for i: int in _gun.barrel_count:
-			_fire_barrel(i)
-		_cooldown += interval(_gun.fire_interval) * (_gun.lance_interval_scale if converged else 1.0)
+		if converged:
+			# One round per turn, so the barrels together keep up the same rounds per second.
+			_fire_barrel(_next_barrel)
+			_next_barrel = (_next_barrel + 1) % _gun.barrel_count
+			_cooldown += interval(_gun.fire_interval) * _gun.thresher_interval_scale / _gun.barrel_count
+		else:
+			for i: int in _gun.barrel_count:
+				_fire_barrel(i)
+			_cooldown += interval(_gun.fire_interval)
 		_show_flash()
 
 
-## Gunship form: barrels sit apart. Lance form: they pull together into one stream.
+## Gunship form: barrels sit apart. Thresher form: every round leaves from the centre line.
 func _barrel_x(index: int) -> float:
-	var spacing: float = _gun.lance_barrel_spacing if converged else _gun.barrel_spacing
-	return (index - (_gun.barrel_count - 1) * 0.5) * spacing
+	if converged:
+		return 0.0
+	return (index - (_gun.barrel_count - 1) * 0.5) * _gun.barrel_spacing
 
 
 func _fire_barrel(index: int) -> void:
 	var x: float = _barrel_x(index)
 	var direction: Vector2 = Vector2.UP
-	# Spread guns fan their barrels out; Lance form closes the fan to a narrow cone.
-	var fan: float = _gun.lance_fan_degrees if converged else _gun.fan_degrees
-	var degrees: float = (index - (_gun.barrel_count - 1) * 0.5) * fan
-	if not converged:
-		# Outer barrels angle outward; every round gets a little random scatter.
+	var speed: float = _gun.round_speed
+	if converged:
+		# Thresher form: dead straight, no scatter, faster rounds.
+		speed *= _gun.thresher_round_speed_scale
+	else:
+		# Spread guns fan their barrels out; outer barrels angle outward; a little random scatter.
+		var degrees: float = (index - (_gun.barrel_count - 1) * 0.5) * _gun.fan_degrees
 		degrees += signf(x) * _gun.splay_degrees + randf_range(-_gun.spread_degrees, _gun.spread_degrees)
-	direction = direction.rotated(deg_to_rad(degrees))
-	var fired: PlayerRound = round_pool.fire(global_position + Vector2(x, 0.0), direction * _gun.round_speed,
+		direction = direction.rotated(deg_to_rad(degrees))
+	var fired: PlayerRound = round_pool.fire(global_position + Vector2(x, 0.0), direction * speed,
 			scaled_damage(_gun.damage), _gun.round_tint) as PlayerRound
 	if fired == null:
 		return
@@ -78,6 +90,8 @@ func _show_flash() -> void:
 	_flash_time = flash_duration
 	for i: int in _flashes.size():
 		var flash: Node2D = _flashes[i]
+		# Thresher form: one stream, one flash.
+		flash.visible = not converged or i == 0
 		var s: float = randf_range(flash_scale_min, flash_scale_max)
 		# Stretch length more than width so the cone keeps its shape.
 		flash.scale = Vector2(lerpf(1.0, s, 0.5), s)

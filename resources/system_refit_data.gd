@@ -7,14 +7,17 @@ enum Perk { NONE, RAZOR_WING, VECTOR_DASH, REACTIVE_ARMOR, NANITE_REPAIR }
 
 ## Propulsion: extra move speed (0.15 = +15%).
 @export var speed_bonus: float = 0.0
-## Propulsion: Lance form speed as a fraction of Gunship speed. 0 = keep the default (55%).
-@export var lance_speed_multiplier: float = 0.0
+## Propulsion: Thresher form speed as a fraction of Gunship speed. 0 = keep the default (55%).
+@export var thresher_speed_multiplier: float = 0.0
 ## Armor: regenerating shield that soaks hits before Armor (§5.4).
 @export var max_plating: int = 0
 ## Seconds without being hit before Plating recharges, then Plating per second.
 @export var plating_recharge_delay: float = 3.0
 @export var plating_recharge_rate: float = 10.0
 @export var perk: Perk = Perk.NONE
+## How this refit changes the airframe (engine glow, swept wings, blades, nozzles), at Light size.
+@export var airframe_gunship: AirframeShape
+@export var airframe_thresher: AirframeShape
 
 
 func apply() -> void:

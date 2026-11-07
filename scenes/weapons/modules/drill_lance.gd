@@ -1,7 +1,7 @@
 class_name DrillLance
 extends ModuleWeapon
 ## Drill Lance module (DESIGN.md §5.8): a short spinning drill that pierces everything it touches.
-## Lance form extends it twice as far. Pulls back in when Fire is released.
+## Thresher form extends it twice as far. Pulls back in when Fire is released.
 
 ## How fast the drill's threads scroll, in pixels per second (the spinning look).
 @export var spin_speed: float = 160.0
@@ -33,9 +33,9 @@ func _physics_process(delta: float) -> void:
 	var active: bool = firing and enabled
 	var wanted: float = 0.0
 	if active:
-		wanted = _drill.lance_length if converged else _drill.length
+		wanted = _drill.thresher_length if converged else _drill.length
 	if not is_equal_approx(_length, wanted):
-		var rate: float = maxf(_drill.length, _drill.lance_length) / _drill.extend_time
+		var rate: float = maxf(_drill.length, _drill.thresher_length) / _drill.extend_time
 		_set_length(move_toward(_length, wanted, rate * delta))
 	if _length <= 0.0:
 		_tick = maxf(_tick - delta, 0.0)

@@ -27,7 +27,7 @@ ASSET ZERO is a modern take on *Raptor: Call of the Shadows* (1994): a vertical-
 - **Effects reference: Mech Havoc.** Glowing muzzle-flash cones, thin pale tracers, thick cyan lasers with a white core and bloom, red glowing enemy streaks, coral warning circles before area attacks, and explosions that go flash → sparks → debris with dark smoke trails → lingering scorch marks.
 
 ## Core hook (4 unique mechanics)
-1. **Combat Morph:** hold a button to flow from the wide Gunship form into the narrow Lance form (55% speed, 140% damage, all weapons focus forward). Release to flow back.
+1. **Combat Morph:** hold a button to flow from the wide Gunship form into the narrow Thresher form (55% speed, 140% damage, all weapons focus forward). Release to flow back.
 2. **Assimilate:** elite enemies (yellow outline) drop their weapon as a module. Fly into it to absorb it onto a fifth hardpoint, the Salvage Mount, until the level ends. Four modules: Spread Cannon, Flak Burst, Drill Lance, Drone Bay.
 3. **Overclock:** salvage pickups, near misses with bullets and elite kills fill a meter. Triggering it melts nearby bullets into salvage, then gives 5 seconds of 1.5× damage and a heat aura that destroys bullets.
 4. **Threat Level:** tied to weight class. The bigger your ship gets, the harder HSD fights back (more enemies and elites, more salvage).

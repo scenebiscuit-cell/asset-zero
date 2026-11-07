@@ -1,7 +1,9 @@
-[gd_resource type="Resource" script_class="BeamData" load_steps=3 format=3]
+[gd_resource type="Resource" script_class="BeamData" load_steps=5 format=3]
 
 [ext_resource type="Script" path="res://resources/beam_data.gd" id="1_beam"]
 [ext_resource type="PackedScene" path="res://scenes/weapons/beam_laser.tscn" id="2_scene"]
+[ext_resource type="Resource" path="res://data/shapes/overlays/hel1_gunship.tres" id="air_g"]
+[ext_resource type="Resource" path="res://data/shapes/overlays/hel1_thresher.tres" id="air_l"]
 
 [resource]
 script = ExtResource("1_beam")
@@ -11,4 +13,6 @@ fire_interval = 0.05
 damage = 6
 reach = 600.0
 width = 6.0
-lance_width = 3.0
+thresher_width = 3.0
+airframe_gunship = ExtResource("air_g")
+airframe_thresher = ExtResource("air_l")

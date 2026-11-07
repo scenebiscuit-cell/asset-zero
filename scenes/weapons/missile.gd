@@ -100,7 +100,7 @@ func _steer(delta: float) -> void:
 		_retarget_left -= delta
 		if _retarget_left <= 0.0:
 			_retarget_left = retarget_interval
-			_target = _pool.find_target(global_position, _ahead_only, _data.lance_seek_cone_degrees)
+			_target = _pool.find_target(global_position, _ahead_only, _data.thresher_seek_cone_degrees)
 	if _target == null:
 		return
 	var wanted: float = global_position.direction_to(_target.global_position).angle()
